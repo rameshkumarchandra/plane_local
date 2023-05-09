@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plane_startup/screens/dash_board_screen.dart';
-import 'package:plane_startup/screens/home_screen.dart';
 import 'package:plane_startup/screens/on_boarding_screen.dart';
-import 'package:plane_startup/screens/setup_profile_screen.dart';
 import 'package:plane_startup/utils/const.dart';
 
 void main() {
@@ -21,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       navigatorKey: Const.globalKey,
-      home: OnBoardingScreen(),
+      home: const OnBoardingScreen(),
     );
   }
 }

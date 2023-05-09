@@ -12,16 +12,17 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
-  final screens = [
+
+
+  @override
+  Widget build(BuildContext context) {
+final screens = [
     const DashBoardScreen(),
-    Container(),
+     Container(),
     Container(),
     Container(),
     Container(),
   ];
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -55,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
               icon: SvgPicture.asset(
                 'assets/svg_images/views.svg',
+                
                 color: currentIndex == 3 ? primaryColor : greyColor,
               ),
               label: 'Views'),

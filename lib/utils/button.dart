@@ -3,13 +3,13 @@ import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/text_styles.dart';
 
 class Button extends StatefulWidget {
-  String text;
-  bool filledButton;
-  bool disable;
-  bool removeStroke;
-  VoidCallback? ontap;
-  Color? textColor;
-  Button(
+  final String text;
+  final bool filledButton;
+  final bool disable;
+  final bool removeStroke;
+  final VoidCallback? ontap;
+  final Color? textColor;
+  const Button(
       {required this.text,
       this.filledButton = true,
       this.ontap,

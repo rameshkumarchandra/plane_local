@@ -83,14 +83,14 @@ class _SignInScreenState extends State<SignInScreen> {
                         const SizedBox(
                           height: 30,
                         ),
-                        Button(
+                        const Button(
                           text: 'Sign In with Google',
                           filledButton: false,
                         ),
                         const SizedBox(
                           height: 15,
                         ),
-                        Button(
+                        const Button(
                           text: 'Sign In with Google',
                           filledButton: false,
                         )
