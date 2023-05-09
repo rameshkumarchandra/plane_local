@@ -186,7 +186,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
               curve: Curves.easeInOut,
             );
           },
-          child: Button(
+          child: const Button(
             text: 'Continue',
           ),
         )

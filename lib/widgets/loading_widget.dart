@@ -4,9 +4,9 @@ import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/text_styles.dart';
 
 class LoadingWidget extends StatefulWidget {
-  Widget widgetClass;
-  bool loading;
-  LoadingWidget({required this.widgetClass, required this.loading, super.key});
+  final Widget widgetClass;
+  final bool loading;
+  const LoadingWidget({required this.widgetClass, required this.loading, super.key});
 
   @override
   State<LoadingWidget> createState() => _LoadingWidgetState();
