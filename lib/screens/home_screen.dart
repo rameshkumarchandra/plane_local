@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:plane_startup/screens/activity.dart';
+import 'package:plane_startup/screens/billing_plans.dart';
 import 'package:plane_startup/screens/dash_board_screen.dart';
+import 'package:plane_startup/screens/import_export.dart';
+import 'package:plane_startup/screens/integrations.dart';
+import 'package:plane_startup/screens/members.dart';
+import 'package:plane_startup/screens/workspace_general.dart';
 import 'package:plane_startup/utils/constants.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,16 +19,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
 
-
   @override
   Widget build(BuildContext context) {
-final screens = [
-    const DashBoardScreen(),
-     Container(),
-    Container(),
-    Container(),
-    Container(),
-  ];
+    final screens = [
+      const DashBoardScreen(),
+      WorkspaceGeneral(),
+      Container(),
+      Container(),
+      Container(),
+    ];
     return Scaffold(
       body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -38,7 +43,9 @@ final screens = [
           BottomNavigationBarItem(
               icon: SvgPicture.asset(
                 'assets/svg_images/home.svg',
-                color: currentIndex == 0 ? primaryColor : greyColor,
+                colorFilter: ColorFilter.mode(
+                    currentIndex == 0 ? primaryColor : greyColor,
+                    BlendMode.srcIn),
               ),
               label: 'Home'),
           BottomNavigationBarItem(
@@ -56,7 +63,6 @@ final screens = [
           BottomNavigationBarItem(
               icon: SvgPicture.asset(
                 'assets/svg_images/views.svg',
-                
                 color: currentIndex == 3 ? primaryColor : greyColor,
               ),
               label: 'Views'),
