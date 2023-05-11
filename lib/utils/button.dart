@@ -25,32 +25,34 @@ class Button extends StatefulWidget {
 class _ButtonState extends State<Button> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.ontap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-            border: widget.filledButton
-                ? const Border()
-                : widget.removeStroke
-                    ? const Border()
-                    : Border.all(color: Colors.grey.shade500),
-            borderRadius: BorderRadius.circular(8),
-            color: (widget.filledButton && !widget.disable)
-                ? primaryColor
-                : widget.disable
-                    ? lightGreeyColor
-                    : Colors.transparent),
-        child: Center(
-          child: Text(
-            widget.text,
-            style: TextStylingWidget.buttonText.copyWith(
-                color: (widget.filledButton && !widget.disable)
-                    ? Colors.white
-                    : widget.disable
-                        ? greyColor
-                        : widget.textColor ?? Colors.black),
+    return Material(
+      child: InkWell(
+        onTap: widget.ontap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              border: widget.filledButton
+                  ? const Border()
+                  : widget.removeStroke
+                      ? const Border()
+                      : Border.all(color: Colors.grey.shade500),
+              borderRadius: BorderRadius.circular(8),
+              color: (widget.filledButton && !widget.disable)
+                  ? primaryColor
+                  : widget.disable
+                      ? lightGreeyColor
+                      : Colors.transparent),
+          child: Center(
+            child: Text(
+              widget.text,
+              style: TextStylingWidget.buttonText.copyWith(
+                  color: (widget.filledButton && !widget.disable)
+                      ? Colors.white
+                      : widget.disable
+                          ? greyColor
+                          : widget.textColor ?? Colors.black),
+            ),
           ),
         ),
       ),

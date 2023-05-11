@@ -157,17 +157,20 @@ class _SignInScreenState extends State<SignInScreen> {
         const SizedBox(
           height: 30,
         ),
-        Button(
-          text: 'Send Code',
-          ontap: (){
-            setState(() {
-            currentpge = 1;
-          });
-          controller.animateToPage(1,
-              duration: const Duration(milliseconds: 250),
-              curve: Curves.easeInOut,
-            );
-          },
+        Hero(
+          tag: 'button',
+          child: Button(
+            text: 'Send Code',
+            ontap: (){
+              setState(() {
+              currentpge = 1;
+            });
+            controller.animateToPage(1,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+              );
+            },
+          ),
         )
       ],
     );
@@ -240,16 +243,19 @@ class _SignInScreenState extends State<SignInScreen> {
         const SizedBox(
           height: 30,
         ),
-        Button(
-          text: 'Log In',
-          ontap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SetupProfileScreen(),
-              ),
-            );
-          },
+        Hero(
+          tag: 'button2',
+          child: Button(
+            text: 'Log In',
+            ontap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SetupProfileScreen(),
+                ),
+              );
+            },
+          ),
         )
       ],
     );

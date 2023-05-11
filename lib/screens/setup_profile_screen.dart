@@ -435,17 +435,20 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
           const SizedBox(
             height: 30,
           ),
-          Button(
-            text: 'Continue',
-            disable: emails.isEmpty ? true : false,
-            ontap: (){
-              Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeScreen(),
-              ),
-            );
-            },
+          Hero(
+            tag: 'button2',
+            child: Button(
+              text: 'Continue',
+              disable: emails.isEmpty ? true : false,
+              ontap: (){
+                Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomeScreen(),
+                ),
+              );
+              },
+            ),
           ),
           const SizedBox(
             height: 20,

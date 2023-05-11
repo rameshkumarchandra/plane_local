@@ -465,16 +465,19 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               const SizedBox(
                 height: 20,
               ),
-              Button(
-                text: 'Get Started',
-                ontap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SignInScreen(),
-                    ),
-                  );
-                },
+              Hero(
+                tag: 'button',
+                child: Button(
+                  text: 'Get Started',
+                  ontap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SignInScreen(),
+                      ),
+                    );
+                  },
+                ),
               )
             ],
           ),
