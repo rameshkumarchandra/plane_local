@@ -1,9 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:plane_startup/screens/on_boarding_screen.dart';
-import 'package:plane_startup/utils/const.dart';
+import 'dart:developer';
 
-void main() {
-  runApp(const MyApp());
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/screens/home_screen.dart';
+import 'package:plane_startup/screens/on_boarding_screen.dart';
+import 'package:plane_startup/services/shared_preference_service.dart';
+
+import 'config/const.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPrefrenceServices.init();
+  Const.appBearerToken =
+      SharedPrefrenceServices.sharedPreferences!.getString("token");
+  log(Const.appBearerToken.toString());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +29,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       navigatorKey: Const.globalKey,
-      home: const OnBoardingScreen(),
+      home: Const.appBearerToken == null
+          ? const OnBoardingScreen()
+          : const HomeScreen(),
     );
   }
 }
