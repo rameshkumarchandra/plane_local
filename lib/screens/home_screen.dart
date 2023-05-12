@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:plane_startup/screens/Import%20&%20Export/cancel_goback.dart';
 import 'package:plane_startup/screens/activity.dart';
 import 'package:plane_startup/screens/billing_plans.dart';
 import 'package:plane_startup/screens/dash_board_screen.dart';
-import 'package:plane_startup/screens/import_export.dart';
+import 'package:plane_startup/screens/Import%20&%20Export/import_export.dart';
 import 'package:plane_startup/screens/integrations.dart';
+import 'package:plane_startup/screens/invite_members.dart';
 import 'package:plane_startup/screens/members.dart';
 import 'package:plane_startup/screens/workspace_general.dart';
 import 'package:plane_startup/utils/constants.dart';
@@ -23,8 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final screens = [
       const DashBoardScreen(),
-      WorkspaceGeneral(),
-      Container(),
+      ImportExportCancel(),
+      InviteMembers(),
       Container(),
       Container(),
     ];

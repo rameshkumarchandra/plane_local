@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plane_startup/screens/setup_profile_screen.dart';
 import 'package:plane_startup/utils/button.dart';
@@ -6,17 +7,20 @@ import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/text_styles.dart';
 import 'package:plane_startup/widgets/loading_widget.dart';
 
-class SignInScreen extends StatefulWidget {
+import '../provider/provider_list.dart';
+
+class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  ConsumerState<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends ConsumerState<SignInScreen> {
   final controller = PageController();
   int currentpge = 0;
-
+  TextEditingController email = TextEditingController();
+  TextEditingController code = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -113,12 +117,13 @@ class _SignInScreenState extends State<SignInScreen> {
                             width: 5,
                           ),
                           InkWell(
-                            onTap: (){
-                              if(currentpge == 0){
+                            onTap: () {
+                              if (currentpge == 0) {
                                 Navigator.of(context).pop();
-                              }
-                              else {
-                                controller.previousPage(duration: const Duration(milliseconds: 250), curve: Curves.easeInOut);
+                              } else {
+                                controller.previousPage(
+                                    duration: const Duration(milliseconds: 250),
+                                    curve: Curves.easeInOut);
                                 setState(() {
                                   currentpge = 0;
                                 });
@@ -127,7 +132,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             child: Text(
                               'Go back',
                               style: TextStylingWidget.description.copyWith(
-                                  color: greyColor, fontWeight: FontWeight.w600),
+                                  color: greyColor,
+                                  fontWeight: FontWeight.w600),
                             ),
                           )
                         ],
@@ -152,6 +158,7 @@ class _SignInScreenState extends State<SignInScreen> {
           height: 10,
         ),
         TextField(
+          controller: email,
           decoration: kTextFieldDecoration,
         ),
         const SizedBox(
@@ -161,11 +168,15 @@ class _SignInScreenState extends State<SignInScreen> {
           tag: 'button',
           child: Button(
             text: 'Send Code',
-            ontap: (){
+            ontap: () async {
+              await ref
+                  .read(ProviderList.userProvider)
+                  .sendMagicCode(email.text);
               setState(() {
-              currentpge = 1;
-            });
-            controller.animateToPage(1,
+                currentpge = 1;
+              });
+              controller.animateToPage(
+                1,
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeInOut,
               );
@@ -215,6 +226,7 @@ class _SignInScreenState extends State<SignInScreen> {
           height: 10,
         ),
         TextField(
+          controller: email,
           decoration: kTextFieldDecoration,
         ),
         const SizedBox(
@@ -225,6 +237,7 @@ class _SignInScreenState extends State<SignInScreen> {
           height: 10,
         ),
         TextField(
+          controller: code,
           decoration: kTextFieldDecoration,
         ),
         const SizedBox(
@@ -247,7 +260,10 @@ class _SignInScreenState extends State<SignInScreen> {
           tag: 'button2',
           child: Button(
             text: 'Log In',
-            ontap: () {
+            ontap: () async {
+              await ref
+                  .read(ProviderList.userProvider)
+                  .validateMagicCode(key: "magic_${email.text}", token: code.text);
               Navigator.push(
                 context,
                 MaterialPageRoute(
