@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:plane_startup/provider/theme_provider.dart';
+import 'package:plane_startup/utils/constants.dart';
+
+import '../provider/provider_list.dart';
 
 // ignore: constant_identifier_names
-const APP_FONT = 'Lexend';
+// const APP_FONT = 'Lexend';
+const APP_FONT = 'Poppins';
 
 enum FontStyle {
   heading,
@@ -14,20 +20,26 @@ enum FontStyle {
   boldSubtitle,
   appbarTitle,
   buttonText,
+  mainHeading,
+  description,
+  text,
+  smallText,
+  secondaryText,
 }
 
 // ignore: non_constant_identifier_names
 Color APP_TEXT_GREY = const Color.fromRGBO(135, 135, 135, 1);
 
-class CustomText extends StatelessWidget {
-   CustomText(
+class CustomText extends ConsumerWidget {
+  CustomText(
     this.text, {
     this.maxLines,
     this.style,
     this.color,
     this.fontSize,
     this.fontWeight,
-    this.textAlign= TextAlign.center,
+    this.overflow,
+    this.textAlign = TextAlign.center,
     this.type = FontStyle.title,
     final Key? key,
   }) : super(key: key);
@@ -39,69 +51,211 @@ class CustomText extends StatelessWidget {
   final FontWeight? fontWeight;
   final Color? color;
   final FontStyle? type;
+  final TextOverflow? overflow;
 
   @override
-  Widget build(BuildContext context) {
-    var style = getStyle(type);
+  Widget build(BuildContext context, WidgetRef ref) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    var style = getStyle(type, themeProvider);
 
     return Text(
       text.toString(),
       maxLines: maxLines,
       textAlign: textAlign ?? TextAlign.start,
-      overflow: TextOverflow.ellipsis,
+      overflow: overflow ?? TextOverflow.visible,
       style: style.merge(style),
     );
   }
 
-  TextStyle getStyle(FontStyle? type) {
+  TextStyle getStyle(FontStyle? type, ThemeProvider themeProvider) {
     switch (type) {
+      case FontStyle.mainHeading:
+        return TextStyle(
+          fontSize: fontSize ?? 24,
+          fontWeight: fontWeight ?? FontWeight.w600,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.primaryTextColor,
+          color: themeProvider.isDarkThemeEnabled
+              ? darkPrimaryTextColor
+              : lightPrimaryTextColor,
+        );
+
+      case FontStyle.description:
+        return TextStyle(
+            fontSize: fontSize ?? 16,
+            fontWeight: fontWeight ?? FontWeight.w400,
+            fontFamily: 'SF Pro Display',
+            // color: color ?? themeProvider.primaryTextColor,
+            color: color ??
+                (themeProvider.isDarkThemeEnabled
+                    ? darkPrimaryTextColor
+                    : lightPrimaryTextColor));
+
+      case FontStyle.smallText:
+        return TextStyle(
+          fontSize: fontSize ?? 13,
+          fontWeight: fontWeight ?? FontWeight.w400,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.primaryTextColor,
+          color: themeProvider.isDarkThemeEnabled
+              ? darkPrimaryTextColor
+              : lightPrimaryTextColor,
+        );
+
+      case FontStyle.text:
+        return TextStyle(
+          fontSize: fontSize ?? 16,
+          fontWeight: fontWeight ?? FontWeight.w400,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.primaryTextColor,
+          color: color ??
+              (themeProvider.isDarkThemeEnabled
+                  ? darkPrimaryTextColor
+                  : lightPrimaryTextColor),
+        );
+
+      case FontStyle.secondaryText:
+        return TextStyle(
+          fontSize: fontSize ?? 16,
+          fontWeight: fontWeight ?? FontWeight.w400,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.secondaryTextColor,
+          color: themeProvider.isDarkThemeEnabled
+              ? darkSecondaryTextColor
+              : lightSecondaryTextColor,
+        );
+
       case FontStyle.heading:
-        return GoogleFonts.getFont(APP_FONT).copyWith(
-            fontSize: fontSize ?? 22,
-            color: color ?? Colors.black,
-            letterSpacing: 0.8,
-            fontWeight: fontWeight ?? FontWeight.bold);
+        // return GoogleFonts.getFont(APP_FONT).copyWith(
+        //     fontSize: fontSize ?? 24,
+        //     color: color ?? Colors.black,
+        //     fontWeight: fontWeight ?? FontWeight.bold);
+        return TextStyle(
+          fontSize: fontSize ?? 26,
+          fontWeight: fontWeight ?? FontWeight.w600,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.primaryTextColor,
+          color: color ??
+              (themeProvider.isDarkThemeEnabled
+                  ? darkPrimaryTextColor
+                  : lightPrimaryTextColor),
+        );
       case FontStyle.heading2:
-        return GoogleFonts.getFont(APP_FONT).copyWith(
-            fontSize: fontSize ?? 19,
-            color: color ?? Colors.black,
-            letterSpacing: 0.8,
-            fontWeight: fontWeight ?? FontWeight.bold);
+        // return GoogleFonts.getFont(APP_FONT).copyWith(
+        //     fontSize: fontSize ?? 19,
+        //     color: color ?? Colors.black,
+        //     letterSpacing: 0.8,
+        //     fontWeight: fontWeight ?? FontWeight.bold);
+        return TextStyle(
+          fontSize: fontSize ?? 18,
+          fontWeight: fontWeight ?? FontWeight.w500,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.primaryTextColor,
+          color: themeProvider.isDarkThemeEnabled
+              ? darkPrimaryTextColor
+              : lightPrimaryTextColor,
+        );
       case FontStyle.title:
-        return GoogleFonts.getFont(APP_FONT).copyWith(
+        // return GoogleFonts.getFont(APP_FONT).copyWith(
+        //     fontSize: fontSize ?? 16,
+        //     color: color ?? themeProvider.secondaryTextColor,
+        //     fontWeight: fontWeight ?? FontWeight.w500);
+        return TextStyle(
             fontSize: fontSize ?? 16,
-            color: color ?? Colors.black,
-            fontWeight: fontWeight ?? FontWeight.w500);
+            fontWeight: fontWeight ?? FontWeight.w400,
+            fontFamily: 'SF Pro Display',
+            // color: color ?? themeProvider.secondaryTextColor,
+            color: color ??
+                (themeProvider.isDarkThemeEnabled
+                    ? darkSecondaryTextColor
+                    : lightSecondaryTextColor));
       case FontStyle.subheading:
-        return GoogleFonts.getFont(APP_FONT).copyWith(
-            fontSize: fontSize ?? 18,
-            color: color ?? Colors.black,
-            fontWeight: fontWeight ?? FontWeight.w500);
+        // return GoogleFonts.getFont(APP_FONT).copyWith(
+        //     fontSize: fontSize ?? 18,
+        //     color: color ??
+        //         (themeProvider.isDarkThemeEnabled
+        //             ? darkSecondaryTextColor
+        //             : lightPrimaryTextColor),
+        //     fontWeight: fontWeight ?? FontWeight.w500);
+        return TextStyle(
+          fontSize: fontSize ?? 18,
+          fontWeight: fontWeight ?? FontWeight.w400,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.secondaryTextColor,
+          color: themeProvider.isDarkThemeEnabled
+              ? darkSecondaryTextColor
+              : lightSecondaryTextColor,
+        );
       case FontStyle.boldTitle:
-        return GoogleFonts.getFont(APP_FONT).copyWith(
-            fontSize: fontSize ?? 18,
-            color: color ?? Colors.black,
-            fontWeight: fontWeight ?? FontWeight.bold);
+        // return GoogleFonts.getFont(APP_FONT).copyWith(
+        //     fontSize: fontSize ?? 18,
+        //     color: color ?? Colors.black,
+        //     fontWeight: fontWeight ?? FontWeight.bold);
+        return TextStyle(
+          fontSize: fontSize ?? 18,
+          fontWeight: fontWeight ?? FontWeight.w600,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.primaryTextColor,
+          color: color ??
+              (themeProvider.isDarkThemeEnabled
+                  ? darkPrimaryTextColor
+                  : lightPrimaryTextColor),
+        );
       case FontStyle.subtitle:
-        return GoogleFonts.getFont(APP_FONT).copyWith(
+        // return GoogleFonts.getFont(APP_FONT).copyWith(
+        //     fontSize: fontSize ?? 14,
+        //     color: color ?? const Color(0xff222222),
+        //     fontWeight: fontWeight ?? FontWeight.normal);
+        return TextStyle(
             fontSize: fontSize ?? 14,
-            color: color ?? const Color(0xff222222),
-            fontWeight: fontWeight ?? FontWeight.normal);
+            fontWeight: fontWeight ?? FontWeight.w400,
+            fontFamily: 'SF Pro Display',
+            // color: color ?? themeProvider.strokeColor,
+            color: color ??
+                (themeProvider.isDarkThemeEnabled
+                    ? darkStrokeColor
+                    : lightStrokeColor));
       case FontStyle.boldSubtitle:
-        return GoogleFonts.getFont(APP_FONT).copyWith(
-            fontSize: fontSize ?? 16,
-            color: color ?? const Color(0xff222222),
-            fontWeight: fontWeight ?? FontWeight.bold);
-     case FontStyle.buttonText:
-      return GoogleFonts.getFont(APP_FONT).copyWith(
-            fontSize: fontSize ?? 17,
-            color: color ??  Colors.white,
-            fontWeight: fontWeight ?? FontWeight.w500); 
+        // return GoogleFonts.getFont(APP_FONT).copyWith(
+        //     fontSize: fontSize ?? 16,
+        //     color: color ?? const Color(0xff222222),
+        //     fontWeight: fontWeight ?? FontWeight.bold);
+        return TextStyle(
+          fontSize: fontSize ?? 16,
+          fontWeight: fontWeight ?? FontWeight.w600,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.primaryTextColor,
+          color: color ??
+              (themeProvider.isDarkThemeEnabled
+                  ? darkPrimaryTextColor
+                  : lightPrimaryTextColor),
+        );
+      case FontStyle.buttonText:
+        // return GoogleFonts.getFont(APP_FONT).copyWith(
+        //     fontSize: fontSize ?? 17,
+        //     color: color ?? Colors.white,
+        //     fontWeight: fontWeight ?? FontWeight.w500);
+        return TextStyle(
+          fontSize: fontSize ?? 17,
+          fontWeight: fontWeight ?? FontWeight.w500,
+          fontFamily: 'SF Pro Display',
+          color: color ?? Colors.white,
+        );
       case FontStyle.appbarTitle:
-      return GoogleFonts.getFont(APP_FONT).copyWith(
-            fontSize: fontSize ?? 18,
-            color: color ?? const Color(0xff222222),
-            fontWeight: fontWeight ?? FontWeight.bold); 
+        // return GoogleFonts.getFont(APP_FONT).copyWith(
+        //     fontSize: fontSize ?? 18,
+        //     color: color ?? const Color(0xff222222),
+        //     fontWeight: fontWeight ?? FontWeight.bold);
+        return TextStyle(
+          fontSize: fontSize ?? 18,
+          fontWeight: fontWeight ?? FontWeight.w600,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.primaryTextColor,
+          color: color ??
+              (themeProvider.isDarkThemeEnabled
+                  ? darkPrimaryTextColor
+                  : lightPrimaryTextColor),
+        );
       default:
         return GoogleFonts.getFont(APP_FONT).copyWith(
           color: color ?? Colors.black,

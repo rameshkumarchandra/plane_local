@@ -7,6 +7,18 @@ const primaryLightColor = Color.fromRGBO(63, 118, 255, 0.1);
 const greyColor = Color.fromRGBO(136, 136, 136, 1);
 const lightGreeyColor = Color.fromRGBO(238, 238, 238, 1);
 
+const lightPrimaryTextColor = Colors.black;
+const lightSecondaryTextColor = Color.fromARGB(255, 97, 97, 97);
+const lightStrokeColor = Color.fromARGB(255, 158, 158, 158);
+const lightBackgroundColor = Colors.white;
+const lightSecondaryBackgroundColor = Color.fromARGB(255, 248, 247, 247);
+
+const darkPrimaryTextColor = Colors.white;
+const darkSecondaryTextColor = Color.fromARGB(255, 224, 224, 224);
+const darkStrokeColor = Color.fromARGB(255, 189, 189, 189);
+const darkBackgroundColor = Color.fromARGB(255, 0, 0, 0);
+const darkSecondaryBackgroundColor = Color.fromARGB(255, 33, 33, 33);
+
 InputDecoration kTextFieldDecoration = InputDecoration(
   labelText: '',
   errorBorder: const OutlineInputBorder(

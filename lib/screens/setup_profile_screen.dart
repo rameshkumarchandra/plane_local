@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/screens/home_screen.dart';
+import 'package:plane_startup/utils/custom_text.dart';
 
+import '../provider/theme_provider.dart';
 import '../utils/button.dart';
 import '../utils/constants.dart';
 import '../utils/text_styles.dart';
 
-class SetupProfileScreen extends StatefulWidget {
+class SetupProfileScreen extends ConsumerStatefulWidget {
   const SetupProfileScreen({super.key});
 
   @override
-  State<SetupProfileScreen> createState() => _SetupProfileScreenState();
+  ConsumerState<SetupProfileScreen> createState() => _SetupProfileScreenState();
 }
 
-class _SetupProfileScreenState extends State<SetupProfileScreen> {
+class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
   final pageController = PageController();
   final formKey = GlobalKey<FormState>();
   int currentPage = 0;
@@ -32,94 +36,118 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     urlController.text = 'https://app.plane.so/';
     return Scaffold(
+      //backgroundColor: themeProvider.backgroundColor,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset('assets/svg_images/logo.svg'),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      currentPage == 0 ? 'Setup up your profile' : 'Workspaces',
-                      style: TextStylingWidget.mainHeading,
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Expanded(
-                      child: PageView(
-                        controller: pageController,
-                        physics: const NeverScrollableScrollPhysics(),
-                        children: [
-                          setUpProfileWidget(),
-                          workSpaceWidget(),
-                          inviteWidgt()
-                        ],
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SvgPicture.asset('assets/svg_images/logo.svg'),
+                      const SizedBox(
+                        height: 30,
                       ),
-                    ),
-                  ],
+                      // Text(
+                      //   currentPage == 0 ? 'Setup up your profile' : 'Workspaces',
+                      //   style: TextStylingWidget.mainHeading.copyWith(
+                      //     color: themeProvider.primaryTextColor,
+                      //   ),
+                      // ),
+                      CustomText(
+                        currentPage == 0
+                            ? 'Setup up your profile'
+                            : 'Workspaces',
+                        type: FontStyle.heading,
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Expanded(
+                        child: PageView(
+                          controller: pageController,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: [
+                            setUpProfileWidget(themeProvider),
+                            workSpaceWidget(themeProvider),
+                            inviteWidgt(themeProvider),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              currentPage == 0
-                  ? Container()
-                  : Positioned(
-                      bottom: 0,
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: GestureDetector(
-                          onTap: () {
-                            pageController.previousPage(
-                                duration: const Duration(milliseconds: 250),
-                                curve: Curves.easeInOut);
-                            setState(() {
-                              currentPage--;
-                            });
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.arrow_back,
-                                color: greyColor,
-                                size: 18,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              Text(
-                                'Go back',
-                                style: TextStylingWidget.description.copyWith(
+                currentPage == 0
+                    ? Container()
+                    : Positioned(
+                        bottom: 0,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: GestureDetector(
+                            onTap: () {
+                              pageController.previousPage(
+                                  duration: const Duration(milliseconds: 250),
+                                  curve: Curves.easeInOut);
+                              setState(() {
+                                currentPage--;
+                              });
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.arrow_back,
                                   color: greyColor,
-                                  fontWeight: FontWeight.w600,
+                                  size: 18,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                // Text(
+                                //   'Go back',
+                                //   style: TextStylingWidget.description.copyWith(
+                                //     color: greyColor,
+                                //     fontWeight: FontWeight.w600,
+                                //   ),
+                                // ),
+                                CustomText(
+                                  'Go back',
+                                  type: FontStyle.title,
+                                  color: greyColor,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget setUpProfileWidget() {
+  Widget setUpProfileWidget(ThemeProvider themeProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('First name *', style: TextStylingWidget.description),
+        // Text('First name *',
+        //     style: TextStylingWidget.description.copyWith(
+        //       color: themeProvider.secondaryTextColor,
+        //     )),
+        CustomText(
+          'First name *',
+          type: FontStyle.title,
+        ),
         const SizedBox(
           height: 10,
         ),
@@ -129,7 +157,14 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
         const SizedBox(
           height: 20,
         ),
-        const Text('Last name *', style: TextStylingWidget.description),
+        // Text('Last name *',
+        //     style: TextStylingWidget.description.copyWith(
+        //       color: themeProvider.secondaryTextColor,
+        //     )),
+        CustomText(
+          'Last name *',
+          type: FontStyle.title,
+        ),
         const SizedBox(
           height: 10,
         ),
@@ -139,8 +174,14 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
         const SizedBox(
           height: 20,
         ),
-        const Text('What is your role? *',
-            style: TextStylingWidget.description),
+        // Text('What is your role? *',
+        //     style: TextStylingWidget.description.copyWith(
+        //       color: themeProvider.secondaryTextColor,
+        //     )),
+        CustomText(
+          'What is your role? *',
+          type: FontStyle.title,
+        ),
         const SizedBox(
           height: 10,
         ),
@@ -187,6 +228,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
             );
           },
           child: const Button(
+            textColor: Colors.white,
             text: 'Continue',
           ),
         )
@@ -194,7 +236,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
     );
   }
 
-  Widget workSpaceWidget() {
+  Widget workSpaceWidget(ThemeProvider themeProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -221,10 +263,15 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                     padding:
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     child: Center(
-                      child: Text(
+                      // child: Text(
+                      //   'New Workspace',
+                      //   style: TextStylingWidget.buttonText.copyWith(
+                      //       color: newWorkSpace ? Colors.white : greyColor),
+                      // ),
+                      child: CustomText(
                         'New Workspace',
-                        style: TextStylingWidget.buttonText.copyWith(
-                            color: newWorkSpace ? Colors.white : greyColor),
+                        type: FontStyle.subtitle,
+                        color: newWorkSpace ? Colors.white : greyColor,
                       ),
                     ),
                   ),
@@ -248,10 +295,16 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                     padding:
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                     child: Center(
-                      child: Text(
+                      // child: Text(
+                      //   'Join Workspace',
+                      //   style: TextStylingWidget.buttonText.copyWith(
+                      //     color: !newWorkSpace ? Colors.white : greyColor,
+                      //   ),
+                      // ),
+                      child: CustomText(
                         'Join Workspace',
-                        style: TextStylingWidget.buttonText.copyWith(
-                            color: !newWorkSpace ? Colors.white : greyColor),
+                        type: FontStyle.subtitle,
+                        color: !newWorkSpace ? Colors.white : greyColor,
                       ),
                     ),
                   ),
@@ -267,8 +320,14 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text('Workspace name *',
-                      style: TextStylingWidget.description),
+                  // Text('Workspace name *',
+                  //     style: TextStylingWidget.description.copyWith(
+                  //       color: themeProvider.secondaryTextColor,
+                  //     )),
+                  CustomText(
+                    'Workspace name *',
+                    type: FontStyle.title,
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -278,8 +337,14 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  const Text('Workspace URL *',
-                      style: TextStylingWidget.description),
+                  // Text('Workspace URL *',
+                  //     style: TextStylingWidget.description.copyWith(
+                  //       color: themeProvider.secondaryTextColor,
+                  //     )),
+                  CustomText(
+                    'Workspace URL *',
+                    type: FontStyle.title,
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -296,6 +361,7 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                   ),
                   Button(
                       text: 'Create Workspace',
+                      textColor: Colors.white,
                       ontap: () {
                         pageController.nextPage(
                             duration: const Duration(milliseconds: 250),
@@ -310,11 +376,15 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                 child: Center(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.6,
-                    child: Text(
+                    // child: Text(
+                    //   'Currently you have no invited workspaces to join.',
+                    //   textAlign: TextAlign.center,
+                    //   style: TextStylingWidget.description
+                    //       .copyWith(color: greyColor),
+                    // ),
+                    child: CustomText(
                       'Currently you have no invited workspaces to join.',
-                      textAlign: TextAlign.center,
-                      style: TextStylingWidget.description
-                          .copyWith(color: greyColor),
+                      type: FontStyle.secondaryText,
                     ),
                   ),
                 ),
@@ -323,13 +393,20 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
     );
   }
 
-  Widget inviteWidgt() {
+  Widget inviteWidgt(ThemeProvider themeProvider) {
     return Form(
       key: formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Email *', style: TextStylingWidget.description),
+          // Text('Email *',
+          //     style: TextStylingWidget.description.copyWith(
+          //       color: themeProvider.secondaryTextColor,
+          //     )),
+          CustomText(
+            'Email *',
+            type: FontStyle.title,
+          ),
           const SizedBox(
             height: 10,
           ),
@@ -339,12 +416,12 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
             decoration: kTextFieldDecoration.copyWith(
               suffixIcon: GestureDetector(
                 onTap: () {
-                  if(validEmail){
-                  setState(() {
-                    emails.add(inviteEmailController.text);
-                    inviteEmailController.clear();
-                    validEmail = false;
-                  });
+                  if (validEmail) {
+                    setState(() {
+                      emails.add(inviteEmailController.text);
+                      inviteEmailController.clear();
+                      validEmail = false;
+                    });
                   }
                 },
                 child: Container(
@@ -389,10 +466,14 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                               children: [
                                 CircleAvatar(
                                   backgroundColor: Colors.purple,
-                                  child: Text(
+                                  // child: Text(
+                                  //   emails[index][0].toString().toUpperCase(),
+                                  //   style: TextStylingWidget.description
+                                  //       .copyWith(color: Colors.white),
+                                  // ),
+                                  child: CustomText(
                                     emails[index][0].toString().toUpperCase(),
-                                    style: TextStylingWidget.description
-                                        .copyWith(color: Colors.white),
+                                    type: FontStyle.heading2,
                                   ),
                                 ),
                                 const SizedBox(
@@ -401,14 +482,24 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
+                                    // Text(
+                                    //   emails[index],
+                                    //   style: TextStylingWidget.description,
+                                    // ),
+                                    CustomText(
                                       emails[index],
-                                      style: TextStylingWidget.description,
+                                      type: FontStyle.description,
                                     ),
-                                    Text(
+                                    // Text(
+                                    //   'Invited',
+                                    //   style:
+                                    //       TextStylingWidget.smallText.copyWith(
+                                    //     color: themeProvider.secondaryTextColor,
+                                    //   ),
+                                    // ),
+                                    CustomText(
                                       'Invited',
-                                      style: TextStylingWidget.smallText
-                                          .copyWith(color: greyColor),
+                                      type: FontStyle.subtitle,
                                     ),
                                   ],
                                 )
@@ -440,13 +531,13 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
             child: Button(
               text: 'Continue',
               disable: emails.isEmpty ? true : false,
-              ontap: (){
+              ontap: () {
                 Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const HomeScreen(),
-                ),
-              );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomeScreen(),
+                  ),
+                );
               },
             ),
           ),
@@ -458,13 +549,13 @@ class _SetupProfileScreenState extends State<SetupProfileScreen> {
             filledButton: false,
             removeStroke: true,
             textColor: greyColor,
-            ontap: (){
+            ontap: () {
               Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeScreen(),
-              ),
-            );
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomeScreen(),
+                ),
+              );
             },
           ),
           const SizedBox(

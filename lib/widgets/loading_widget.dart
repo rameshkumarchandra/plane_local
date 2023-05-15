@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_text.dart';
 import 'package:plane_startup/utils/text_styles.dart';
 
 class LoadingWidget extends StatefulWidget {
@@ -25,8 +26,8 @@ class _LoadingWidgetState extends State<LoadingWidget> {
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      SizedBox(
+                    children: [
+                      const SizedBox(
                         width: 30,
                         height: 30,
                         child: LoadingIndicator(
@@ -36,13 +37,17 @@ class _LoadingWidgetState extends State<LoadingWidget> {
                           backgroundColor: Colors.transparent,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      // Text(
+                      //   'processing...',
+                      //   style: TextStylingWidget.smallText,
+                      // )
+                      CustomText(
                         'processing...',
-                        style: TextStylingWidget.smallText,
-                      )
+                        type: FontStyle.subtitle,
+                      ),
                     ],
                   ),
                 ),

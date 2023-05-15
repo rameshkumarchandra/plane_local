@@ -1,37 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_appBar.dart';
 
+import '../../provider/provider_list.dart';
 import '../../utils/custom_text.dart';
 
-class ImportExportCancel extends StatefulWidget {
+class ImportExportCancel extends ConsumerStatefulWidget {
   const ImportExportCancel({super.key});
 
   @override
-  State<ImportExportCancel> createState() => _ImportExportCancelState();
+  ConsumerState<ImportExportCancel> createState() => _ImportExportCancelState();
 }
 
-class _ImportExportCancelState extends State<ImportExportCancel> {
+class _ImportExportCancelState extends ConsumerState<ImportExportCancel> {
   var selected = 0;
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: CustomText(
-          'Cancel & go back',
-          type: FontStyle.appbarTitle,
-        ),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
-              Icons.close,
-              color: Colors.black,
-            )),
+      //backgroundColor: Colors.white,
+      appBar: CustomAppBar(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        text: 'Import & Export',
       ),
       body: Column(
         children: [
@@ -47,19 +43,24 @@ class _ImportExportCancelState extends State<ImportExportCancel> {
             child: Row(
               children: [
                 Container(
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: selected>0?const Color.fromRGBO(9, 169, 83, 1):selected == 0
-                          ? const Color.fromRGBO(63, 118, 255, 1)
-                          : null,
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: Icon(Icons.settings,
-                        color: selected == 0 ||selected>0
-                            ? Colors.white
-                            : const Color.fromRGBO(143, 143, 147, 1))),
+                  height: 45,
+                  width: 45,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: selected > 0
+                        ? const Color.fromRGBO(9, 169, 83, 1)
+                        : selected == 0
+                            ? const Color.fromRGBO(63, 118, 255, 1)
+                            : null,
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Icon(
+                    Icons.settings,
+                    color: selected == 0 || selected > 0
+                        ? Colors.white
+                        : const Color.fromRGBO(143, 143, 147, 1),
+                  ),
+                ),
                 Expanded(
                   child: Container(
                     padding: const EdgeInsets.only(left: 16, right: 16),
@@ -73,9 +74,11 @@ class _ImportExportCancelState extends State<ImportExportCancel> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       border: Border.all(color: Colors.grey.shade300),
-                      color:  selected>1?const Color.fromRGBO(9, 169, 83, 1):selected == 1
-                          ? const Color.fromRGBO(63, 118, 255, 1)
-                          : null,
+                      color: selected > 1
+                          ? const Color.fromRGBO(9, 169, 83, 1)
+                          : selected == 1
+                              ? const Color.fromRGBO(63, 118, 255, 1)
+                              : null,
                     ),
                     child: Icon(Icons.cloud_upload_outlined,
                         color: selected == 1
@@ -442,7 +445,6 @@ class _ImportExportCancelState extends State<ImportExportCancel> {
               child: CustomText(
                 'Back',
                 type: FontStyle.buttonText,
-                color: Colors.black,
               ),
             )),
             Expanded(

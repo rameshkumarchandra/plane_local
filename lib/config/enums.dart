@@ -12,3 +12,5 @@ enum AuthStateEnum {
 }
 
 enum HttpMethod { connect, delete, get, head, options, patch, post, put, trace }
+
+enum Theme { light, dark }

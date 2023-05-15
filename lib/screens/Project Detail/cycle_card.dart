@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/utils/constants.dart';
 
 import '../../utils/custom_text.dart';
 import 'cycle_detail.dart';
 
-class CycleCard extends StatefulWidget {
+class CycleCard extends ConsumerStatefulWidget {
   const CycleCard({super.key});
 
   @override
-  State<CycleCard> createState() => _CycleCardState();
+  ConsumerState<CycleCard> createState() => _CycleCardState();
 }
 
-class _CycleCardState extends State<CycleCard> {
+class _CycleCardState extends ConsumerState<CycleCard> {
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return GestureDetector(
       onTap: () {
         Navigator.of(context)
@@ -21,6 +25,9 @@ class _CycleCardState extends State<CycleCard> {
       child: Container(
         margin: const EdgeInsets.only(top: 15),
         decoration: BoxDecoration(
+            color: themeProvider.isDarkThemeEnabled
+                ? darkBackgroundColor
+                : lightBackgroundColor,
             border: Border.all(
               color: Colors.grey.shade300,
             ),
@@ -34,6 +41,7 @@ class _CycleCardState extends State<CycleCard> {
               child: CustomText(
                 'Cycle Name',
                 type: FontStyle.subheading,
+                // color: themeProvider.primaryTextColor,
               ),
             ),
             const SizedBox(
@@ -42,24 +50,28 @@ class _CycleCardState extends State<CycleCard> {
             Container(
               padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
               child: Row(
-                children:  [
-                  const Icon(
+                children: [
+                  Icon(
                     Icons.calendar_month,
+                    // color: themeProvider.secondaryTextColor,
                     size: 18,
                   ),
                   CustomText(
                     ' Jan 16, 2022',
-                      type: FontStyle.subtitle,
+                    // color: themeProvider.secondaryTextColor,
+                    type: FontStyle.subtitle,
                   ),
                   const SizedBox(
                     width: 40,
                   ),
-                  const Icon(
+                  Icon(
                     Icons.calendar_month,
+                    // color: themeProvider.secondaryTextColor,
                     size: 18,
                   ),
                   CustomText(
                     ' Jan 16, 2022',
+                    // color: themeProvider.secondaryTextColor,
                     type: FontStyle.subtitle,
                   ),
                 ],
@@ -80,9 +92,10 @@ class _CycleCardState extends State<CycleCard> {
                   const SizedBox(
                     width: 10,
                   ),
-                   CustomText(
+                  CustomText(
                     'Vamsi Kurama',
-                      type: FontStyle.subtitle,
+                    // color: themeProvider.secondaryTextColor,
+                    type: FontStyle.subtitle,
                   ),
                 ],
               ),
@@ -96,10 +109,17 @@ class _CycleCardState extends State<CycleCard> {
               padding: const EdgeInsets.only(left: 15),
               width: MediaQuery.of(context).size.width,
               height: 40,
-              color: Colors.grey.shade100,
+              decoration: BoxDecoration(
+                color: themeProvider.isDarkThemeEnabled
+                    ? darkSecondaryBackgroundColor
+                    : lightSecondaryBackgroundColor,
+                borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
+              ),
               child: CustomText(
                 'Progress -10%',
-              type: FontStyle.subtitle,
+                type: FontStyle.title,
               ),
             )
           ],

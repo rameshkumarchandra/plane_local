@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plane_startup/screens/sign_in.dart';
 import 'package:plane_startup/utils/button.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/text_styles.dart';
 
+import '../provider/provider_list.dart';
+import '../utils/custom_text.dart';
 import '../widgets/status_widgt.dart';
 import '../widgets/three_dots_widget.dart';
 
-class OnBoardingScreen extends StatefulWidget {
+class OnBoardingScreen extends ConsumerStatefulWidget {
   const OnBoardingScreen({super.key});
 
   @override
-  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+  ConsumerState<OnBoardingScreen> createState() => _OnBoardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
+class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
   int currentIndex = 0;
 
   List data = [
@@ -379,12 +382,15 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
       body: SafeArea(
         top: false,
         child: Container(
           height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(gradient: gradient),
+          decoration: BoxDecoration(
+            gradient: themeProvider.isDarkThemeEnabled ? null : gradient,
+          ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
@@ -404,20 +410,32 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Text(
+                        // Text(
+                        //   data[index]['title'],
+                        //   style: TextStylingWidget.mainHeading.copyWith(
+                        //     // color: themeProvider.primaryTextCol
+                        //   ),
+                        // ),
+                        CustomText(
                           data[index]['title'],
-                          style: TextStylingWidget.mainHeading,
+                          type: FontStyle.heading,
                         ),
                         const SizedBox(
                           height: 20,
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.7,
-                          child: Text(
+                          // child: Text(
+                          //   data[index]['description'],
+                          //   textAlign: TextAlign.center,
+                          //   style: TextStylingWidget.description.copyWith(
+                          //       // color: themeProvider.secondaryTextCol
+                          //       ),
+                          // ),
+                          child: CustomText(
                             data[index]['description'],
+                            type: FontStyle.description,
                             textAlign: TextAlign.center,
-                            style: TextStylingWidget.description
-                                .copyWith(color: greyColor),
                           ),
                         )
                       ],

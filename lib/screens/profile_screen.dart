@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/screens/Import%20&%20Export/import_export.dart';
+import 'package:plane_startup/screens/activity.dart';
+import 'package:plane_startup/screens/billing_plans.dart';
+import 'package:plane_startup/screens/integrations.dart';
+import 'package:plane_startup/screens/members.dart';
 import 'package:plane_startup/screens/profile_detail_screen.dart';
+import 'package:plane_startup/screens/workspace_general.dart';
 import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_text.dart';
 
+import '../provider/theme_provider.dart';
 import '../utils/text_styles.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   ProfileScreen({super.key});
 
   List menus = [
@@ -16,14 +26,30 @@ class ProfileScreen extends StatelessWidget {
           'icon': const Icon(
             Icons.person_outline,
             size: 18,
-          )
+          ),
+          'onTap': (context) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProfileDetailScreen(),
+              ),
+            );
+          }
         },
         {
           'title': 'Activity',
           'icon': const Icon(
             Icons.signal_cellular_alt,
             size: 18,
-          )
+          ),
+          'onTap': (context) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Activity(),
+              ),
+            );
+          }
         }
       ],
     },
@@ -35,70 +61,122 @@ class ProfileScreen extends StatelessWidget {
           'icon': const Icon(
             Icons.workspaces_outline,
             size: 18,
-          )
+          ),
+          'onTap': (context) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const WorkspaceGeneral(),
+              ),
+            );
+          }
         },
         {
           'title': 'Members',
           'icon': const Icon(
             Icons.people_outline,
             size: 18,
-          )
+          ),
+          'onTap': (context) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Members(),
+              ),
+            );
+          }
         },
         {
           'title': 'Billing & Plans',
           'icon': const Icon(
             Icons.credit_card,
             size: 18,
-          )
+          ),
+          'onTap': (context) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BillingPlans(),
+              ),
+            );
+          }
         },
         {
           'title': 'Integrations',
           'icon': const Icon(
             Icons.route,
             size: 18,
-          )
+          ),
+          'onTap': (context) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Integrations(),
+              ),
+            );
+          }
         },
         {
           'title': 'Import/Export',
           'icon': const Icon(
             Icons.swap_vert_circle_outlined,
             size: 16,
-          )
+          ),
+          'onTap': (context) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ImportEport(),
+              ),
+            );
+          }
         }
       ]
     }
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Material(
+      color: themeProvider.isDarkThemeEnabled
+          ? darkBackgroundColor
+          : lightBackgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            // const Text(
+            //   'Profile',
+            //   style: TextStylingWidget.mainHeading,
+            // ),
+            CustomText(
               'Profile',
-              style: TextStylingWidget.mainHeading,
+              type: FontStyle.mainHeading,
             ),
             const SizedBox(
               height: 15,
             ),
-            profileCard(),
+            profileCard(themeProvider),
             const SizedBox(
               height: 20,
             ),
-            menuItems()
+            menuItems(themeProvider)
           ],
         ),
       ),
     );
   }
 
-  Widget profileCard() {
+  Widget profileCard(ThemeProvider themeProvider) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8), color: lightGreeyColor),
+        borderRadius: BorderRadius.circular(8),
+        color: themeProvider.isDarkThemeEnabled
+            ? darkSecondaryBackgroundColor
+            : lightSecondaryBackgroundColor,
+      ),
       padding: const EdgeInsets.all(15),
       child: Row(
         children: [
@@ -106,6 +184,7 @@ class ProfileScreen extends StatelessWidget {
             tag: 'photo',
             child: CircleAvatar(
               radius: 40,
+              backgroundImage: AssetImage('assets/cover.png'),
             ),
           ),
           const SizedBox(
@@ -114,17 +193,25 @@ class ProfileScreen extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              // const Text(
+              //   'Ramesh Kumar',
+              //   style: TextStylingWidget.subHeading,
+              // ),
+              CustomText(
                 'Ramesh Kumar',
-                style: TextStylingWidget.subHeading,
+                type: FontStyle.boldTitle,
               ),
               const SizedBox(
                 height: 10,
               ),
-              Text(
+              // Text(
+              //   'rameshkumar2299@gmail.com',
+              //   style: TextStylingWidget.description.copyWith(color: greyColor),
+              // )
+              CustomText(
                 'rameshkumar2299@gmail.com',
-                style: TextStylingWidget.description.copyWith(color: greyColor),
-              )
+                type: FontStyle.secondaryText,
+              ),
             ],
           )
         ],
@@ -132,7 +219,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget menuItems() {
+  Widget menuItems(ThemeProvider themeProvider) {
     return ListView.builder(
       primary: false,
       shrinkWrap: true,
@@ -148,10 +235,16 @@ class ProfileScreen extends StatelessWidget {
                 color: primaryLightColor,
               ),
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: Text(
+              // child: Text(
+              //   menus[index]['menu'],
+              //   style: TextStylingWidget.description
+              //       .copyWith(fontWeight: FontWeight.w500, color: primaryColor),
+              // ),
+              child: CustomText(
                 menus[index]['menu'],
-                style: TextStylingWidget.description
-                    .copyWith(fontWeight: FontWeight.w500, color: primaryColor),
+                type: FontStyle.description,
+                color: primaryColor,
+                textAlign: TextAlign.start,
               ),
             ),
             const SizedBox(
@@ -165,10 +258,7 @@ class ProfileScreen extends StatelessWidget {
               itemBuilder: (context, idx) {
                 return InkWell(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ProfileDetailScreen()));
+                    menus[index]['items'][idx]['onTap'](context);
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(10),
@@ -181,10 +271,14 @@ class ProfileScreen extends StatelessWidget {
                             const SizedBox(
                               width: 10,
                             ),
-                            Text(
+                            // Text(
+                            //   menus[index]['items'][idx]['title'],
+                            //   style: TextStylingWidget.description
+                            //       .copyWith(fontSize: 18),
+                            // ),
+                            CustomText(
                               menus[index]['items'][idx]['title'],
-                              style: TextStylingWidget.description
-                                  .copyWith(fontSize: 18),
+                              type: FontStyle.heading2,
                             ),
                           ],
                         ),

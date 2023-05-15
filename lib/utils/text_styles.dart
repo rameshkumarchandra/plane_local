@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
+//convert in cumsumer widget
 class TextStylingWidget {
   static const TextStyle mainHeading = TextStyle(
-      fontSize: 24, fontWeight: FontWeight.w600, fontFamily: 'SF Pro Display');
+    fontSize: 24,
+    fontWeight: FontWeight.w600,
+    fontFamily: 'SF Pro Display',
+  );
 
   static const TextStyle description = TextStyle(
       fontSize: 16, fontWeight: FontWeight.w400, fontFamily: 'SF Pro Display');

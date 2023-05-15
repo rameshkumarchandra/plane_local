@@ -1,52 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:plane_startup/screens/Import%20&%20Export/cancel_goback.dart';
+import 'package:plane_startup/screens/Import%20&%20Export/jira_import.dart';
+import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_appBar.dart';
 
+import '../../provider/provider_list.dart';
 import '../../utils/custom_text.dart';
 
-class ImportEport extends StatefulWidget {
+class ImportEport extends ConsumerStatefulWidget {
   const ImportEport({super.key});
 
   @override
-  State<ImportEport> createState() => _ImportEportState();
+  ConsumerState<ImportEport> createState() => _ImportEportState();
 }
 
-class _ImportEportState extends State<ImportEport> {
+class _ImportEportState extends ConsumerState<ImportEport> {
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: CustomText(
-          'Import/Export',
-          type: FontStyle.appbarTitle,
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
-              Icons.close,
-              color: Colors.black,
-            )),
-      ),
+      // backgroundColor: Colors.white,
+      appBar: CustomAppBar(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          text: 'Import & Export'),
       body: SingleChildScrollView(
         child: Column(
           children: [
-             Container(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            height: 2,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.grey[300],
-          ),
+            Container(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              height: 2,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.grey[300],
+            ),
             Container(
               height: 180,
               margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
               padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-              decoration: const BoxDecoration(
-                color:  Color.fromRGBO(236, 241, 255, 0.5),
+              decoration: BoxDecoration(
+                color: themeProvider.isDarkThemeEnabled
+                    ? darkSecondaryBackgroundColor
+                    : lightSecondaryBackgroundColor,
               ),
               width: MediaQuery.of(context).size.width,
               child: Column(
@@ -76,9 +75,9 @@ class _ImportEportState extends State<ImportEport> {
                         'Read more',
                         textAlign: TextAlign.left,
                         type: FontStyle.title,
-                         color: const Color.fromRGBO(63, 118, 255, 1),
+                        color: const Color.fromRGBO(63, 118, 255, 1),
                       ),
-                     const  SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       const Icon(
@@ -91,136 +90,154 @@ class _ImportEportState extends State<ImportEport> {
                 ],
               ),
             ),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(top: 16, bottom: 16),
-              margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.grey.shade300)),
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 15),
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.grey.shade200),
-                    child: SvgPicture.asset(
-                      'assets/svg/github.svg',
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const ImportExportCancel()));
+              },
+              child: Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(top: 16, bottom: 16),
+                margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                decoration: BoxDecoration(
+                    color: themeProvider.isDarkThemeEnabled
+                        ? darkSecondaryBackgroundColor
+                        : lightSecondaryBackgroundColor,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.grey.shade300)),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 15),
                       height: 45,
                       width: 45,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.grey.shade200),
+                      child: SvgPicture.asset(
+                        'assets/svg_images/github.svg',
+                        height: 45,
+                        width: 45,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width - 120,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CustomText(
-                              'Github',
-                              textAlign: TextAlign.left,
-                              type: FontStyle.subheading,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              color: const Color.fromRGBO(243, 245, 248, 1),
-                              child: CustomText(
-                                'Not Installed',
-                                type: FontStyle.subtitle,
-                                color: const Color.fromRGBO(73, 80, 87, 1),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width - 120,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomText(
+                                'Github',
+                                textAlign: TextAlign.left,
+                                type: FontStyle.boldSubtitle,
                               ),
-                            )
-                          ],
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                color: const Color.fromRGBO(243, 245, 248, 1),
+                                child: CustomText(
+                                  'Not Installed',
+                                  type: FontStyle.subtitle,
+                                  color: const Color.fromRGBO(73, 80, 87, 1),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 5),
-                        width: MediaQuery.of(context).size.width - 120,
-                        child: CustomText(
-                          'Connect with GitHub with your Plane workspace to sync project issues.',
-                          textAlign: TextAlign.left,
-                          maxLines: 3,
-                          type: FontStyle.title,
-                          color: const Color.fromRGBO(133, 142, 150, 1),
+                        Container(
+                          margin: const EdgeInsets.only(top: 5),
+                          width: MediaQuery.of(context).size.width - 120,
+                          child: CustomText(
+                            'Connect with GitHub with your Plane workspace to sync project issues.',
+                            textAlign: TextAlign.left,
+                            maxLines: 3,
+                            type: FontStyle.title,
+                            color: const Color.fromRGBO(133, 142, 150, 1),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(top: 16, bottom: 16),
-              margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: Colors.grey.shade300)),
-              child: Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 15),
-                    height: 45,
-                    width: 45,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.grey.shade200),
-                    child: SvgPicture.asset(
-                      'assets/svg/github.svg',
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const JiraImport()));
+              },
+              child: Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(top: 16, bottom: 16),
+                margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                decoration: BoxDecoration(
+                    color: themeProvider.isDarkThemeEnabled
+                        ? darkSecondaryBackgroundColor
+                        : lightSecondaryBackgroundColor,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.grey.shade300)),
+                child: Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 15),
                       height: 45,
                       width: 45,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.grey.shade200),
+                      child: SvgPicture.asset(
+                        'assets/svg_images/github.svg',
+                        height: 45,
+                        width: 45,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width - 120,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CustomText(
-                              'Jira',
-                              textAlign: TextAlign.left,
-                              type: FontStyle.subheading,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              color: const Color.fromRGBO(243, 245, 248, 1),
-                              child: CustomText(
-                                'Not Installed',
-                                type: FontStyle.subtitle,
-                                color: const Color.fromRGBO(73, 80, 87, 1),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width - 120,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomText(
+                                'Jira',
+                                textAlign: TextAlign.left,
+                                type: FontStyle.boldSubtitle,
                               ),
-                            )
-                          ],
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                color: const Color.fromRGBO(243, 245, 248, 1),
+                                child: CustomText(
+                                  'Not Installed',
+                                  type: FontStyle.subtitle,
+                                  color: const Color.fromRGBO(73, 80, 87, 1),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 5),
-                        width: MediaQuery.of(context).size.width - 120,
-                        child: CustomText(
-                          'Import issues and epics from Jira projects and epics.',
-                          textAlign: TextAlign.left,
-                          maxLines: 3,
-                          type: FontStyle.title,
-                          color: const Color.fromRGBO(133, 142, 150, 1),
+                        Container(
+                          margin: const EdgeInsets.only(top: 5),
+                          width: MediaQuery.of(context).size.width - 120,
+                          child: CustomText(
+                            'Import issues and epics from Jira projects and epics.',
+                            textAlign: TextAlign.left,
+                            maxLines: 3,
+                            type: FontStyle.title,
+                            color: const Color.fromRGBO(133, 142, 150, 1),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -237,6 +254,9 @@ class _ImportEportState extends State<ImportEport> {
               padding: const EdgeInsets.only(top: 40, bottom: 40),
               margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
               decoration: BoxDecoration(
+                  color: themeProvider.isDarkThemeEnabled
+                      ? darkSecondaryBackgroundColor
+                      : lightSecondaryBackgroundColor,
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(color: Colors.grey.shade300)),
               child: Column(

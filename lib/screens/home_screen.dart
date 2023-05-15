@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plane_startup/screens/Import%20&%20Export/cancel_goback.dart';
 import 'package:plane_startup/screens/activity.dart';
@@ -8,30 +9,35 @@ import 'package:plane_startup/screens/Import%20&%20Export/import_export.dart';
 import 'package:plane_startup/screens/integrations.dart';
 import 'package:plane_startup/screens/invite_members.dart';
 import 'package:plane_startup/screens/members.dart';
+import 'package:plane_startup/screens/profile_screen.dart';
 import 'package:plane_startup/screens/workspace_general.dart';
+import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/screens/dash_board_screen.dart';
+import 'package:plane_startup/screens/project_screen.dart';
 import 'package:plane_startup/utils/constants.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     final screens = [
       const DashBoardScreen(),
-      ImportExportCancel(),
-      InviteMembers(),
+      const ProjectScreen(),
       Container(),
       Container(),
+      ProfileScreen(),
     ];
     return Scaffold(
-      body: screens[currentIndex],
+      body: SafeArea(child: screens[currentIndex]),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {
           setState(() {
@@ -41,15 +47,23 @@ class _HomeScreenState extends State<HomeScreen> {
         currentIndex: currentIndex,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: primaryColor,
+        // unselectedItemColor: themeProvider.secondaryTextColor,
+        unselectedItemColor: themeProvider.isDarkThemeEnabled
+            ? darkSecondaryTextColor
+            : lightSecondaryTextColor,
+        // backgroundColor: themeProvider.secondaryBackgroundColor,
+        backgroundColor: themeProvider.isDarkThemeEnabled
+            ? darkSecondaryBackgroundColor
+            : lightSecondaryBackgroundColor,
+        elevation: 1,
         items: [
           BottomNavigationBarItem(
-              icon: SvgPicture.asset(
-                'assets/svg_images/home.svg',
-                colorFilter: ColorFilter.mode(
-                    currentIndex == 0 ? primaryColor : greyColor,
-                    BlendMode.srcIn),
-              ),
-              label: 'Home'),
+            icon: SvgPicture.asset(
+              'assets/svg_images/home.svg',
+              color: currentIndex == 0 ? primaryColor : greyColor,
+            ),
+            label: 'Home',
+          ),
           BottomNavigationBarItem(
               icon: SvgPicture.asset(
                 'assets/svg_images/projects.svg',

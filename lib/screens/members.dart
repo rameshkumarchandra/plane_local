@@ -1,60 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/screens/billing_plans.dart';
+import 'package:plane_startup/screens/invite_members.dart';
+import 'package:plane_startup/utils/custom_appBar.dart';
 
+import '../provider/provider_list.dart';
+import '../utils/constants.dart';
 import '../utils/custom_text.dart';
 
-class Members extends StatefulWidget {
+class Members extends ConsumerStatefulWidget {
   const Members({super.key});
 
   @override
-  State<Members> createState() => _MembersState();
+  ConsumerState<Members> createState() => _MembersState();
 }
 
-class _MembersState extends State<Members> {
+class _MembersState extends ConsumerState<Members> {
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CustomText(
-              'Members',
-              type: FontStyle.appbarTitle,
-            ),
-            GestureDetector(
-                 onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => BillingPlans()));
-              },
-              child: Container(
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.add,
-                      color: Color.fromRGBO(63, 118, 255, 1),
-                    ),
-                    CustomText('Add',
-                        type: FontStyle.title,
-                        color: const Color.fromRGBO(63, 118, 255, 1)),
-                  ],
-                ),
+      // backgroundColor: themeProvider.isDarkThemeEnabled
+      //     ? darkSecondaryBackgroundColor
+      //     : lightSecondaryBackgroundColor,
+      appBar: CustomAppBar(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        text: 'Members',
+        actions: [
+          //row of add button and Add text
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => InviteMembers()));
+            },
+            child: Container(
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.add,
+                    color: Color.fromRGBO(63, 118, 255, 1),
+                  ),
+                  CustomText('Add',
+                      type: FontStyle.title,
+                      color: const Color.fromRGBO(63, 118, 255, 1)),
+                ],
               ),
-            )
-          ],
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
-              Icons.close,
-              color: Colors.black,
-            )),
+            ),
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -88,54 +85,49 @@ class _MembersState extends State<Members> {
               type: FontStyle.subtitle,
             ),
             trailing: Container(
-            
               width: 80,
               child: DropdownButtonFormField(
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                ),
-                items: [
-                DropdownMenuItem(
-                  value: 'Admin',
-                  child:  CustomText(
-                    'Admin',
-                    type: FontStyle.subtitle,
-                    fontWeight: FontWeight.bold,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
                   ),
-                  
-                ),
-                DropdownMenuItem(
-                  value: 'Member',
-                  child: CustomText( 
-                    'Member',
-                    type: FontStyle.subtitle,
-                     fontWeight: FontWeight.bold,
-                  ),
-                 
-                ),
-                  DropdownMenuItem(
-                  value: 'Viewer',
-                  child:  CustomText(
-                    'Viewer',
-                    type: FontStyle.subtitle,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  
-                ),
-                  DropdownMenuItem(
-                  value: 'Guest',
-                  child:  CustomText(
-                    'Guest',
-                    type: FontStyle.subtitle,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  
-                ),
-              ], onChanged: (val) {}),
+                  items: [
+                    DropdownMenuItem(
+                      value: 'Admin',
+                      child: CustomText(
+                        'Admin',
+                        type: FontStyle.subtitle,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Member',
+                      child: CustomText(
+                        'Member',
+                        type: FontStyle.subtitle,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Viewer',
+                      child: CustomText(
+                        'Viewer',
+                        type: FontStyle.subtitle,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Guest',
+                      child: CustomText(
+                        'Guest',
+                        type: FontStyle.subtitle,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                  onChanged: (val) {}),
             ),
- 
           ),
-                    ListTile(
+          ListTile(
             leading: Container(
               height: 45,
               width: 45,
@@ -159,36 +151,33 @@ class _MembersState extends State<Members> {
               type: FontStyle.subtitle,
             ),
             trailing: Container(
-            
               width: 80,
               child: DropdownButtonFormField(
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                ),
-                items: [
-                DropdownMenuItem(
-                  value: 'Admin',
-                  child:  CustomText(
-                    'Admin',
-                    type: FontStyle.subtitle,
-                    fontWeight: FontWeight.bold,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
                   ),
-                  
-                ),
-                DropdownMenuItem(
-                  value: 'Member',
-                  child: CustomText( 
-                    'Member',
-                    type: FontStyle.subtitle,
-                     fontWeight: FontWeight.bold,
-                  ),
-                 
-                ),
-              ], onChanged: (val) {}),
+                  items: [
+                    DropdownMenuItem(
+                      value: 'Admin',
+                      child: CustomText(
+                        'Admin',
+                        type: FontStyle.subtitle,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Member',
+                      child: CustomText(
+                        'Member',
+                        type: FontStyle.subtitle,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                  onChanged: (val) {}),
             ),
- 
           ),
-                    ListTile(
+          ListTile(
             leading: Container(
               height: 45,
               width: 45,
@@ -212,36 +201,33 @@ class _MembersState extends State<Members> {
               type: FontStyle.subtitle,
             ),
             trailing: Container(
-            
               width: 80,
               child: DropdownButtonFormField(
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                ),
-                items: [
-                DropdownMenuItem(
-                  value: 'Admin',
-                  child:  CustomText(
-                    'Admin',
-                    type: FontStyle.subtitle,
-                    fontWeight: FontWeight.bold,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
                   ),
-                  
-                ),
-                DropdownMenuItem(
-                  value: 'Member',
-                  child: CustomText( 
-                    'Member',
-                    type: FontStyle.subtitle,
-                     fontWeight: FontWeight.bold,
-                  ),
-                 
-                ),
-              ], onChanged: (val) {}),
+                  items: [
+                    DropdownMenuItem(
+                      value: 'Admin',
+                      child: CustomText(
+                        'Admin',
+                        type: FontStyle.subtitle,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Member',
+                      child: CustomText(
+                        'Member',
+                        type: FontStyle.subtitle,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                  onChanged: (val) {}),
             ),
- 
           ),
-                    ListTile(
+          ListTile(
             leading: Container(
               height: 45,
               width: 45,
@@ -265,34 +251,31 @@ class _MembersState extends State<Members> {
               type: FontStyle.subtitle,
             ),
             trailing: Container(
-            
               width: 80,
               child: DropdownButtonFormField(
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                ),
-                items: [
-                DropdownMenuItem(
-                  value: 'Admin',
-                  child:  CustomText(
-                    'Admin',
-                    type: FontStyle.subtitle,
-                    fontWeight: FontWeight.bold,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
                   ),
-                  
-                ),
-                DropdownMenuItem(
-                  value: 'Member',
-                  child: CustomText( 
-                    'Member',
-                    type: FontStyle.subtitle,
-                     fontWeight: FontWeight.bold,
-                  ),
-                 
-                ),
-              ], onChanged: (val) {}),
+                  items: [
+                    DropdownMenuItem(
+                      value: 'Admin',
+                      child: CustomText(
+                        'Admin',
+                        type: FontStyle.subtitle,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: 'Member',
+                      child: CustomText(
+                        'Member',
+                        type: FontStyle.subtitle,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                  onChanged: (val) {}),
             ),
- 
           ),
         ],
       ),

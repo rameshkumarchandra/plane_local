@@ -1,22 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/provider/theme_provider.dart';
+import 'package:plane_startup/screens/Project%20Detail/create_cycle.dart';
+import 'package:plane_startup/screens/Project%20Detail/create_module.dart';
+import 'package:plane_startup/screens/Project%20Detail/page_card.dart';
+import 'package:plane_startup/screens/Project%20Detail/view_card.dart';
+import 'package:plane_startup/screens/issue_detail_screen.dart';
+import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_appBar.dart';
+import 'package:plane_startup/utils/settings_screen.dart';
+import 'package:plane_startup/utils/type_sheet.dart';
+import 'package:plane_startup/utils/views_sheet.dart';
 
 import '../../kanban/custom/board.dart';
 import '../../kanban/models/inputs.dart';
 import '../../utils/custom_text.dart';
+import '../../utils/filter_sheet.dart';
+import '../settings_screen.dart';
 import 'cycle_card.dart';
 import 'empty.dart';
 import 'module_card.dart';
 
-class ProjectDetail extends StatefulWidget {
+class ProjectDetail extends ConsumerStatefulWidget {
   const ProjectDetail({super.key});
 
   @override
-  State<ProjectDetail> createState() => _ProjectDetailState();
+  ConsumerState<ProjectDetail> createState() => _ProjectDetailState();
 }
 
-class _ProjectDetailState extends State<ProjectDetail> {
+class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   var tabs = [
     {'title': 'Issues', 'width': 60},
     {'title': 'Cycles', 'width': 60},
@@ -26,12 +41,15 @@ class _ProjectDetailState extends State<ProjectDetail> {
   ];
   var controller = PageController(initialPage: 0);
 
-  var selected = 1;
+  var selected = 0;
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.read(ProviderList.themeProvider);
     var pages = [
       Container(
-        color: const Color.fromRGBO(250, 250, 250, 1),
+        color: themeProvider.isDarkThemeEnabled
+            ? darkSecondaryBackgroundColor
+            : lightSecondaryBackgroundColor,
         padding: const EdgeInsets.only(top: 15, left: 15),
         child: KanbanBoard(
           List.generate(
@@ -39,98 +57,105 @@ class _ProjectDetailState extends State<ProjectDetail> {
             (index) => BoardListsData(
               items: List.generate(
                   200,
-                  (index) => Container(
-                        margin: const EdgeInsets.only(bottom: 15),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: Colors.grey.shade200, width: 2),
-                            borderRadius: BorderRadius.circular(10)),
-                        constraints: const BoxConstraints(maxWidth: 500),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    child: Row(
+                  (index) => GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => const IssueDetail()));
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 15),
+                          decoration: BoxDecoration(
+                              color: themeProvider.isDarkThemeEnabled
+                                  ? lightPrimaryTextColor
+                                  : darkPrimaryTextColor,
+                              border: Border.all(
+                                  color: Colors.grey.shade200, width: 2),
+                              borderRadius: BorderRadius.circular(10)),
+                          constraints: const BoxConstraints(maxWidth: 500),
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                color: Colors.orange.shade100),
+                                            margin: const EdgeInsets.only(
+                                                right: 15),
+                                            height: 25,
+                                            width: 25,
+                                            child: const Icon(
+                                              Icons.signal_cellular_alt,
+                                              color: Colors.orange,
+                                              size: 18,
+                                            ),
+                                          ),
+                                          CustomText(
+                                            'FC-7',
+                                            type: FontStyle.title,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Stack(
                                       children: [
                                         Container(
-                                          alignment: Alignment.center,
+                                          margin: const EdgeInsets.only(
+                                              left: 30, top: 5),
+                                          height: 15,
+                                          width: 15,
                                           decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(6),
-                                              color: Colors.orange.shade100),
-                                          margin:
-                                              const EdgeInsets.only(right: 15),
-                                          height: 25,
-                                          width: 25,
-                                          child: const Icon(
-                                            Icons.signal_cellular_alt,
-                                            color: Colors.orange,
-                                            size: 18,
-                                          ),
+                                                  BorderRadius.circular(25),
+                                              color: const Color.fromRGBO(
+                                                  247, 174, 89, 1)),
                                         ),
-                                        CustomText(
-                                          'FC-7',
-                                          color: const Color.fromRGBO(
-                                              133, 142, 150, 1),
-                                          type: FontStyle.title,
+                                        Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 15, top: 5),
+                                          height: 15,
+                                          width: 15,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              color: const Color.fromRGBO(
+                                                  140, 193, 255, 1)),
+                                        ),
+                                        Container(
+                                          margin: const EdgeInsets.only(top: 5),
+                                          height: 15,
+                                          width: 15,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(25),
+                                              color: const Color.fromRGBO(
+                                                  30, 57, 88, 1)),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  Stack(
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 30, top: 5),
-                                        height: 15,
-                                        width: 15,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(25),
-                                            color: const Color.fromRGBO(
-                                                247, 174, 89, 1)),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 15, top: 5),
-                                        height: 15,
-                                        width: 15,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(25),
-                                            color: const Color.fromRGBO(
-                                                140, 193, 255, 1)),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(top: 5),
-                                        height: 15,
-                                        width: 15,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(25),
-                                            color: const Color.fromRGBO(
-                                                30, 57, 88, 1)),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              CustomText(
-                                'Issue details activities and comments API endpoints and documnetaion',
-                                type: FontStyle.title,
-                                maxLines: 10,
-                              ),
-                            ],
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                CustomText(
+                                  'Issue details activities and comments API endpoints and documnetaion',
+                                  type: FontStyle.title,
+                                  maxLines: 10,
+                                  textAlign: TextAlign.start,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       )),
@@ -138,7 +163,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
                 height: 50,
                 child: Row(
                   children: [
-                    SvgPicture.asset("assets/svg/circle.svg"),
+                    SvgPicture.asset("assets/svg_images/circle.svg"),
                     const SizedBox(
                       width: 10,
                     ),
@@ -172,10 +197,15 @@ class _ProjectDetailState extends State<ProjectDetail> {
                   ],
                 ),
               ),
-              backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
+              // backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
+              backgroundColor: themeProvider.isDarkThemeEnabled
+                  ? darkSecondaryBackgroundColor
+                  : lightSecondaryBackgroundColor,
             ),
           ),
-          backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
+          backgroundColor: themeProvider.isDarkThemeEnabled
+              ? darkSecondaryBackgroundColor
+              : lightSecondaryBackgroundColor,
           listScrollConfig: ScrollConfig(
               offset: 65,
               duration: const Duration(milliseconds: 100),
@@ -189,24 +219,45 @@ class _ProjectDetailState extends State<ProjectDetail> {
               fontWeight: FontWeight.w500),
         ),
       ),
-      cycles(),
-      EmptyPlaceholder.emptyModules(context),
-      EmptyPlaceholder.emptyView(),
-      EmptyPlaceholder.emptyPages(),
+      cycles(themeProvider),
+      //EmptyPlaceholder.emptyModules(context),
+      modules(themeProvider),
+      // EmptyPlaceholder.emptyView(context),
+      view(themeProvider),
+      // EmptyPlaceholder.emptyPages(context),
+      page(themeProvider),
     ];
     return Scaffold(
-      backgroundColor: Colors.white,
+      appBar: CustomAppBar(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        text: '',
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingScreen(),
+                ),
+              );
+            },
+            icon: Icon(
+              Icons.settings,
+              color: themeProvider.isDarkThemeEnabled
+                  ? Colors.white
+                  : Colors.black,
+            ),
+          )
+        ],
+      ),
       body: Container(
-        margin: const EdgeInsets.only(top: 25),
+        // color: themeProvider.backgroundColor,
+        color: Colors.transparent,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const IconButton(
-                onPressed: null,
-                icon: Icon(
-                  Icons.close,
-                  color: Colors.black,
-                )),
             Row(
               children: [
                 Container(
@@ -230,8 +281,8 @@ class _ProjectDetailState extends State<ProjectDetail> {
             ),
             Container(
                 margin: const EdgeInsets.only(top: 20),
-                height: 50,
                 width: MediaQuery.of(context).size.width,
+                height: 46,
                 child: ListView.builder(
                   itemCount: tabs.length,
                   shrinkWrap: true,
@@ -251,8 +302,11 @@ class _ProjectDetailState extends State<ProjectDetail> {
                                 left: index == 0 ? 20 : 0, right: 25, top: 10),
                             child: CustomText(
                               tabs[index]['title'].toString(),
-                              color: const Color.fromRGBO(133, 142, 150, 1),
-                              type: FontStyle.subheading,
+                              // color: index == selected
+                              //     ? primaryColor
+                              // : themeProvider.secondaryTextColor,
+                              color: index == selected ? primaryColor : null,
+                              type: FontStyle.secondaryText,
                             ),
                           ),
                           selected == index
@@ -299,21 +353,41 @@ class _ProjectDetailState extends State<ProjectDetail> {
                     child: Row(
                       children: [
                         Expanded(
-                            child: SizedBox(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                              CustomText(
-                                ' Issue',
-                                type: FontStyle.subtitle,
-                                color: Colors.white,
-                              )
-                            ],
+                            child: GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                enableDrag: true,
+                                constraints: BoxConstraints(
+                                    maxHeight:
+                                        MediaQuery.of(context).size.height *
+                                            0.85),
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                )),
+                                context: context,
+                                builder: (ctx) {
+                                  return FilterSheet();
+                                });
+                          },
+                          child: SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                CustomText(
+                                  ' Issue',
+                                  type: FontStyle.subtitle,
+                                  color: Colors.white,
+                                )
+                              ],
+                            ),
                           ),
                         )),
                         Container(
@@ -322,21 +396,41 @@ class _ProjectDetailState extends State<ProjectDetail> {
                           color: Colors.white,
                         ),
                         Expanded(
-                            child: SizedBox(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.menu,
-                                color: Colors.white,
-                                size: 19,
-                              ),
-                              CustomText(
-                                ' Type',
-                                type: FontStyle.subtitle,
-                                color: Colors.white,
-                              )
-                            ],
+                            child: GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                enableDrag: true,
+                                constraints: BoxConstraints(
+                                    maxHeight:
+                                        MediaQuery.of(context).size.height *
+                                            0.85),
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                )),
+                                context: context,
+                                builder: (ctx) {
+                                  return TypeSheet();
+                                });
+                          },
+                          child: SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.menu,
+                                  color: Colors.white,
+                                  size: 19,
+                                ),
+                                CustomText(
+                                  ' Type',
+                                  type: FontStyle.subtitle,
+                                  color: Colors.white,
+                                )
+                              ],
+                            ),
                           ),
                         )),
                         Container(
@@ -345,21 +439,41 @@ class _ProjectDetailState extends State<ProjectDetail> {
                           color: Colors.white,
                         ),
                         Expanded(
-                            child: SizedBox(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.view_sidebar,
-                                color: Colors.white,
-                                size: 19,
-                              ),
-                              CustomText(
-                                ' Views',
-                                type: FontStyle.subtitle,
-                                color: Colors.white,
-                              )
-                            ],
+                            child: GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                enableDrag: true,
+                                constraints: BoxConstraints(
+                                    maxHeight:
+                                        MediaQuery.of(context).size.height *
+                                            0.85),
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                )),
+                                context: context,
+                                builder: (ctx) {
+                                  return ViewsSheet();
+                                });
+                          },
+                          child: SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.view_sidebar,
+                                  color: Colors.white,
+                                  size: 19,
+                                ),
+                                CustomText(
+                                  ' Views',
+                                  type: FontStyle.subtitle,
+                                  color: Colors.white,
+                                )
+                              ],
+                            ),
                           ),
                         )),
                         Container(
@@ -368,72 +482,101 @@ class _ProjectDetailState extends State<ProjectDetail> {
                           color: Colors.white,
                         ),
                         Expanded(
-                            child: SizedBox(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.filter_alt,
-                                color: Colors.white,
-                                size: 19,
-                              ),
-                              CustomText(
-                                ' Filters',
-                                type: FontStyle.subtitle,
-                                color: Colors.white,
-                              )
-                            ],
+                            child: GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                enableDrag: true,
+                                constraints: BoxConstraints(
+                                    maxHeight:
+                                        MediaQuery.of(context).size.height *
+                                            0.85),
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                )),
+                                context: context,
+                                builder: (ctx) {
+                                  return FilterSheet();
+                                });
+                          },
+                          child: SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.filter_alt,
+                                  color: Colors.white,
+                                  size: 19,
+                                ),
+                                CustomText(
+                                  ' Filters',
+                                  type: FontStyle.subtitle,
+                                  color: Colors.white,
+                                )
+                              ],
+                            ),
                           ),
                         )),
                       ],
                     ),
                   )
-                : Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.black,
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: SizedBox(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                              ),
-                              CustomText(
-                                selected == 1 ? ' Add Cycle' : 'Add Module',
-                                type: FontStyle.subtitle,
-                                color: Colors.white,
-                              )
-                            ],
+                : GestureDetector(
+                    onTap: () {
+                      selected == 1
+                          ? Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => CreateCycle()))
+                          : Navigator.of(context).push(MaterialPageRoute(
+                              builder: (ctx) => CreateModule()));
+                    },
+                    child: Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.black,
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                ),
+                                CustomText(
+                                  selected == 1 ? ' Add Cycle' : 'Add Module',
+                                  type: FontStyle.subtitle,
+                                  color: Colors.white,
+                                )
+                              ],
+                            ),
+                          )),
+                          Container(
+                            height: 50,
+                            width: 1,
+                            color: Colors.white,
                           ),
-                        )),
-                        Container(
-                          height: 50,
-                          width: 1,
-                          color: Colors.white,
-                        ),
-                        Expanded(
-                            child: SizedBox(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.filter_alt,
-                                color: Colors.white,
-                              ),
-                              CustomText(
-                                ' Filters',
-                                type: FontStyle.subtitle,
-                                color: Colors.white,
-                              )
-                            ],
-                          ),
-                        )),
-                      ],
+                          Expanded(
+                              child: SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.filter_alt,
+                                  color: Colors.white,
+                                ),
+                                CustomText(
+                                  ' Filters',
+                                  type: FontStyle.subtitle,
+                                  color: Colors.white,
+                                )
+                              ],
+                            ),
+                          )),
+                        ],
+                      ),
                     ),
                   )
           ],
@@ -442,8 +585,11 @@ class _ProjectDetailState extends State<ProjectDetail> {
     );
   }
 
-  Widget cycles() {
+  Widget cycles(ThemeProvider themeProvider) {
     return Container(
+      color: themeProvider.isDarkThemeEnabled
+          ? darkSecondaryBackgroundColor
+          : lightSecondaryBackgroundColor,
       padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
       child: SingleChildScrollView(
         child: Column(
@@ -453,7 +599,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
                 child: CustomText(
               ' Current Cycles',
               type: FontStyle.heading,
-              color: Colors.white,
+              // color: themeProvider.primaryTextColor,
             )),
             const CycleCard(),
             const CycleCard(),
@@ -464,19 +610,64 @@ class _ProjectDetailState extends State<ProjectDetail> {
     );
   }
 
-  Widget modules() {
+  Widget modules(ThemeProvider themeProvider) {
     return Container(
+      color: themeProvider.isDarkThemeEnabled
+          ? darkSecondaryBackgroundColor
+          : lightSecondaryBackgroundColor,
       padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [
-          SizedBox(
-            child: Text(
-              'Current Cycles',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-            ),
-          ),
+          // SizedBox(
+          //   child: Text(
+          //     'Current Cycles',
+          //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          //   ),
+          // ),
           ModuleCard()
+        ],
+      ),
+    );
+  }
+
+  Widget page(ThemeProvider themeProvider) {
+    return Container(
+      color: themeProvider.isDarkThemeEnabled
+          ? darkSecondaryBackgroundColor
+          : lightSecondaryBackgroundColor,
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          // SizedBox(
+          //   child: Text(
+          //     'Current Cycles',
+          //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          //   ),
+          // ),
+          PageCard()
+        ],
+      ),
+    );
+  }
+
+  Widget view(ThemeProvider themeProvider) {
+    return Container(
+      color: themeProvider.isDarkThemeEnabled
+          ? darkSecondaryBackgroundColor
+          : lightSecondaryBackgroundColor,
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          // SizedBox(
+          //   child: Text(
+          //     'Current Cycles',
+          //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          //   ),
+          // ),
+          ViewCard()
         ],
       ),
     );

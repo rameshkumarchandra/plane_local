@@ -1,36 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/screens/members.dart';
+import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_appBar.dart';
 
 import '../utils/custom_text.dart';
 
-class Activity extends StatefulWidget {
+class Activity extends ConsumerStatefulWidget {
   const Activity({super.key});
 
   @override
-  State<Activity> createState() => _ActivityState();
+  ConsumerState<Activity> createState() => _ActivityState();
 }
 
-class _ActivityState extends State<Activity> {
+class _ActivityState extends ConsumerState<Activity> {
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: CustomText(
-          'Activity',
-          type: FontStyle.appbarTitle,
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
-              Icons.close,
-              color: Colors.black,
-            )),
+      // backgroundColor: themeProvider.isDarkThemeEnabled
+      //     ? darkSecondaryBackgroundColor
+      //     : lightSecondaryBackgroundColor,
+      appBar: CustomAppBar(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        text: 'Activity',
       ),
       body: Column(
         children: [
@@ -49,7 +47,6 @@ class _ActivityState extends State<Activity> {
                   color: Colors.grey.shade200),
             ),
             title: Container(
-             
               child: Wrap(children: [
                 CustomText(
                   'Bhavesh Raja ',
@@ -57,7 +54,7 @@ class _ActivityState extends State<Activity> {
                   fontWeight: FontWeight.bold,
                 ),
                 CustomText(
-                  ' set the proiority to',
+                  ' set the proiority to ',
                   type: FontStyle.title,
                   fontWeight: FontWeight.normal,
                 ),
@@ -69,13 +66,12 @@ class _ActivityState extends State<Activity> {
               ]),
             ),
             subtitle: CustomText(
-                '23 hours ago',
-                color: const Color.fromRGBO(133, 142, 150, 1),
-                textAlign: TextAlign.left,
-                type: FontStyle.title,
-              ),
+              '23 hours ago',
+              color: const Color.fromRGBO(133, 142, 150, 1),
+              textAlign: TextAlign.left,
+              type: FontStyle.title,
+            ),
           ),
-          
           ListTile(
             leading: Container(
               height: 45,
@@ -85,7 +81,6 @@ class _ActivityState extends State<Activity> {
                   color: Colors.grey.shade200),
             ),
             title: Container(
-             
               child: Wrap(children: [
                 CustomText(
                   'Bhavesh Raja ',
@@ -105,12 +100,13 @@ class _ActivityState extends State<Activity> {
               ]),
             ),
             subtitle: CustomText(
-                '23 hours ago',
-                color: const Color.fromRGBO(133, 142, 150, 1),
-                textAlign: TextAlign.left,
-                type: FontStyle.title,
-              ),
-          ),ListTile(
+              '23 hours ago',
+              color: const Color.fromRGBO(133, 142, 150, 1),
+              textAlign: TextAlign.left,
+              type: FontStyle.title,
+            ),
+          ),
+          ListTile(
             leading: Container(
               height: 45,
               width: 45,
@@ -119,7 +115,6 @@ class _ActivityState extends State<Activity> {
                   color: Colors.grey.shade200),
             ),
             title: Container(
-             
               child: Wrap(children: [
                 CustomText(
                   'Bhavesh Raja ',
@@ -139,20 +134,24 @@ class _ActivityState extends State<Activity> {
               ]),
             ),
             subtitle: Row(
-              mainAxisAlignment : MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomText(
-                    'Yesterday',
-                    color: const Color.fromRGBO(133, 142, 150, 1),
-                    textAlign: TextAlign.left,
-                    type: FontStyle.title,
-                  ),
-                  GestureDetector(
+                  'Yesterday',
+                  color: const Color.fromRGBO(133, 142, 150, 1),
+                  textAlign: TextAlign.left,
+                  type: FontStyle.title,
+                ),
+                GestureDetector(
                     onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Members()));
-              },
-                    child: Icon(Icons.ios_share_outlined,color: Colors.blue,size: 18,))
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Members()));
+                    },
+                    child: Icon(
+                      Icons.ios_share_outlined,
+                      color: Colors.blue,
+                      size: 18,
+                    ))
               ],
             ),
           ),

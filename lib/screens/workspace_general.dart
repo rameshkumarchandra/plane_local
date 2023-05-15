@@ -1,34 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/screens/activity.dart';
+import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_appBar.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 
-class WorkspaceGeneral extends StatefulWidget {
+import '../provider/provider_list.dart';
+
+class WorkspaceGeneral extends ConsumerStatefulWidget {
   const WorkspaceGeneral({super.key});
 
   @override
-  State<WorkspaceGeneral> createState() => _WorkspaceGeneralState();
+  ConsumerState<WorkspaceGeneral> createState() => _WorkspaceGeneralState();
 }
 
-class _WorkspaceGeneralState extends State<WorkspaceGeneral> {
+class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: CustomText(
-          'General',
-          type: FontStyle.appbarTitle,
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
-              Icons.close,
-              color: Colors.black,
-            )),
+      appBar: CustomAppBar(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        text: 'Workspace General',
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -47,7 +44,7 @@ class _WorkspaceGeneralState extends State<WorkspaceGeneral> {
                     height: 45,
                     width: 45,
                     decoration: BoxDecoration(
-                      color: const Color.fromRGBO(48, 0, 240, 1),
+                      color: primaryColor,
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
@@ -56,13 +53,21 @@ class _WorkspaceGeneralState extends State<WorkspaceGeneral> {
                       height: 45,
                       width: 100,
                       decoration: BoxDecoration(
+                        color: themeProvider.isDarkThemeEnabled
+                            ? darkSecondaryBackgroundColor
+                            : lightSecondaryBackgroundColor,
                         border: Border.all(color: Colors.grey.shade300),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.file_upload_outlined),
+                          Icon(
+                            Icons.file_upload_outlined,
+                            color: themeProvider.isDarkThemeEnabled
+                                ? darkPrimaryTextColor
+                                : lightPrimaryTextColor,
+                          ),
                           CustomText(
                             'Upload',
                             type: FontStyle.title,
@@ -75,6 +80,9 @@ class _WorkspaceGeneralState extends State<WorkspaceGeneral> {
                       width: 100,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
+                        color: themeProvider.isDarkThemeEnabled
+                            ? darkSecondaryBackgroundColor
+                            : lightSecondaryBackgroundColor,
                         border: Border.all(color: Colors.grey.shade300),
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -108,13 +116,11 @@ class _WorkspaceGeneralState extends State<WorkspaceGeneral> {
                 right: 20,
               ),
               child: TextFormField(
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300)),
-                  disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300)),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300)),
+                decoration: kTextFieldDecoration.copyWith(
+                  fillColor: themeProvider.isDarkThemeEnabled
+                      ? darkBackgroundColor
+                      : lightBackgroundColor,
+                  filled: true,
                 ),
               ),
             ),
@@ -140,17 +146,11 @@ class _WorkspaceGeneralState extends State<WorkspaceGeneral> {
                 right: 20,
               ),
               child: TextFormField(
-                decoration: InputDecoration(
-                  suffixIcon: const Icon(
-                    Icons.copy,
-                    color: Colors.black,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300)),
-                  disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300)),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300)),
+                decoration: kTextFieldDecoration.copyWith(
+                  fillColor: themeProvider.isDarkThemeEnabled
+                      ? darkBackgroundColor
+                      : lightBackgroundColor,
+                  filled: true,
                 ),
               ),
             ),
@@ -176,20 +176,18 @@ class _WorkspaceGeneralState extends State<WorkspaceGeneral> {
                 right: 20,
               ),
               child: TextFormField(
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300)),
-                  disabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300)),
-                  enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300)),
+                decoration: kTextFieldDecoration.copyWith(
+                  fillColor: themeProvider.isDarkThemeEnabled
+                      ? darkBackgroundColor
+                      : lightBackgroundColor,
+                  filled: true,
                 ),
               ),
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Activity()));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => Activity()));
               },
               child: Container(
                   height: 45,
@@ -208,6 +206,8 @@ class _WorkspaceGeneralState extends State<WorkspaceGeneral> {
             ),
             Container(
               decoration: BoxDecoration(
+                  //light red
+                  // color: Colors.red[00],
                   borderRadius: BorderRadius.circular(6),
                   border:
                       Border.all(color: const Color.fromRGBO(255, 12, 12, 1))),

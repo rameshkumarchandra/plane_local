@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:plane_startup/screens/create_page_screen.dart';
+import 'package:plane_startup/screens/create_view_screen.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 
 import 'create_cycle.dart';
@@ -481,7 +483,7 @@ class EmptyPlaceholder {
     );
   }
 
-  static Widget emptyPages() {
+  static Widget emptyPages(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       //  margin: const EdgeInsets.only(top: 150),
@@ -593,31 +595,37 @@ class EmptyPlaceholder {
               type: FontStyle.title,
             ),
           ),
-          Container(
-            height: 40,
-            width: 150,
-            margin: const EdgeInsets.only(top: 30),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              color: const Color.fromRGBO(63, 118, 255, 1),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 24,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                CustomText(
-                  'Add Page',
-                  type: FontStyle.buttonText,
-                )
-              ],
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const CreatePage()));
+            },
+            child: Container(
+              height: 40,
+              width: 150,
+              margin: const EdgeInsets.only(top: 30),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: const Color.fromRGBO(63, 118, 255, 1),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  CustomText(
+                    'Add Page',
+                    type: FontStyle.buttonText,
+                  )
+                ],
+              ),
             ),
           )
         ],
@@ -625,7 +633,7 @@ class EmptyPlaceholder {
     );
   }
 
-  static Widget emptyView() {
+  static Widget emptyView(BuildContext context) {
     return Container(
       alignment: Alignment.center,
       //  margin: const EdgeInsets.only(top: 150),
@@ -677,7 +685,7 @@ class EmptyPlaceholder {
                     Container(
                       margin: const EdgeInsets.only(left: 15, right: 15),
                       child: SvgPicture.asset(
-                        "assets/svg/view_empty.svg",
+                        "assets/svg_images/view_empty.svg",
                         width: 300,
                         fit: BoxFit.cover,
                       ),
@@ -705,31 +713,37 @@ class EmptyPlaceholder {
               maxLines: 3,
             ),
           ),
-          Container(
-            height: 40,
-            width: 150,
-            margin: const EdgeInsets.only(top: 30),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-              color: const Color.fromRGBO(63, 118, 255, 1),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 24,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                CustomText(
-                  'Add View',
-                  type: FontStyle.buttonText,
-                ),
-              ],
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const CreateView()));
+            },
+            child: Container(
+              height: 40,
+              width: 150,
+              margin: const EdgeInsets.only(top: 30),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: const Color.fromRGBO(63, 118, 255, 1),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  CustomText(
+                    'Add View',
+                    type: FontStyle.buttonText,
+                  ),
+                ],
+              ),
             ),
           )
         ],

@@ -1,55 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plane_startup/screens/integrations.dart';
+import 'package:plane_startup/utils/custom_appBar.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 
-class BillingPlans extends StatefulWidget {
+import '../provider/provider_list.dart';
+import '../utils/constants.dart';
+
+class BillingPlans extends ConsumerStatefulWidget {
   const BillingPlans({super.key});
 
   @override
-  State<BillingPlans> createState() => _BillingPlansState();
+  ConsumerState<BillingPlans> createState() => _BillingPlansState();
 }
 
-class _BillingPlansState extends State<BillingPlans> {
+class _BillingPlansState extends ConsumerState<BillingPlans> {
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            CustomText(
-              'Billings & Plans',
-              type: FontStyle.appbarTitle,
-            ),
-            Container(
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.add,
-                    color: Color.fromRGBO(63, 118, 255, 1),
-                  ),
-                  CustomText('Add',
-                      type: FontStyle.title,
-                      color: const Color.fromRGBO(63, 118, 255, 1)),
-                ],
+      // backgroundColor: themeProvider.isDarkThemeEnabled
+      //     ? darkSecondaryBackgroundColor
+      //     : lightSecondaryBackgroundColor,
+      // appBar: AppBar(
+      //   title: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       CustomText(
+      //         'Billings & Plans',
+      //         type: FontStyle.appbarTitle,
+      //       ),
+      //       Container(
+      //         child: Row(
+      //           children: [
+      //             const Icon(
+      //               Icons.add,
+      //               color: Color.fromRGBO(63, 118, 255, 1),
+      //             ),
+      //             CustomText('Add',
+      //                 type: FontStyle.title,
+      //                 color: const Color.fromRGBO(63, 118, 255, 1)),
+      //           ],
+      //         ),
+      //       )
+      //     ],
+      //   ),
+      //   centerTitle: true,
+      //   elevation: 0,
+      //   backgroundColor: Colors.white,
+      //   leading: IconButton(
+      //       onPressed: () => Navigator.of(context).pop(),
+      //       icon: const Icon(
+      //         Icons.close,
+      //         color: Colors.black,
+      //       )),
+      // ),
+      appBar: CustomAppBar(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        text: 'Billings & Plans',
+        actions: [
+          Row(
+            children: [
+              const Icon(
+                Icons.add,
+                color: Color.fromRGBO(63, 118, 255, 1),
               ),
-            )
-          ],
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
-              Icons.close,
-              color: Colors.black,
-            )),
+              CustomText('Add',
+                  type: FontStyle.title,
+                  color: const Color.fromRGBO(63, 118, 255, 1)),
+            ],
+          )
+        ],
       ),
+
       body: Column(
         children: [
           Container(
@@ -72,7 +100,7 @@ class _BillingPlansState extends State<BillingPlans> {
                 ])),
             child: Row(
               children: [
-                SvgPicture.asset("assets/svg/stars.svg"),
+                SvgPicture.asset("assets/svg_images/stars.svg"),
                 const SizedBox(
                   width: 15,
                 ),
@@ -89,8 +117,11 @@ class _BillingPlansState extends State<BillingPlans> {
             height: 100,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6),
-                color: const Color.fromRGBO(250, 250, 250, 1)),
+              borderRadius: BorderRadius.circular(6),
+              color: themeProvider.isDarkThemeEnabled
+                  ? darkSecondaryBackgroundColor
+                  : lightSecondaryBackgroundColor,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -117,13 +148,15 @@ class _BillingPlansState extends State<BillingPlans> {
               type: FontStyle.heading,
             ),
           ),
-
           Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(top: 16, bottom: 16),
             margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
+                color: themeProvider.isDarkThemeEnabled
+                    ? darkSecondaryBackgroundColor
+                    : lightSecondaryBackgroundColor,
                 border: Border.all(color: Colors.grey.shade300)),
             child: Column(
               children: [
@@ -133,14 +166,15 @@ class _BillingPlansState extends State<BillingPlans> {
                   type: FontStyle.title,
                 ),
                 GestureDetector(
-                     onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Integrations()));
-              },
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => Integrations()));
+                  },
                   child: Container(
                       height: 45,
                       width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                      margin:
+                          const EdgeInsets.only(top: 20, left: 20, right: 20),
                       decoration: BoxDecoration(
                         color: const Color.fromRGBO(63, 118, 255, 1),
                         borderRadius: BorderRadius.circular(6),
@@ -155,8 +189,7 @@ class _BillingPlansState extends State<BillingPlans> {
               ],
             ),
           ),
-
-           Container(
+          Container(
             alignment: Alignment.centerLeft,
             margin: const EdgeInsets.only(left: 16, right: 16, top: 25),
             child: CustomText(
@@ -170,6 +203,9 @@ class _BillingPlansState extends State<BillingPlans> {
             padding: const EdgeInsets.only(top: 40, bottom: 40),
             margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
             decoration: BoxDecoration(
+                color: themeProvider.isDarkThemeEnabled
+                    ? darkSecondaryBackgroundColor
+                    : lightSecondaryBackgroundColor,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: Colors.grey.shade300)),
             child: Column(
@@ -180,7 +216,9 @@ class _BillingPlansState extends State<BillingPlans> {
                   size: 50,
                   color: Color.fromRGBO(133, 142, 150, 1),
                 ),
-                const SizedBox(height: 30,),
+                const SizedBox(
+                  height: 30,
+                ),
                 CustomText(
                   'There are no invoices to display',
                   textAlign: TextAlign.center,

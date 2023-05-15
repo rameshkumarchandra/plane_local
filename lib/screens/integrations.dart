@@ -1,37 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plane_startup/screens/Import%20&%20Export/import_export.dart';
+import 'package:plane_startup/utils/custom_appBar.dart';
 
+import '../provider/provider_list.dart';
+import '../utils/constants.dart';
 import '../utils/custom_text.dart';
 
-class Integrations extends StatefulWidget {
+class Integrations extends ConsumerStatefulWidget {
   const Integrations({super.key});
 
   @override
-  State<Integrations> createState() => _IntegrationsState();
+  ConsumerState<Integrations> createState() => _IntegrationsState();
 }
 
-class _IntegrationsState extends State<Integrations> {
+class _IntegrationsState extends ConsumerState<Integrations> {
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: CustomText(
-          'Integrations',
-          type: FontStyle.appbarTitle,
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(
-              Icons.close,
-              color: Colors.black,
-            )),
+      appBar: CustomAppBar(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        text: 'Integrations',
       ),
       body: Column(
         children: [
@@ -42,15 +37,18 @@ class _IntegrationsState extends State<Integrations> {
             color: Colors.grey[300],
           ),
           GestureDetector(
-               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => ImportEport()));
-              },
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => ImportEport()));
+            },
             child: Container(
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.only(top: 16, bottom: 16),
               margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
               decoration: BoxDecoration(
+                  color: themeProvider.isDarkThemeEnabled
+                      ? darkSecondaryBackgroundColor
+                      : lightSecondaryBackgroundColor,
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(color: Colors.grey.shade300)),
               child: Row(
@@ -63,7 +61,7 @@ class _IntegrationsState extends State<Integrations> {
                         borderRadius: BorderRadius.circular(50),
                         color: Colors.grey.shade200),
                     child: SvgPicture.asset(
-                      'assets/svg/slack.svg',
+                      'assets/svg_images/slack.svg',
                       height: 45,
                       width: 45,
                     ),
@@ -118,6 +116,9 @@ class _IntegrationsState extends State<Integrations> {
             padding: const EdgeInsets.only(top: 16, bottom: 16),
             margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
             decoration: BoxDecoration(
+                color: themeProvider.isDarkThemeEnabled
+                    ? darkSecondaryBackgroundColor
+                    : lightSecondaryBackgroundColor,
                 borderRadius: BorderRadius.circular(6),
                 border: Border.all(color: Colors.grey.shade300)),
             child: Row(
@@ -130,12 +131,11 @@ class _IntegrationsState extends State<Integrations> {
                       borderRadius: BorderRadius.circular(50),
                       color: Colors.grey.shade200),
                   child: SvgPicture.asset(
-                    'assets/svg/github.svg',
+                    'assets/svg_images/github.svg',
                     height: 45,
                     width: 45,
                   ),
                 ),
-
                 const SizedBox(
                   width: 10,
                 ),
