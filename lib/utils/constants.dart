@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../config/const.dart';
+
 
 const primaryColor = Color.fromRGBO(63, 118, 255, 1);
 const primaryLightColor = Color.fromRGBO(63, 118, 255, 0.1);
@@ -20,7 +22,13 @@ const darkBackgroundColor = Color.fromARGB(255, 0, 0, 0);
 const darkSecondaryBackgroundColor = Color.fromARGB(255, 33, 33, 33);
 
 InputDecoration kTextFieldDecoration = InputDecoration(
+  errorStyle: GoogleFonts.getFont('Lexend').copyWith(
+            fontSize: 14,
+            color:  Colors.red,
+            fontWeight: FontWeight.bold),
+  //contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
   labelText: '',
+  
   errorBorder: const OutlineInputBorder(
     borderSide: BorderSide(color: Color.fromARGB(255, 253, 17, 0)),
     borderRadius: BorderRadius.all(Radius.circular(8.0)),

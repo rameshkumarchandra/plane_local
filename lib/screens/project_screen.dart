@@ -113,7 +113,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const CreateProject(),
+                    builder: (context) =>  CreateProject(),
                   ),
                 );
               },

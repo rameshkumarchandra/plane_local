@@ -21,6 +21,7 @@ class SignInScreen extends ConsumerStatefulWidget {
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
   final controller = PageController();
+  final formKey = GlobalKey<FormState>();
   int currentpge = 0;
   TextEditingController email = TextEditingController();
   TextEditingController code = TextEditingController();
@@ -225,7 +226,52 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             text: 'Send Code',
             ontap: () async {
               await ref
-                  .read(ProviderList.userProvider)
+                  .read(ProviderList.authProvider)
+                  .sendMagicCode(email.text);
+              setState(() {
+                currentpge = 1;
+              });
+              controller.animateToPage(
+                1,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+              );
+            },
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        TextFormField(
+          controller: email,
+          keyboardType: TextInputType.emailAddress,
+          validator: (val) {
+            if (val!.isEmpty) {
+              return '*Enter your email';
+            }
+            if (!RegExp(
+                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                .hasMatch(val)) {
+              return '*Please Enter valid email';
+            } else {
+              return null;
+            }
+          },
+          decoration: kTextFieldDecoration,
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Hero(
+          tag: 'button',
+          child: Button(
+            text: 'Send Code',
+            ontap: () async {
+              if (!formKey.currentState!.validate()) {
+                return;
+              }
+              await ref
+                  .read(ProviderList.authProvider)
                   .sendMagicCode(email.text);
               setState(() {
                 currentpge = 1;
@@ -339,7 +385,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           child: Button(
             text: 'Log In',
             ontap: () async {
-              await ref.read(ProviderList.userProvider).validateMagicCode(
+              await ref.read(ProviderList.authProvider).validateMagicCode(
                   key: "magic_${email.text}", token: code.text);
               Navigator.push(
                 context,
