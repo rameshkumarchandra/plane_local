@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 
@@ -361,7 +361,7 @@ class _CycleDetailState extends ConsumerState<CycleDetail> {
                               const Duration(milliseconds: 200),
                           cardTransitionDuration:
                               const Duration(milliseconds: 400),
-                          textStyle: GoogleFonts.firaSans(
+                          textStyle: TextStyle(
                               fontSize: 19,
                               height: 1.3,
                               color: Colors.grey.shade800,

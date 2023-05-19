@@ -53,15 +53,27 @@ class _MembersState extends ConsumerState<Members> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            height: 2,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.grey[300],
-          ),
-          ListTile(
+      body: MembersListWidget()
+    );
+  }
+}
+
+
+class MembersListWidget extends StatefulWidget {
+  const MembersListWidget({super.key});
+
+  @override
+  State<MembersListWidget> createState() => _MembersListWidgetState();
+}
+
+class _MembersListWidgetState extends State<MembersListWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        // shrinkWrap: true,
+        itemCount: 5,
+        itemBuilder: (context, index){
+        return ListTile(
             leading: Container(
               height: 45,
               width: 45,
@@ -78,14 +90,17 @@ class _MembersState extends ConsumerState<Members> {
                 ),
               ],
             ),
-            subtitle: CustomText(
-              'bhaveshraja@gmail.com',
-              color: const Color.fromRGBO(133, 142, 150, 1),
-              textAlign: TextAlign.left,
-              type: FontStyle.subtitle,
+            subtitle: SizedBox(
+              width: MediaQuery.of(context).size.width - 125,
+              child: CustomText(
+                'bhaveshraja@gmail.com',
+                color: const Color.fromRGBO(133, 142, 150, 1),
+                textAlign: TextAlign.left,
+                type: FontStyle.subtitle,
+              ),
             ),
-            trailing: Container(
-              width: 80,
+            trailing: SizedBox(
+              width: 82,
               child: DropdownButtonFormField(
                   decoration: const InputDecoration(
                     border: InputBorder.none,
@@ -126,159 +141,7 @@ class _MembersState extends ConsumerState<Members> {
                   ],
                   onChanged: (val) {}),
             ),
-          ),
-          ListTile(
-            leading: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.grey.shade200),
-            ),
-            title: Wrap(
-              children: [
-                CustomText(
-                  'Vihar Kurama ',
-                  type: FontStyle.title,
-                  fontWeight: FontWeight.bold,
-                ),
-              ],
-            ),
-            subtitle: CustomText(
-              'bhaveshraja@gmail.com',
-              color: const Color.fromRGBO(133, 142, 150, 1),
-              textAlign: TextAlign.left,
-              type: FontStyle.subtitle,
-            ),
-            trailing: Container(
-              width: 80,
-              child: DropdownButtonFormField(
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                  ),
-                  items: [
-                    DropdownMenuItem(
-                      value: 'Admin',
-                      child: CustomText(
-                        'Admin',
-                        type: FontStyle.subtitle,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Member',
-                      child: CustomText(
-                        'Member',
-                        type: FontStyle.subtitle,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                  onChanged: (val) {}),
-            ),
-          ),
-          ListTile(
-            leading: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.grey.shade200),
-            ),
-            title: Wrap(
-              children: [
-                CustomText(
-                  'Vamsi Kurama ',
-                  type: FontStyle.title,
-                  fontWeight: FontWeight.bold,
-                ),
-              ],
-            ),
-            subtitle: CustomText(
-              'bhaveshraja@gmail.com',
-              color: const Color.fromRGBO(133, 142, 150, 1),
-              textAlign: TextAlign.left,
-              type: FontStyle.subtitle,
-            ),
-            trailing: Container(
-              width: 80,
-              child: DropdownButtonFormField(
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                  ),
-                  items: [
-                    DropdownMenuItem(
-                      value: 'Admin',
-                      child: CustomText(
-                        'Admin',
-                        type: FontStyle.subtitle,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Member',
-                      child: CustomText(
-                        'Member',
-                        type: FontStyle.subtitle,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                  onChanged: (val) {}),
-            ),
-          ),
-          ListTile(
-            leading: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.grey.shade200),
-            ),
-            title: Wrap(
-              children: [
-                CustomText(
-                  'Sainath ',
-                  type: FontStyle.title,
-                  fontWeight: FontWeight.bold,
-                ),
-              ],
-            ),
-            subtitle: CustomText(
-              'bhaveshraja@gmail.com',
-              color: const Color.fromRGBO(133, 142, 150, 1),
-              textAlign: TextAlign.left,
-              type: FontStyle.subtitle,
-            ),
-            trailing: Container(
-              width: 80,
-              child: DropdownButtonFormField(
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                  ),
-                  items: [
-                    DropdownMenuItem(
-                      value: 'Admin',
-                      child: CustomText(
-                        'Admin',
-                        type: FontStyle.subtitle,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: 'Member',
-                      child: CustomText(
-                        'Member',
-                        type: FontStyle.subtitle,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                  onChanged: (val) {}),
-            ),
-          ),
-        ],
-      ),
-    );
+          );
+      });
   }
 }

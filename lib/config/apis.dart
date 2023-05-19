@@ -12,4 +12,5 @@ class APIs {
       '$baseApi/api/workspaces/\$SLUG/invite/';
   static String listWorkspaces  ="$baseApi/api/users/me/workspaces/";
   static String workspaceSlugCheck = '$baseApi/api/workspace-slug-check/?slug=\$SLUG';
+  static String fileUpload = '$baseApi/api/users/file-assets/';
 }

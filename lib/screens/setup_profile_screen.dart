@@ -12,6 +12,7 @@ import 'package:plane_startup/widgets/loading_widget.dart';
 // import '../Provider/provider_list.dart';
 import '../utils/button.dart';
 import '../utils/constants.dart';
+import '../utils/custom_text.dart';
 import '../utils/text_styles.dart';
 
 class SetupProfileScreen extends ConsumerStatefulWidget {
@@ -23,42 +24,33 @@ class SetupProfileScreen extends ConsumerStatefulWidget {
 
 class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
   final formKey = GlobalKey<FormState>();
-  String? dropDownValue;
-  bool dropdownEmpty = false;
-  List<String> dropDownItems = [
-    'Founder or learship team',
-    'Product manager',
-    'Designer',
-    'Software developer',
-    'Freelancer',
-    'Other'
-  ];
+
   bool newWorkSpace = true;
-  TextEditingController firstName = TextEditingController();
-  TextEditingController lastName = TextEditingController();
+  bool dropdownEmpty = false;
 
   @override
   void initState() {
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
     final prov = ref.read(ProviderList.profileProvider);
-
-    firstName.text = prov.userProfile.first_name!;
-    lastName.text = prov.userProfile.last_name!;
-    dropDownValue = prov.userProfile.role;
-    log(dropDownValue.toString());
+    // });
+    
     super.initState();
   }
+
+  bool checked = false;
+  List workSpaces = ['new Work space'];
 
   @override
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     final prov = ref.watch(ProviderList.profileProvider);
-   // log(dropDownValue.toString());
+    // log(dropDownValue.toString());
     return Scaffold(
       //backgroundColor: themeProvider.backgroundColor,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: LoadingWidget(
-          loading: prov.getProfileState==AuthStateEnum.loading,
+          loading: prov.getProfileState == AuthStateEnum.loading,
           widgetClass: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -67,7 +59,8 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                 child: Stack(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 16, top: 20),
+                      padding:
+                          const EdgeInsets.only(left: 16, right: 16, top: 20),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -75,7 +68,7 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                           const SizedBox(
                             height: 30,
                           ),
-                          Text(
+                          const Text(
                             'Setup up your profile',
                             style: TextStylingWidget.mainHeading,
                           ),
@@ -98,7 +91,7 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                     }
                                     return null;
                                   },
-                                  controller: firstName,
+                                  controller: prov.firstName,
                                   decoration: kTextFieldDecoration,
                                 ),
                                 const SizedBox(
@@ -116,7 +109,7 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                       }
                                       return null;
                                     },
-                                    controller: lastName,
+                                    controller: prov.lastName,
                                     decoration: kTextFieldDecoration),
                                 const SizedBox(
                                   height: 20,
@@ -136,27 +129,30 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 4),
                                   child: DropdownButton(
-                                    value: dropDownValue,
+                                    value: prov.dropDownValue,
                                     elevation: 1,
-                                    underline: Container(color: Colors.transparent),
+                                    underline:
+                                        Container(color: Colors.transparent),
                                     icon: const Icon(Icons.keyboard_arrow_down),
-                                    items: dropDownItems.map((String items) {
+                                    items: prov.dropDownItems.map((String items) {
                                       return DropdownMenuItem(
                                         value: items,
                                         child: SizedBox(
-                                            width:
-                                                MediaQuery.of(context).size.width -
-                                                    80,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width -
+                                                80,
                                             child: Text(items)),
                                       );
                                     }).toList(),
                                     onChanged: (String? newValue) {
                                       setState(() {
-                                        dropDownValue = newValue!;
+                                        prov.dropDownValue = newValue!;
                                       });
                                     },
                                   ),
                                 ),
+                                
                                 dropdownEmpty
                                     ? CustomText(
                                         "*required",
@@ -171,31 +167,33 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                 GestureDetector(
                                   onTap: () async {
                                     if (!formKey.currentState!.validate()) {
-                                      if (dropDownValue == null) {
+                                      if (prov.dropDownValue == null) {
                                         setState(() {
                                           dropdownEmpty = true;
                                         });
-                                      }else{
-                                         setState(() {
+                                      } else {
+                                        setState(() {
                                           dropdownEmpty = false;
                                         });
                                       }
                                       return;
                                     }
-                                    if (dropDownValue == null) {
+                                    if (prov.dropDownValue == null) {
                                       setState(() {
                                         dropdownEmpty = true;
                                       });
                                       return;
                                     }
                                     await prov.updateProfile(data: {
-                                      'first_name': firstName.text,
-                                      'last_name': lastName.text,
-                                      'role': dropDownValue
+                                      'first_name': prov.firstName.text,
+                                      'last_name': prov.lastName.text,
+                                      'role': prov.dropDownValue
                                     });
-          
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (ctx) => const SetupWorkspace()));
+
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                const SetupWorkspace()));
                                   },
                                   child: const Button(
                                     text: 'Continue',
@@ -235,7 +233,8 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                     ),
                                     Text(
                                       'Go back',
-                                      style: TextStylingWidget.description.copyWith(
+                                      style: TextStylingWidget.description
+                                          .copyWith(
                                         color: greyColor,
                                         fontWeight: FontWeight.w600,
                                       ),

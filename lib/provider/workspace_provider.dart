@@ -108,7 +108,7 @@ class WorkspaceProvider extends ChangeNotifier {
 
   Future inviteToWorkspace({required String slug, required data}) async {
     workspaceInvitationState = AuthStateEnum.loading;
-
+    notifyListeners();
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,

@@ -36,6 +36,7 @@ class _IntegrationsState extends ConsumerState<Integrations> {
             width: MediaQuery.of(context).size.width,
             color: Colors.grey[300],
           ),
+          
           GestureDetector(
             onTap: () {
               Navigator.of(context)
@@ -180,6 +181,7 @@ class _IntegrationsState extends ConsumerState<Integrations> {
               ],
             ),
           ),
+        
         ],
       ),
     );

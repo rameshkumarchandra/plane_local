@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/provider/profile_provider.dart';
 import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/screens/Import%20&%20Export/import_export.dart';
 import 'package:plane_startup/screens/activity.dart';
@@ -14,8 +15,15 @@ import 'package:plane_startup/utils/custom_text.dart';
 import '../provider/theme_provider.dart';
 import '../utils/text_styles.dart';
 
-class ProfileScreen extends ConsumerWidget {
-  ProfileScreen({super.key});
+class ProfileScreen extends ConsumerStatefulWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  ConsumerState<ProfileScreen> createState() =>
+      _ProfileScreenState();
+  }
+
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   List menus = [
     {
@@ -136,8 +144,10 @@ class ProfileScreen extends ConsumerWidget {
   ];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
+    var profileProvider = ref.watch(ProviderList.profileProvider);
+
     return Material(
       color: themeProvider.isDarkThemeEnabled
           ? darkBackgroundColor
@@ -158,7 +168,7 @@ class ProfileScreen extends ConsumerWidget {
             const SizedBox(
               height: 15,
             ),
-            profileCard(themeProvider),
+            profileCard(themeProvider, profileProvider),
             const SizedBox(
               height: 20,
             ),
@@ -169,7 +179,7 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget profileCard(ThemeProvider themeProvider) {
+  Widget profileCard(ThemeProvider themeProvider, ProfileProvider profileProvider) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -178,11 +188,18 @@ class ProfileScreen extends ConsumerWidget {
             : lightSecondaryBackgroundColor,
       ),
       padding: const EdgeInsets.all(15),
-      child: Row(
+      child: 
+      Row(
         children: [
-          const Hero(
+           Hero(
             tag: 'photo',
-            child: CircleAvatar(
+            child: 
+            profileProvider.userProfile.avatar != null 
+            ? CircleAvatar(
+              radius: 40,
+              backgroundImage: NetworkImage(profileProvider.userProfile.avatar!),
+            ) :
+            const CircleAvatar(
               radius: 40,
               backgroundImage: AssetImage('assets/cover.png'),
             ),
@@ -299,3 +316,4 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 }
+

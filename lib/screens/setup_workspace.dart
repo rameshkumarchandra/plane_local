@@ -2,11 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:plane_startup/screens/invite_co-workers.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 import 'package:plane_startup/widgets/loading_widget.dart';
@@ -45,11 +42,11 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
   Widget build(BuildContext context) {
     var prov = ref.watch(ProviderList.workspaceProvider);
     return Scaffold(
-      body: LoadingWidget(
-        loading: prov.workspaceInvitationState == AuthStateEnum.loading,
-        widgetClass: Form(
-          key: formKey,
-          child: SingleChildScrollView(
+      body: SafeArea(
+        child: LoadingWidget(
+          loading: prov.workspaceInvitationState == AuthStateEnum.loading,
+          widgetClass: Form(
+            key: formKey,
             child: Container(
               height: MediaQuery.of(context).size.height,
               padding: const EdgeInsets.only(left: 16, right: 16, top: 20),
@@ -197,7 +194,7 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                               ],
                               controller: urlController,
                               //enabled: false,
-
+                      
                               // style: GoogleFonts.getFont(APP_FONT).copyWith(
                               //     fontSize: 16,
                               //     color: Colors.black,
@@ -337,6 +334,9 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                     'Select workspace to join',
                                     type: FontStyle.heading2,
                                   ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
                                   Expanded(
                                       child: ListView.builder(
                                           itemCount:
@@ -443,14 +443,16 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                       : Button(
                                           ontap: () {
                                             var data = [];
-                                            for (var element in selectedWorkspaces) {
+                                            for (var element
+                                                in selectedWorkspaces) {
                                               data.add(
                                                   prov.workspaceInvitations[
                                                       element]['id']);
                                             }
                                             log(data.toString());
                                             prov.joinWorkspaces(data: data);
-                                            for (var element in selectedWorkspaces) {
+                                            for (var element
+                                                in selectedWorkspaces) {
                                               prov.workspaceInvitations
                                                   .removeAt(element);
                                             }

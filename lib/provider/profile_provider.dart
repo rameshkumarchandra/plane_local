@@ -19,7 +19,20 @@ class ProfileProvider extends ChangeNotifier {
   //   print("Called");
   // }
   // static Ref? ref;
+  String? dropDownValue;
+  List<String> dropDownItems = [
+    'Founder or learship team',
+    'Product manager',
+    'Designer',
+    'Software developer',
+    'Freelancer',
+    'Other'
+  ];
+
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
   AuthStateEnum getProfileState = AuthStateEnum.empty;
+  AuthStateEnum updateProfileState = AuthStateEnum.empty;
   UserProfile userProfile = UserProfile.initialize();
   Future getProfile() async {
     getProfileState = AuthStateEnum.loading;
@@ -32,20 +45,25 @@ class ProfileProvider extends ChangeNotifier {
         httpMethod: HttpMethod.get,
       );
       userProfile = UserProfile.fromMap(response.data["user"]);
+      firstName.text = userProfile.first_name!;
+      lastName.text = userProfile.last_name!;
+      // dropDownValue = userProfile.role!;
       //  await Future.delayed(Duration(seconds: 1));
       getProfileState = AuthStateEnum.success;
-      log("DONE");
+      // log("DONE" + response.data.toString());
       notifyListeners();
 
       // return response.data;
-    } catch (e) {
+    } on DioError catch (e) {
+      print('----- ERROR ------');
+      log(e.response.toString());
       getProfileState = AuthStateEnum.error;
       notifyListeners();
     }
   }
 
-  Future updateProfile({required dynamic data}) async {
-    getProfileState = AuthStateEnum.loading;
+  Future updateProfile({required Map data}) async {
+    updateProfileState = AuthStateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -56,11 +74,11 @@ class ProfileProvider extends ChangeNotifier {
           data: data);
       log(response.data.toString());
       userProfile = UserProfile.fromMap(response.data);
-      getProfileState = AuthStateEnum.success;
+      updateProfileState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.error.toString());
-      getProfileState = AuthStateEnum.error;
+      updateProfileState = AuthStateEnum.error;
       notifyListeners();
     }
   }

@@ -1,10 +1,10 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/src/change_notifier_provider.dart';
 import 'package:plane_startup/config/apis.dart';
+import 'package:plane_startup/config/const.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/models/user_profile_model.dart';
 import 'package:plane_startup/services/shared_preference_service.dart';
@@ -16,10 +16,12 @@ class AuthProvider extends ChangeNotifier {
   AuthProvider(ChangeNotifierProviderRef<AuthProvider> this.ref);
   Ref ref;
   AuthStateEnum sendCodeState = AuthStateEnum.empty;
+  AuthStateEnum validateCodeState = AuthStateEnum.empty;
 
   Future sendMagicCode(String email) async {
     sendCodeState = AuthStateEnum.loading;
     String? magicToken;
+    notifyListeners();
     try {
       var response = await DioConfig().dioServe(
         hasAuth: false,
@@ -30,15 +32,20 @@ class AuthProvider extends ChangeNotifier {
           'email': email,
         },
       );
+      sendCodeState = AuthStateEnum.success;
       log(response.data.toString());
+      notifyListeners();
     } on DioError catch (e) {
       log(e.error.toString());
+      sendCodeState = AuthStateEnum.failed;
+      notifyListeners();
     }
   }
 
-  Future validateMagicCode(
-      {required String key, required token}) async {
-    try {
+  Future validateMagicCode({required String key, required token}) async {
+    validateCodeState = AuthStateEnum.loading;
+    notifyListeners();
+    try  {
       log({"key": key, "token": token}.toString());
       var response = await DioConfig().dioServe(
           hasAuth: false,
@@ -46,12 +53,24 @@ class AuthProvider extends ChangeNotifier {
           hasBody: true,
           httpMethod: HttpMethod.post,
           data: {"key": key, "token": token});
-      ref.read(ProviderList.profileProvider).userProfile = UserProfile.fromMap(response.data);
+          Const.appBearerToken = response.data["access_token"];
       SharedPrefrenceServices.sharedPreferences!
           .setString("token", response.data["access_token"]);
+      await ref.read(ProviderList.profileProvider).getProfile();
+      // .userProfile = UserProfile.fromMap(response.data);
+          validateCodeState = AuthStateEnum.success;
+      
       log(response.data.toString());
-    } catch (e) {
-      log(e.toString());
+      notifyListeners();
+    } on DioError catch (e) {
+      validateCodeState = AuthStateEnum.failed;
+      ScaffoldMessenger.of(Const.globalKey.currentContext!).showSnackBar(
+          SnackBar(
+            content: Text(e.response.toString()),
+          ),
+        );
+      log(e.response.toString());
+      notifyListeners();
     }
   }
 }

@@ -225,11 +225,58 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                 color: greyColor,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Progress',
                     style: TextStylingWidget.smallText.copyWith(fontSize: 12),
                   ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: Container(
+                            height: 5,
+                            constraints: const BoxConstraints(maxWidth: 60),
+                            margin: const EdgeInsets.only(right: 2),
+                            color: Colors.grey[300],
+                          ),
+                        ),
+                        Container(
+                          height: 5,
+                          constraints: const BoxConstraints(maxWidth: 30),
+                          margin: const EdgeInsets.only(right: 2),
+                          color: Colors.blue,
+                        ),
+                        Container(
+                          height: 5,
+                          constraints: const BoxConstraints(maxWidth: 50),
+                          margin: const EdgeInsets.only(right: 2),
+                          color: Colors.orange,
+                        ),
+                        Container(
+                          height: 5,
+                          constraints: const BoxConstraints(maxWidth: 40),
+                          margin: const EdgeInsets.only(right: 2),
+                          color: Colors.purple,
+                        ),
+                        Container(
+                          height: 5,
+                          constraints: const BoxConstraints(maxWidth: 60),
+                          margin: const EdgeInsets.only(right: 2),
+                          color: Colors.green,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(
+                    Icons.expand_more,
+                    size: 18,
+                    color: greyColor,
+                  )
                 ],
               )
             ],
@@ -252,7 +299,7 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
                   Text(
-                    'Plane Launch Cycle',
+                    'Github Integrations',
                     style: TextStylingWidget.subHeading,
                   ),
                   Icon(
@@ -322,10 +369,24 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                 height: 10,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
+                      const Icon(
+                        Icons.person_outline,
+                        size: 15,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Lead:',
+                        style: TextStylingWidget.smallText
+                            .copyWith(color: greyColor),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
                       CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.orange,
@@ -336,7 +397,7 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                         ),
                       ),
                       const SizedBox(
-                        width: 15,
+                        width: 5,
                       ),
                       const Text(
                         'Vamsi kurama',
@@ -344,20 +405,27 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(
+                    width: 20,
+                  ),
                   Row(
                     children: [
-                      SvgPicture.asset(
-                        'assets/svg_images/edit_icon.svg',
-                        height: 15,
-                        width: 15,
+                      const Icon(
+                        Icons.people,
+                        size: 15,
                       ),
                       const SizedBox(
-                        width: 15,
+                        width: 5,
                       ),
-                      SvgPicture.asset(
-                        'assets/svg_images/options_icon.svg',
-                        width: 15,
+                      Text(
+                        'Members:',
+                        style: TextStylingWidget.smallText
+                            .copyWith(color: greyColor),
                       ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      // const ThreeDotsWidget()
                     ],
                   )
                 ],
@@ -371,6 +439,24 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                     'Progress',
                     style: TextStylingWidget.smallText.copyWith(fontSize: 12),
                   ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      child: Row(
+                    children: [
+                      Container(
+                        height: 5,
+                        constraints: const BoxConstraints(maxWidth: 190),
+                        color: Colors.green,
+                      ),
+                      Container(
+                        height: 5,
+                        constraints: const BoxConstraints(maxWidth: 60),
+                        color: Colors.grey[300],
+                      ),
+                    ],
+                  ))
                 ],
               )
             ],
@@ -496,209 +582,9 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                     );
                   },
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget firstCard() {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 500),
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        shadowColor: primaryColor.withOpacity(0.5),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'FC-7',
-                style: TextStylingWidget.description.copyWith(color: greyColor),
               ),
               const SizedBox(
-                height: 10,
-              ),
-              Text(
-                'Issue details activities and comments API endpoints and documnetaion',
-                style: TextStylingWidget.description
-                    .copyWith(fontSize: 15, fontWeight: FontWeight.w500),
-              ),
-              // const SizedBox(
-              //   height: 10,
-              // ),
-              // Row(
-              //   crossAxisAlignment: CrossAxisAlignment.center,
-              //   children: [
-              //     Container(
-              //       padding: const EdgeInsets.all(10),
-              //       decoration: BoxDecoration(
-              //           borderRadius: BorderRadius.circular(5),
-              //           color: Colors.orange.withOpacity(0.2)),
-              //       child: SvgPicture.asset(
-              //         'assets/svg_images/graph_icon.svg',
-              //         height: 10,
-              //         width: 10,
-              //         color: Colors.orange,
-              //       ),
-              //     ),
-              //     const SizedBox(
-              //       width: 10,
-              //     ),
-              //     const StautsWidget(),
-              //     const SizedBox(
-              //       width: 10,
-              //     ),
-              //     const ThreeDotsWidget()
-              //   ],
-              // )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget secondCard() {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 500),
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        shadowColor: primaryColor.withOpacity(0.5),
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    'Plane Launch Cycle',
-                    style: TextStylingWidget.subHeading,
-                  ),
-                  Icon(
-                    Icons.star_outline,
-                    color: greyColor,
-                    size: 20,
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
-                          child: SvgPicture.asset(
-                            'assets/svg_images/calendar_icon.svg',
-                            height: 15,
-                            width: 15,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '  Start : ',
-                          style: TextStylingWidget.smallText.copyWith(
-                            color: greyColor,
-                          ),
-                        ),
-                        const TextSpan(
-                            text: 'Jan 16, 2022',
-                            style: TextStylingWidget.smallText),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
-                          child: SvgPicture.asset(
-                            'assets/svg_images/calendar_icon.svg',
-                            height: 15,
-                            width: 15,
-                          ),
-                        ),
-                        TextSpan(
-                          text: '  End : ',
-                          style: TextStylingWidget.smallText.copyWith(
-                            color: greyColor,
-                          ),
-                        ),
-                        const TextSpan(
-                            text: 'Apr 16, 2023',
-                            style: TextStylingWidget.smallText),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 12,
-                        backgroundColor: Colors.orange,
-                        child: Text(
-                          'V',
-                          style: TextStylingWidget.smallText
-                              .copyWith(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      const Text(
-                        'Vamsi kurama',
-                        style: TextStylingWidget.smallText,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        'assets/svg_images/edit_icon.svg',
-                        height: 15,
-                        width: 15,
-                      ),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      SvgPicture.asset(
-                        'assets/svg_images/options_icon.svg',
-                        width: 15,
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              const Divider(
-                color: greyColor,
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Progress',
-                    style: TextStylingWidget.smallText.copyWith(fontSize: 12),
-                  ),
-                ],
+                height: 20,
               )
             ],
           ),

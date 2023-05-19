@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/provider/theme_provider.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_cycle.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_module.dart';
 import 'package:plane_startup/screens/Project%20Detail/page_card.dart';
 import 'package:plane_startup/screens/Project%20Detail/view_card.dart';
+import 'package:plane_startup/screens/create_page_screen.dart';
+import 'package:plane_startup/screens/create_view_screen.dart';
 import 'package:plane_startup/screens/issue_detail_screen.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_appBar.dart';
@@ -212,7 +214,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
               curve: Curves.linear),
           listTransitionDuration: const Duration(milliseconds: 200),
           cardTransitionDuration: const Duration(milliseconds: 400),
-          textStyle: GoogleFonts.firaSans(
+          textStyle: TextStyle(
               fontSize: 19,
               height: 1.3,
               color: Colors.grey.shade800,
@@ -239,7 +241,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SettingScreen(),
+                  builder: (context) => const SettingScreen(),
                 ),
               );
             },
@@ -369,7 +371,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                 )),
                                 context: context,
                                 builder: (ctx) {
-                                  return FilterSheet();
+                                  return const FilterSheet();
                                 });
                           },
                           child: SizedBox(
@@ -412,7 +414,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                 )),
                                 context: context,
                                 builder: (ctx) {
-                                  return TypeSheet();
+                                  return const TypeSheet();
                                 });
                           },
                           child: SizedBox(
@@ -498,7 +500,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                 )),
                                 context: context,
                                 builder: (ctx) {
-                                  return FilterSheet();
+                                  return const FilterSheet();
                                 });
                           },
                           child: SizedBox(
@@ -526,9 +528,18 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                     onTap: () {
                       selected == 1
                           ? Navigator.of(context).push(MaterialPageRoute(
-                              builder: (ctx) => CreateCycle()))
-                          : Navigator.of(context).push(MaterialPageRoute(
-                              builder: (ctx) => CreateModule()));
+                              builder: (ctx) => const CreateCycle()))
+                          : selected == 2
+                              ? Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (ctx) => const CreateModule()))
+                              : selected == 3
+                                  ? Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (ctx) => const CreateView()))
+                                  : Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (ctx) =>
+                                              const CreatePage()));
                     },
                     child: Container(
                       height: 50,
@@ -546,7 +557,13 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                   color: Colors.white,
                                 ),
                                 CustomText(
-                                  selected == 1 ? ' Add Cycle' : 'Add Module',
+                                  selected == 1
+                                      ? ' Add Cycle'
+                                      : selected == 2
+                                          ? 'Add Module'
+                                          : selected == 3
+                                              ? 'Add View'
+                                              : 'Add Page',
                                   type: FontStyle.subtitle,
                                   color: Colors.white,
                                 )

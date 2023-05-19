@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:plane_startup/provider/theme_provider.dart';
 import 'package:plane_startup/utils/constants.dart';
 
@@ -257,7 +257,8 @@ class CustomText extends ConsumerWidget {
                   : lightPrimaryTextColor),
         );
       default:
-        return GoogleFonts.getFont(APP_FONT).copyWith(
+        return TextStyle(
+          fontFamily: 'SF Pro Display',
           color: color ?? Colors.black,
           fontWeight: fontWeight ?? FontWeight.normal,
           fontSize: fontSize ?? 17,

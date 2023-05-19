@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 import 'package:plane_startup/utils/text_styles.dart';
 
-class LoadingWidget extends StatefulWidget {
+class LoadingWidget extends ConsumerStatefulWidget {
   final Widget widgetClass;
   final bool loading;
   const LoadingWidget({required this.widgetClass, required this.loading, super.key});
 
   @override
-  State<LoadingWidget> createState() => _LoadingWidgetState();
+  ConsumerState<LoadingWidget> createState() => _LoadingWidgetState();
 }
 
-class _LoadingWidgetState extends State<LoadingWidget> {
+class _LoadingWidgetState extends ConsumerState<LoadingWidget> {
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Stack(
       children: [
         widget.widgetClass,
         widget.loading
             ? Container(
-                color: Colors.white.withOpacity(0.7),
+                color: 
+                themeProvider.isDarkThemeEnabled ?
+                Colors.black.withOpacity(0.7) :
+                Colors.white.withOpacity(0.7),
                 height: height,
                 child: Center(
                   child: Column(

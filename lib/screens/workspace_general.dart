@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/screens/activity.dart';
 import 'package:plane_startup/utils/constants.dart';
@@ -186,8 +184,8 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => Activity()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const Activity()));
               },
               child: Container(
                   height: 45,
@@ -215,6 +213,9 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
               child: ExpansionTile(
                 childrenPadding:
                     const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+                iconColor:
+                    themeProvider.isDarkThemeEnabled ? Colors.white : greyColor,
+                collapsedIconColor: themeProvider.isDarkThemeEnabled ? Colors.white : greyColor,
                 backgroundColor: const Color.fromRGBO(255, 12, 12, 0.1),
                 title: CustomText(
                   'Danger Zone',
