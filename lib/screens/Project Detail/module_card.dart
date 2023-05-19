@@ -191,7 +191,7 @@ class _ModuleCardState extends ConsumerState<ModuleCard> {
                   padding: const EdgeInsets.only(right: 15, top: 20),
                   // child: const Text(
                   //   '12 March, 2023',
-                  //   style: TextStyle(fontSize: 15, color: Colors.black),
+                  //   style: TextStyle(fontSize: 15, color: Colors.blacklack),
                   // ),
                   child: CustomText(
                     '12 March, 2023',

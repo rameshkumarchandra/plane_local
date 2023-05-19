@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/screens/invite_co-workers.dart';
 import 'package:plane_startup/screens/on_boarding_screen.dart';
 import 'package:plane_startup/screens/setup_profile_screen.dart';
@@ -33,7 +34,7 @@ void main() async {
   if (!prefs!.containsKey('isDarkThemeEnabled')) {
     await prefs!.setBool('isDarkThemeEnabled', false);
   }
-  // SharedPrefrenceServices.sharedPreferences!.clear();
+  //SharedPrefrenceServices.sharedPreferences!.clear();
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -47,12 +48,33 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
-  if (Const.appBearerToken != null) {
+    if (Const.appBearerToken != null) {
       var prov = ref.read(ProviderList.profileProvider);
-      prov.getProfile();
-      ref
-          .read(ProviderList.workspaceProvider)
-          .getWorkspaces();
+      prov.getProfile().then((value) {
+        ref.read(ProviderList.workspaceProvider).getWorkspaces().then((value) {
+          log(prov.userProfile.last_workspace_id.toString());
+
+          ref.read(ProviderList.projectProvider).getProjects(
+              slug: ref
+                  .read(ProviderList.workspaceProvider)
+                  .workspaces
+                  .where((element) =>
+                      element['id'] == prov.userProfile.last_workspace_id)
+                  .first['slug']);
+                 ref.read(ProviderList.projectProvider).favouriteProjects(
+                  index: 0,
+              slug: ref
+                  .read(ProviderList.workspaceProvider)
+                  .workspaces
+                  .where((element) =>
+                      element['id'] == prov.userProfile.last_workspace_id)
+                  .first['slug'],
+                  method: HttpMethod.get,
+                  projectID: ""
+                  
+                  );
+        });
+      });
     }
     ref.read(ProviderList.themeProvider).prefs = prefs;
     ref.read(ProviderList.themeProvider).isDarkThemeEnabled =
@@ -70,14 +92,14 @@ class _MyAppState extends ConsumerState<MyApp> {
       title: 'Flutter Demo',
       theme: ThemeData(
         // theme the entire app with list of colors
-        
+
         primarySwatch: const MaterialColor(
           //white color
           0xFFFFFFFF,
           <int, Color>{
             50: Color(0xFFFFFFFF),
-            100:Color(0xFFFFFFFF),
-            200:Color(0xFFFFFFFF),
+            100: Color(0xFFFFFFFF),
+            200: Color(0xFFFFFFFF),
             300: Color(0xFFFFFFFF),
             400: Color(0xFFFFFFFF),
             500: Color(0xFFFFFFFF),
@@ -88,17 +110,13 @@ class _MyAppState extends ConsumerState<MyApp> {
           },
         ),
         textTheme: TextTheme(
-                subtitle1: TextStyle(
-              color: themeProvider.isDarkThemeEnabled
-                  ? Colors.white
-                  : Colors.black,
-            )),
+            subtitle1: TextStyle(
+          color: themeProvider.isDarkThemeEnabled ? Colors.white : Colors.black,
+        )),
 
         // cursor color
 
-        textSelectionTheme: TextSelectionThemeData(
-          cursorColor:  primaryColor
-        ),
+        textSelectionTheme: TextSelectionThemeData(cursorColor: primaryColor),
 
         primaryColor:
             themeProvider.isDarkThemeEnabled ? Colors.black : Colors.white,
@@ -118,10 +136,8 @@ class _MyAppState extends ConsumerState<MyApp> {
       themeMode:
           themeProvider.isDarkThemeEnabled ? ThemeMode.dark : ThemeMode.light,
       navigatorKey: Const.globalKey,
-      home: 
-      Const.appBearerToken == null
-          ? const OnBoardingScreen()
-          : const App(),
+      home:
+          Const.appBearerToken == null ? const OnBoardingScreen() : const App(),
     );
   }
 }

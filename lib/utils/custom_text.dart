@@ -128,7 +128,7 @@ class CustomText extends ConsumerWidget {
       case FontStyle.heading:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 24,
-        //     color: color ?? Colors.black,
+        //     color: color ?? Colors.blacklack,
         //     fontWeight: fontWeight ?? FontWeight.bold);
         return TextStyle(
           fontSize: fontSize ?? 26,
@@ -143,7 +143,7 @@ class CustomText extends ConsumerWidget {
       case FontStyle.heading2:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 19,
-        //     color: color ?? Colors.black,
+        //     color: color ?? Colors.blacklack,
         //     letterSpacing: 0.8,
         //     fontWeight: fontWeight ?? FontWeight.bold);
         return TextStyle(
@@ -189,7 +189,7 @@ class CustomText extends ConsumerWidget {
       case FontStyle.boldTitle:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 18,
-        //     color: color ?? Colors.black,
+        //     color: color ?? Colors.blacklack,
         //     fontWeight: fontWeight ?? FontWeight.bold);
         return TextStyle(
           fontSize: fontSize ?? 18,

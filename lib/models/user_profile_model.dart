@@ -35,7 +35,7 @@ class UserProfile {
   final String? last_login_medium;
   final String? last_login_uagent;
   final String? token_updated_at;
-  final String? last_workspace_id;
+   String? last_workspace_id;
   final String? my_issues_prop;
   final String? role;
   final bool? is_bot;

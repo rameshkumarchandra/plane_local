@@ -9,7 +9,8 @@ import 'package:plane_startup/utils/text_styles.dart';
 class LoadingWidget extends ConsumerStatefulWidget {
   final Widget widgetClass;
   final bool loading;
-  const LoadingWidget({required this.widgetClass, required this.loading, super.key});
+  const LoadingWidget(
+      {required this.widgetClass, required this.loading, super.key});
 
   @override
   ConsumerState<LoadingWidget> createState() => _LoadingWidgetState();

@@ -29,6 +29,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
+    themeProvider.context = context;
     final screens = [
       const DashBoardScreen(),
       const ProjectScreen(),
@@ -37,7 +38,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ProfileScreen(),
     ];
     return Scaffold(
-      body: SafeArea(child: screens[currentIndex]),
+      body: SafeArea(
+        child: screens[currentIndex]
+      
+      ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {
           setState(() {

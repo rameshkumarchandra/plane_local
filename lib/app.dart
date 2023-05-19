@@ -19,6 +19,7 @@ class App extends ConsumerStatefulWidget {
 class _AppState extends ConsumerState<App> {
   @override
   Widget build(BuildContext context) {
+    ref.read(ProviderList.themeProvider).context = context;
     final ProfileProvider profileProv = ref.watch(ProviderList.profileProvider);
     final WorkspaceProvider workspaceProv =
         ref.watch(ProviderList.workspaceProvider);

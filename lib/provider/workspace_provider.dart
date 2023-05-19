@@ -1,16 +1,22 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/src/change_notifier_provider.dart';
+import 'package:plane_startup/provider/provider_list.dart';
 
 import '../config/apis.dart';
 import '../config/enums.dart';
 import '../services/dio_service.dart';
 
 class WorkspaceProvider extends ChangeNotifier {
+  WorkspaceProvider(ChangeNotifierProviderRef<WorkspaceProvider> this.ref);
+  Ref? ref;
   var workspaceInvitations = [];
   var workspaces = [];
   var urlNotAvailable = false;
   AuthStateEnum workspaceInvitationState = AuthStateEnum.loading;
+  AuthStateEnum selectWorkspaceState = AuthStateEnum.empty;
 
   Future getWorkspaceInvitations() async {
     workspaceInvitationState = AuthStateEnum.loading;
@@ -143,6 +149,29 @@ class WorkspaceProvider extends ChangeNotifier {
     } catch (e) {
       log(e.toString());
       workspaceInvitationState = AuthStateEnum.error;
+      notifyListeners();
+    }
+  }
+
+  Future selectWorkspace({required String id}) async {
+    selectWorkspaceState = AuthStateEnum.loading;
+    notifyListeners();
+    try {
+      var response = await DioConfig().dioServe(
+        hasAuth: true,
+        url: APIs.baseApi + APIs.profile,
+        hasBody: true,
+        data: {"last_workspace_id": id},
+        httpMethod: HttpMethod.patch,
+      );
+      selectWorkspaceState = AuthStateEnum.success;
+      ref!.read(ProviderList.profileProvider).userProfile.last_workspace_id =id;
+      log(response.data.toString());
+      notifyListeners();
+      // return response.data;
+    } catch (e) {
+      log(e.toString());
+      selectWorkspaceState = AuthStateEnum.error;
       notifyListeners();
     }
   }

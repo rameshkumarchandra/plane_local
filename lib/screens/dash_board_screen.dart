@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_text.dart';
+import 'package:plane_startup/utils/select_workspace.dart';
 import 'package:plane_startup/utils/text_styles.dart';
+import 'package:plane_startup/widgets/loading_widget.dart';
 
 import '../provider/provider_list.dart';
 
@@ -31,16 +33,25 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                   'Dashboard',
                   type: FontStyle.heading,
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: primaryColor,
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  child: CustomText(
-                    'B',
-                    type: FontStyle.buttonText,
+                GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      backgroundColor: Colors.transparent,
+                      context: themeProvider.context!,
+                      builder: (context) =>  SelectWorkspace(),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: primaryColor,
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: CustomText(
+                      'B',
+                      type: FontStyle.buttonText,
+                    ),
                   ),
                 )
               ],
@@ -87,7 +98,7 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                         // child: Text(
                         //   'Star Plane',
                         //   style: TextStylingWidget.buttonText
-                        //       .copyWith(color: Colors.black),
+                        //       .copyWith(color: Colors.blacklack),
                         // ),
                         child: CustomText(
                           'Star Plane',
