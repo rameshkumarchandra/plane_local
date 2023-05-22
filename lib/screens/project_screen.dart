@@ -27,7 +27,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var projectProvider = ref.watch(ProviderList.projectProvider);
- //   log(projectProvider.starredProjects.toString());
+    //   log(projectProvider.starredProjects.toString());
     return Scaffold(
       appBar: AppBar(
         //back ground color same as scaffold
@@ -74,6 +74,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CreateProject(),
+                    // builder: (context) => ProjectDetail(),
                   ),
                 );
               },
@@ -117,7 +118,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                         shrinkWrap: true,
                         separatorBuilder: (context, index) {
                           return Container(
-                             margin: const EdgeInsets.only(top: 5,bottom: 5),
+                            margin: const EdgeInsets.only(top: 5, bottom: 5),
                             child: Divider(
                               height: 1,
                               thickness: 1,
@@ -136,7 +137,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CreateView(),
+                                  builder: (context) => ProjectDetail(),
                                 ),
                               );
                             },
@@ -275,18 +276,19 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                   separatorBuilder: (context, index) {
                     return projectProvider.projects[index]['is_favorite'] ==
                             true
-                        ? Container():Container(
-                          margin: const EdgeInsets.only(top: 5,bottom: 5),
-                          child: Divider(
-                                              height: 1,
-                                              thickness: 1,
-                                              indent: 20,
-                                              endIndent: 20,
-                                              color: themeProvider.isDarkThemeEnabled
-                            ? darkStrokeColor
-                            : Colors.grey.shade300,
-                                            ),
-                        );
+                        ? Container()
+                        : Container(
+                            margin: const EdgeInsets.only(top: 5, bottom: 5),
+                            child: Divider(
+                              height: 1,
+                              thickness: 1,
+                              indent: 20,
+                              endIndent: 20,
+                              color: themeProvider.isDarkThemeEnabled
+                                  ? darkStrokeColor
+                                  : Colors.grey.shade300,
+                            ),
+                          );
                   },
                   itemCount: projectProvider.projects.length,
                   itemBuilder: (context, index) {

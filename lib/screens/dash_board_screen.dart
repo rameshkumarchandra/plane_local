@@ -36,10 +36,20 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                 GestureDetector(
                   onTap: () {
                     showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
-                      context: themeProvider.context!,
-                      builder: (context) =>  SelectWorkspace(),
-                    );
+                        isScrollControlled: true,
+                        enableDrag: true,
+                        constraints: BoxConstraints(
+                            maxHeight:
+                                MediaQuery.of(context).size.height * 0.45),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                        )),
+                        context: context,
+                        builder: (ctx) {
+                          return SelectWorkspace();
+                        });
                   },
                   child: Container(
                     decoration: BoxDecoration(

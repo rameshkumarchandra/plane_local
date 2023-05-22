@@ -13,7 +13,13 @@ class ProjectsProvider extends ChangeNotifier {
   var projectState = AuthStateEnum.empty;
   var unsplashImageState = AuthStateEnum.empty;
   var unsplashImages = [];
-  var coverUrl = "https://app.plane.so/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1575116464504-9e7652fddcb3%3Fcrop%3Dentropy%26cs%3Dtinysrgb%26fit%3Dmax%26fm%3Djpg%26ixid%3DMnwyODUyNTV8MHwxfHNlYXJjaHwxOHx8cGxhbmV8ZW58MHx8fHwxNjgxNDY4NTY5%26ixlib%3Drb-4.0.3%26q%3D80%26w%3D1080&w=1920&q=75";
+  var coverUrl =
+      "https://app.plane.so/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1575116464504-9e7652fddcb3%3Fcrop%3Dentropy%26cs%3Dtinysrgb%26fit%3Dmax%26fm%3Djpg%26ixid%3DMnwyODUyNTV8MHwxfHNlYXJjaHwxOHx8cGxhbmV8ZW58MHx8fHwxNjgxNDY4NTY5%26ixlib%3Drb-4.0.3%26q%3D80%26w%3D1080&w=1920&q=75";
+
+  void changeCoverUrl({required String url}) {
+    coverUrl = url;
+    notifyListeners();
+  }
 
   Future getUnsplashImages() async {
     unsplashImageState = AuthStateEnum.loading;

@@ -68,7 +68,7 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
           child: Form(
             child: SafeArea(
               child: SizedBox(
-                height: MediaQuery.of(context).size.height - 150,
+                height: MediaQuery.of(context).size.height - 100,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
@@ -82,47 +82,49 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
                           Hero(
                             tag: 'photo',
                             child: pickedImage != null
-                          ? Stack(
-                              children: [
-                                CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: FileImage(pickedImage!),
-                                ),
-                                fileUploadProvider.fileUploadState == AuthStateEnum.loading
-                              ? CircleAvatar(
-                                  radius: 50,
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.7),
-                                  child: const Center(
-                                    child: SizedBox(
-                                      width: 30,
-                                      height: 30,
-                                      child: LoadingIndicator(
-                                        indicatorType: Indicator
-                                            .lineSpinFadeLoader,
-                                        colors: [Colors.black],
-                                        strokeWidth: 1.0,
-                                        backgroundColor:
-                                            Colors.transparent,
+                                ? Stack(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage:
+                                            FileImage(pickedImage!),
                                       ),
-                                    ),
-                                  ),
-                                )
-                              : Container()
-                              ],
-                            )
-                          : profileProvier.userProfile.avatar != null
-                          ? CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(
-                                  profileProvier.userProfile.avatar!),
-                            )
-                          : const CircleAvatar(
-                              radius: 50,
-                              backgroundImage: AssetImage(
-                                'assets/cover.png',
-                              ),
-                            ),
+                                      fileUploadProvider.fileUploadState ==
+                                              AuthStateEnum.loading
+                                          ? CircleAvatar(
+                                              radius: 50,
+                                              backgroundColor:
+                                                  Colors.white.withOpacity(0.7),
+                                              child: const Center(
+                                                child: SizedBox(
+                                                  width: 30,
+                                                  height: 30,
+                                                  child: LoadingIndicator(
+                                                    indicatorType: Indicator
+                                                        .lineSpinFadeLoader,
+                                                    colors: [Colors.black],
+                                                    strokeWidth: 1.0,
+                                                    backgroundColor:
+                                                        Colors.transparent,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : Container()
+                                    ],
+                                  )
+                                : profileProvier.userProfile.avatar != null
+                                    ? CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage: NetworkImage(
+                                            profileProvier.userProfile.avatar!),
+                                      )
+                                    : const CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage: AssetImage(
+                                          'assets/cover.png',
+                                        ),
+                                      ),
                           ),
                           const SizedBox(
                             width: 20,
@@ -318,7 +320,9 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
       setState(() {
         pickedImage = File(image.path);
       });
-      ref.read(ProviderList.fileUploadProvider).uploadFile(pickedImage!, 'image');
+      ref
+          .read(ProviderList.fileUploadProvider)
+          .uploadFile(pickedImage!, 'image');
     } on PlatformException catch (e) {
       print(e);
     }

@@ -65,9 +65,13 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                     const SizedBox(
                       height: 30,
                     ),
-                    const Text(
+                    // const Text(
+                    //   'Workspaces',
+                    //   style: TextStylingWidget.mainHeading,
+                    // ),
+                    CustomText(
                       'Workspaces',
-                      style: TextStylingWidget.mainHeading,
+                      type: FontStyle.heading,
                     ),
                     const SizedBox(
                       height: 30,

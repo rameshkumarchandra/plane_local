@@ -219,10 +219,14 @@ class _JiraImportState extends ConsumerState<JiraImport> {
                         ),
                         const SizedBox(height: 5),
                         Container(
+                          // padding: EdgeInsets.symmetric(horizontal: 10),
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey.shade300),
                               borderRadius: BorderRadius.circular(4)),
                           child: DropdownButtonFormField(
+                              dropdownColor: themeProvider.isDarkThemeEnabled
+                                  ? darkSecondaryBackgroundColor
+                                  : Colors.white,
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                               ),
@@ -379,6 +383,9 @@ class _JiraImportState extends ConsumerState<JiraImport> {
                               border: Border.all(color: Colors.grey.shade300),
                               borderRadius: BorderRadius.circular(4)),
                           child: DropdownButtonFormField(
+                              dropdownColor: themeProvider.isDarkThemeEnabled
+                                  ? darkSecondaryBackgroundColor
+                                  : Colors.white,
                               decoration: const InputDecoration(
                                 border: InputBorder.none,
                               ),

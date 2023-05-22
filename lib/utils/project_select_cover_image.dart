@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
@@ -7,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/services/dio_service.dart';
 import 'package:plane_startup/utils/button.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_text.dart';
@@ -23,25 +27,94 @@ class SelectCoverImage extends ConsumerStatefulWidget {
 class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
   var selected = 0;
   File? coverImage;
+  final searchController = TextEditingController();
+  var page = 1;
+  final per_page = 18;
+  bool isLoading = false;
+  bool isSearching = false;
+
   @override
   void initState() {
-    if (ref.read(ProviderList.projectProvider).unsplashImages.isEmpty) {
-      // ref.read(ProviderList.projectProvider).getUnsplashImages();
-    }
+    // if (ref.read(ProviderList.projectProvider).unsplashImages.isEmpty) {
+    //    ref.read(ProviderList.projectProvider).getUnsplashImages();
+    // }
+    getImages(true);
 
     super.initState();
+  }
+
+  List images = [];
+  var dio = Dio();
+  final UNSPLASH_API = 'oXgq-j5Vl9i5w4dkNN9SBTptJewO2S0uhkwnUNnIpAU';
+
+  Future getImages(bool isFirstReq) async {
+    if (!isFirstReq) {
+      FocusScope.of(context).unfocus();
+    }
+
+    setState(() {
+      // images.clear();
+      // page = 1;
+      // isSearching = true;
+      isLoading = true;
+    });
+    //unfocus keyboard
+
+    try {
+      var url = searchController.text.isEmpty
+          ? 'https://api.unsplash.com/photos/?client_id=$UNSPLASH_API&page=$page&per_page=$per_page'
+          : 'https://api.unsplash.com/search/photos/?client_id=$UNSPLASH_API&query=${searchController.text}&page=$page&per_page=$per_page ';
+      log(url);
+      var response = await DioConfig().dioServe(
+        hasAuth: false,
+        url: url,
+        hasBody: false,
+        httpMethod: HttpMethod.get,
+      );
+      //var res = jsonDecode(response.toString());
+      // log(response.toString());
+      searchController.text.isEmpty
+          ? response.data.forEach((e) {
+              images.add(e['urls']['regular']);
+            })
+          : response.data['results'].forEach((e) {
+              images.add(e['urls']['regular']);
+            });
+      log(images.length.toString());
+      log(images.toString());
+      isLoading = false;
+      // isSearching = false;
+      setState(() {});
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  bool onNotification(ScrollNotification notification) {
+    if (notification is ScrollEndNotification) {
+      if ((notification.metrics.pixels ==
+              notification.metrics.maxScrollExtent) &&
+          !isLoading &&
+          images.isNotEmpty &&
+          searchController.text.isNotEmpty) {
+        page++;
+        getImages(true);
+      }
+    }
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
     var projectProvider = ref.watch(ProviderList.projectProvider);
     var fileProvider = ref.watch(ProviderList.fileUploadProvider);
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Container(
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    return NotificationListener<ScrollNotification>(
+      onNotification: onNotification,
+      child: Container(
         padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(
-          color: Colors.white,
+          //color: Colors.white,
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10), topRight: Radius.circular(10)),
         ),
@@ -72,7 +145,11 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                         child: CustomText(
                           'Unsplash',
                           type: FontStyle.title,
-                          color: selected == 0 ? Colors.white : Colors.black,
+                          color: selected == 0
+                              ? Colors.white
+                              : themeProvider.isDarkThemeEnabled
+                                  ? darkPrimaryTextColor
+                                  : lightPrimaryTextColor,
                         ),
                       ),
                     ),
@@ -96,7 +173,11 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                         child: CustomText(
                           'Upload',
                           type: FontStyle.title,
-                          color: selected == 1 ? Colors.white : Colors.black,
+                          color: selected == 1
+                              ? Colors.white
+                              : themeProvider.isDarkThemeEnabled
+                                  ? darkPrimaryTextColor
+                                  : lightPrimaryTextColor,
                         ),
                       ),
                     ),
@@ -113,29 +194,90 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                             //   height: 50,
                             width: MediaQuery.of(context).size.width - 130,
                             child: TextFormField(
+                                controller: searchController,
                                 decoration: kTextFieldDecoration.copyWith(
-                              hintText: 'Search for images',
-                            )),
+                                  labelText: 'Search for images',
+                                  labelStyle: TextStyle(
+                                      color: themeProvider.isDarkThemeEnabled
+                                          ? darkSecondaryTextColor
+                                          : lightSecondaryTextColor),
+                                )),
                           ),
                           const SizedBox(
                             width: 20,
                           ),
                           Expanded(
-                            child: Container(
-                              height: 50,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: CustomText(
-                                'Search',
-                                type: FontStyle.buttonText,
+                            child: GestureDetector(
+                              onTap: () {
+                                images.clear();
+                                page = 1;
+                                getImages(false);
+                              },
+                              child: Container(
+                                height: 50,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: CustomText(
+                                  'Search',
+                                  type: FontStyle.buttonText,
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
+
+                (selected == 0 && images.isNotEmpty)
+                    ? Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child:
+                              // isSearching
+                              //     ? const Center(
+                              //         child: CircularProgressIndicator(
+                              //           color: primaryColor,
+                              //         ),
+                              //       )
+                              // :
+                              GridView.builder(
+                            itemCount: images.length + 1,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10),
+                            itemBuilder: (context, index) {
+                              if (index == images.length) {
+                                return isLoading
+                                    ? const Center(
+                                        child: CircularProgressIndicator(
+                                          color: primaryColor,
+                                        ),
+                                      )
+                                    : Container();
+                              }
+                              return GestureDetector(
+                                onTap: () {
+                                  projectProvider.changeCoverUrl(
+                                      url: images[index]);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: Image.network(images[index])
+                                              .image)),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      )
+                    : Container(),
                 // Wrap(
                 //   children: projectProvider.unsplashImages.map((e) => GestureDetector(
                 //     onTap: (){
@@ -199,16 +341,16 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
 
                 selected == 1 && coverImage != null
                     ? GestureDetector(
-                      onTap: ()async{
-                           var file = await ImagePicker.platform
-                                  .pickImage(source: ImageSource.gallery);
-                              if (file != null) {
-                                setState(() {
-                                  coverImage = File(file.path);
-                                });
-                              }
-                      },
-                      child: Container(
+                        onTap: () async {
+                          var file = await ImagePicker.platform
+                              .pickImage(source: ImageSource.gallery);
+                          if (file != null) {
+                            setState(() {
+                              coverImage = File(file.path);
+                            });
+                          }
+                        },
+                        child: Container(
                           height: 250,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
@@ -218,7 +360,7 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                             ),
                           ),
                         ),
-                    )
+                      )
                     : Container(),
                 selected == 1 && coverImage != null
                     ? Column(

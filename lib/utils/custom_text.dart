@@ -178,14 +178,14 @@ class CustomText extends ConsumerWidget {
         //             : lightPrimaryTextColor),
         //     fontWeight: fontWeight ?? FontWeight.w500);
         return TextStyle(
-          fontSize: fontSize ?? 18,
-          fontWeight: fontWeight ?? FontWeight.w400,
-          fontFamily: 'SF Pro Display',
-          // color: color ?? themeProvider.secondaryTextColor,
-          color: themeProvider.isDarkThemeEnabled
-              ? darkSecondaryTextColor
-              : lightSecondaryTextColor,
-        );
+            fontSize: fontSize ?? 18,
+            fontWeight: fontWeight ?? FontWeight.w400,
+            fontFamily: 'SF Pro Display',
+            // color: color ?? themeProvider.secondaryTextColor,
+            color: color ??
+                (themeProvider.isDarkThemeEnabled
+                    ? darkSecondaryTextColor
+                    : lightSecondaryTextColor));
       case FontStyle.boldTitle:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 18,
@@ -265,5 +265,4 @@ class CustomText extends ConsumerWidget {
         );
     }
   }
-
 }
