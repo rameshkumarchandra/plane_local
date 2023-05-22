@@ -5,10 +5,12 @@ import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/screens/setup_profile_screen.dart';
 import 'package:plane_startup/utils/button.dart';
 import 'package:plane_startup/utils/constants.dart';
-import 'package:plane_startup/utils/custom_text.dart';
+import 'package:plane_startup/utils/custom_rich_text.dart';
 import 'package:plane_startup/widgets/loading_widget.dart';
+import 'package:plane_startup/widgets/resend_code_button.dart';
 
 import '../provider/provider_list.dart';
+import '../utils/custom_text.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -25,7 +27,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   int currentpge = 0;
   TextEditingController email = TextEditingController();
   TextEditingController code = TextEditingController();
-  bool sentCode = false;
+  bool sentCode = true;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +42,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             child: LoadingWidget(
               loading: authProvider.sendCodeState == AuthStateEnum.loading ||
                   authProvider.validateCodeState == AuthStateEnum.loading,
-              widgetClass: SafeArea(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
+              widgetClass: SizedBox(
+                height: height,
+                child: SafeArea(
                   child: Stack(
                     children: [
                       Padding(
@@ -117,9 +119,14 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                       height: 20,
                                     )
                                   : Container(),
-                              CustomText(
-                                'Email *',
-                                type: FontStyle.title,
+                              const CustomRichText(
+                                widgets: [
+                                  TextSpan(text: 'Email'),
+                                  TextSpan(
+                                      text: '*',
+                                      style: TextStyle(color: Colors.red))
+                                ],
+                                type: RichFontStyle.text,
                               ),
                               const SizedBox(
                                 height: 10,
@@ -144,9 +151,14 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                 height: 15,
                               ),
                               sentCode
-                                  ? CustomText(
-                                      'Enter Code *',
-                                      type: FontStyle.title,
+                                  ? const CustomRichText(
+                                      widgets: [
+                                        TextSpan(text: 'Enter code'),
+                                        TextSpan(
+                                            text: '*',
+                                            style: TextStyle(color: Colors.red))
+                                      ],
+                                      type: RichFontStyle.text,
                                     )
                                   : Container(),
                               sentCode
@@ -159,9 +171,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                       controller: code,
                                       decoration: kTextFieldDecoration,
                                       validator: (value) {
-                                        if(value!.isEmpty){
+                                        if (value!.isEmpty) {
                                           return "Please enter the code";
                                         }
+                                        return null;
                                       },
                                     )
                                   : Container(),
@@ -172,13 +185,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                   ? Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        CustomText(
-                                          'Didn’t receive code? Get new code in 22secs.',
-                                          type: FontStyle.subtitle,
-                                        ),
+                                        ResendCodeButton(signUp: true),
                                       ],
                                     )
                                   : Container(),
+                              
                               sentCode
                                   ? const SizedBox(
                                       height: 30,
@@ -189,33 +200,32 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                 child: Button(
                                   text: !sentCode ? 'Send code' : 'Log In',
                                   ontap: () async {
-                                    if(validateSave()){
-                                    if (!sentCode) {
-                                      await ref
-                                          .read(ProviderList.authProvider)
-                                          .sendMagicCode(email.text);
-                                      setState(() {
-                                        sentCode = true;
-                                      });
-                                    } else {
-                                      await ref
-                                          .read(ProviderList.authProvider)
-                                          .validateMagicCode(
-                                              key: "magic_${email.text}",
-                                              token: code.text)
-                                          .then(
-                                            (value) {
-                                              if(authProvider.validateCodeState == AuthStateEnum.success){
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const SetupProfileScreen(),
-                                                  ),
-                                                );
-                                              }
-                                            }
-                                          );
+                                    if (validateSave()) {
+                                      if (!sentCode) {
+                                        await ref
+                                            .read(ProviderList.authProvider)
+                                            .sendMagicCode(email.text);
+                                        setState(() {
+                                          sentCode = true;
+                                        });
+                                      } else {
+                                        await ref
+                                            .read(ProviderList.authProvider)
+                                            .validateMagicCode(
+                                                key: "magic_${email.text}",
+                                                token: code.text)
+                                            .then((value) {
+                                          if (authProvider.validateCodeState ==
+                                              AuthStateEnum.success) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SetupProfileScreen(),
+                                              ),
+                                            );
+                                          }
+                                        });
                                       }
                                     }
                                   },
@@ -257,6 +267,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                           ),
                         ),
                       ),
+                      sentCode ?
                       Positioned(
                         bottom: 0,
                         child: SizedBox(
@@ -289,6 +300,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                           ),
                         ),
                       )
+                      : Container()
                     ],
                   ),
                 ),
@@ -308,5 +320,4 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     }
     return false;
   }
-
 }

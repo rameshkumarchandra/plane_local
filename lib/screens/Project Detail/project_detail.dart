@@ -13,7 +13,6 @@ import 'package:plane_startup/screens/create_view_screen.dart';
 import 'package:plane_startup/screens/issue_detail_screen.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_appBar.dart';
-import 'package:plane_startup/utils/settings_screen.dart';
 import 'package:plane_startup/utils/type_sheet.dart';
 import 'package:plane_startup/utils/views_sheet.dart';
 
@@ -23,7 +22,6 @@ import '../../utils/custom_text.dart';
 import '../../utils/filter_sheet.dart';
 import '../settings_screen.dart';
 import 'cycle_card.dart';
-import 'empty.dart';
 import 'module_card.dart';
 
 class ProjectDetail extends ConsumerStatefulWidget {
@@ -254,320 +252,146 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
           )
         ],
       ),
-      body: Container(
-        // color: themeProvider.backgroundColor,
-        color: Colors.transparent,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: Colors.grey.shade300),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(
-                    left: 10,
+      body: SafeArea(
+        child: Container(
+          // color: themeProvider.backgroundColor,
+          color: Colors.transparent,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: Colors.grey.shade300),
                   ),
-                  child: CustomText(
-                    'Project Name',
-                    type: FontStyle.heading2,
-                  ),
-                ),
-              ],
-            ),
-            Container(
-                margin: const EdgeInsets.only(top: 20),
-                width: MediaQuery.of(context).size.width,
-                height: 46,
-                child: ListView.builder(
-                  itemCount: tabs.length,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        //  setState(() {
-                        controller.jumpToPage(index);
-                        //  selected = index;
-                        //});
-                      },
-                      child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: index == 0 ? 20 : 0, right: 25, top: 10),
-                            child: CustomText(
-                              tabs[index]['title'].toString(),
-                              // color: index == selected
-                              //     ? primaryColor
-                              // : themeProvider.secondaryTextColor,
-                              color: index == selected ? primaryColor : null,
-                              type: FontStyle.secondaryText,
-                            ),
-                          ),
-                          selected == index
-                              ? Container(
-                                  margin: EdgeInsets.only(
-                                      left: index == 0 ? 20 : 0,
-                                      right: 25,
-                                      top: 10),
-                                  height: 7,
-                                  width: double.parse(
-                                      tabs[index]['width'].toString()),
-                                  color: const Color.fromRGBO(63, 118, 255, 1),
-                                )
-                              : Container()
-                        ],
-                      ),
-                    );
-                  },
-                )),
-            Container(
-              height: 2,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.grey.shade300,
-            ),
-            Expanded(
-                child: PageView.builder(
-              controller: controller,
-              onPageChanged: (page) {
-                setState(() {
-                  selected = page;
-                });
-              },
-              itemBuilder: (ctx, index) {
-                return Container(
-                    alignment: Alignment.center, child: pages[index]);
-              },
-              itemCount: 5,
-            )),
-            selected == 0
-                ? Container(
-                    height: 50,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.black,
-                    child: Row(
-                      children: [
-                        Expanded(
-                            child: GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                                isScrollControlled: true,
-                                enableDrag: true,
-                                constraints: BoxConstraints(
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height *
-                                            0.85),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30),
-                                )),
-                                context: context,
-                                builder: (ctx) {
-                                  return const FilterSheet();
-                                });
-                          },
-                          child: SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                CustomText(
-                                  ' Issue',
-                                  type: FontStyle.subtitle,
-                                  color: Colors.white,
-                                )
-                              ],
-                            ),
-                          ),
-                        )),
-                        Container(
-                          height: 50,
-                          width: 1,
-                          color: Colors.white,
-                        ),
-                        Expanded(
-                            child: GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                                isScrollControlled: true,
-                                enableDrag: true,
-                                constraints: BoxConstraints(
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height *
-                                            0.85),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30),
-                                )),
-                                context: context,
-                                builder: (ctx) {
-                                  return const TypeSheet();
-                                });
-                          },
-                          child: SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.menu,
-                                  color: Colors.white,
-                                  size: 19,
-                                ),
-                                CustomText(
-                                  ' Type',
-                                  type: FontStyle.subtitle,
-                                  color: Colors.white,
-                                )
-                              ],
-                            ),
-                          ),
-                        )),
-                        Container(
-                          height: 50,
-                          width: 1,
-                          color: Colors.white,
-                        ),
-                        Expanded(
-                            child: GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                                isScrollControlled: true,
-                                enableDrag: true,
-                                constraints: BoxConstraints(
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height *
-                                            0.85),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30),
-                                )),
-                                context: context,
-                                builder: (ctx) {
-                                  return ViewsSheet();
-                                });
-                          },
-                          child: SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.view_sidebar,
-                                  color: Colors.white,
-                                  size: 19,
-                                ),
-                                CustomText(
-                                  ' Views',
-                                  type: FontStyle.subtitle,
-                                  color: Colors.white,
-                                )
-                              ],
-                            ),
-                          ),
-                        )),
-                        Container(
-                          height: 50,
-                          width: 1,
-                          color: Colors.white,
-                        ),
-                        Expanded(
-                            child: GestureDetector(
-                          onTap: () {
-                            showModalBottomSheet(
-                                isScrollControlled: true,
-                                enableDrag: true,
-                                constraints: BoxConstraints(
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height *
-                                            0.85),
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(30),
-                                  topRight: Radius.circular(30),
-                                )),
-                                context: context,
-                                builder: (ctx) {
-                                  return const FilterSheet();
-                                });
-                          },
-                          child: SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.filter_alt,
-                                  color: Colors.white,
-                                  size: 19,
-                                ),
-                                CustomText(
-                                  ' Filters',
-                                  type: FontStyle.subtitle,
-                                  color: Colors.white,
-                                )
-                              ],
-                            ),
-                          ),
-                        )),
-                      ],
+                  Container(
+                    padding: const EdgeInsets.only(
+                      left: 10,
                     ),
-                  )
-                : GestureDetector(
-                    onTap: () {
-                      selected == 1
-                          ? Navigator.of(context).push(MaterialPageRoute(
-                              builder: (ctx) => const CreateCycle()))
-                          : selected == 2
-                              ? Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (ctx) => const CreateModule()))
-                              : selected == 3
-                                  ? Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (ctx) => const CreateView()))
-                                  : Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (ctx) =>
-                                              const CreatePage()));
+                    child: CustomText(
+                      'Project Name',
+                      type: FontStyle.heading2,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                  margin: const EdgeInsets.only(top: 20),
+                  width: MediaQuery.of(context).size.width,
+                  height: 46,
+                  child: ListView.builder(
+                    itemCount: tabs.length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          //  setState(() {
+                          controller.jumpToPage(index);
+                          //  selected = index;
+                          //});
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(
+                                  left: index == 0 ? 20 : 0,
+                                  right: 25,
+                                  top: 10),
+                              child: CustomText(
+                                tabs[index]['title'].toString(),
+                                // color: index == selected
+                                //     ? primaryColor
+                                // : themeProvider.secondaryTextColor,
+                                color: index == selected ? primaryColor : null,
+                                type: FontStyle.secondaryText,
+                              ),
+                            ),
+                            selected == index
+                                ? Container(
+                                    margin: EdgeInsets.only(
+                                        left: index == 0 ? 20 : 0,
+                                        right: 25,
+                                        top: 10),
+                                    height: 7,
+                                    width: double.parse(
+                                        tabs[index]['width'].toString()),
+                                    color:
+                                        const Color.fromRGBO(63, 118, 255, 1),
+                                  )
+                                : Container()
+                          ],
+                        ),
+                      );
                     },
-                    child: Container(
+                  )),
+              Container(
+                height: 2,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.grey.shade300,
+              ),
+              Expanded(
+                  child: PageView.builder(
+                controller: controller,
+                onPageChanged: (page) {
+                  setState(() {
+                    selected = page;
+                  });
+                },
+                itemBuilder: (ctx, index) {
+                  return Container(
+                      alignment: Alignment.center, child: pages[index]);
+                },
+                itemCount: 5,
+              )),
+              selected == 0
+                  ? Container(
                       height: 50,
                       width: MediaQuery.of(context).size.width,
                       color: Colors.black,
                       child: Row(
                         children: [
                           Expanded(
-                              child: SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                ),
-                                CustomText(
-                                  selected == 1
-                                      ? ' Add Cycle'
-                                      : selected == 2
-                                          ? 'Add Module'
-                                          : selected == 3
-                                              ? 'Add View'
-                                              : 'Add Page',
-                                  type: FontStyle.subtitle,
-                                  color: Colors.white,
-                                )
-                              ],
+                              child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  enableDrag: true,
+                                  constraints: BoxConstraints(
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height *
+                                              0.85),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30),
+                                  )),
+                                  context: context,
+                                  builder: (ctx) {
+                                    return const FilterSheet();
+                                  });
+                            },
+                            child: SizedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                  CustomText(
+                                    ' Issue',
+                                    type: FontStyle.subtitle,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
                             ),
                           )),
                           Container(
@@ -576,27 +400,207 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                             color: Colors.white,
                           ),
                           Expanded(
-                              child: SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.filter_alt,
-                                  color: Colors.white,
-                                ),
-                                CustomText(
-                                  ' Filters',
-                                  type: FontStyle.subtitle,
-                                  color: Colors.white,
-                                )
-                              ],
+                              child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  enableDrag: true,
+                                  constraints: BoxConstraints(
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height *
+                                              0.85),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30),
+                                  )),
+                                  context: context,
+                                  builder: (ctx) {
+                                    return const TypeSheet();
+                                  });
+                            },
+                            child: SizedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.menu,
+                                    color: Colors.white,
+                                    size: 19,
+                                  ),
+                                  CustomText(
+                                    ' Type',
+                                    type: FontStyle.subtitle,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
+                          Container(
+                            height: 50,
+                            width: 1,
+                            color: Colors.white,
+                          ),
+                          Expanded(
+                              child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  enableDrag: true,
+                                  constraints: BoxConstraints(
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height *
+                                              0.85),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30),
+                                  )),
+                                  context: context,
+                                  builder: (ctx) {
+                                    return ViewsSheet();
+                                  });
+                            },
+                            child: SizedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.view_sidebar,
+                                    color: Colors.white,
+                                    size: 19,
+                                  ),
+                                  CustomText(
+                                    ' Views',
+                                    type: FontStyle.subtitle,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
+                          Container(
+                            height: 50,
+                            width: 1,
+                            color: Colors.white,
+                          ),
+                          Expanded(
+                              child: GestureDetector(
+                            onTap: () {
+                              showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  enableDrag: true,
+                                  constraints: BoxConstraints(
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height *
+                                              0.85),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30),
+                                  )),
+                                  context: context,
+                                  builder: (ctx) {
+                                    return const FilterSheet();
+                                  });
+                            },
+                            child: SizedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.filter_alt,
+                                    color: Colors.white,
+                                    size: 19,
+                                  ),
+                                  CustomText(
+                                    ' Filters',
+                                    type: FontStyle.subtitle,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
                             ),
                           )),
                         ],
                       ),
-                    ),
-                  )
-          ],
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        selected == 1
+                            ? Navigator.of(context).push(MaterialPageRoute(
+                                builder: (ctx) => const CreateCycle()))
+                            : selected == 2
+                                ? Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (ctx) => const CreateModule()))
+                                : selected == 3
+                                    ? Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                const CreateView()))
+                                    : Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (ctx) =>
+                                                const CreatePage()));
+                      },
+                      child: Container(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.black,
+                        child: Row(
+                          children: [
+                            Expanded(
+                                child: SizedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                  ),
+                                  CustomText(
+                                    selected == 1
+                                        ? ' Add Cycle'
+                                        : selected == 2
+                                            ? 'Add Module'
+                                            : selected == 3
+                                                ? 'Add View'
+                                                : 'Add Page',
+                                    type: FontStyle.subtitle,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            )),
+                            Container(
+                              height: 50,
+                              width: 1,
+                              color: Colors.white,
+                            ),
+                            Expanded(
+                                child: SizedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.filter_alt,
+                                    color: Colors.white,
+                                  ),
+                                  CustomText(
+                                    ' Filters',
+                                    type: FontStyle.subtitle,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
+                            )),
+                          ],
+                        ),
+                      ),
+                    )
+            ],
+          ),
         ),
       ),
     );

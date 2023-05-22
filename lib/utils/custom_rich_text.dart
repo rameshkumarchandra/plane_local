@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:google_fonts/google_fonts.dart';
 import 'package:plane_startup/provider/theme_provider.dart';
-import 'package:plane_startup/utils/constants.dart';
 
 import '../provider/provider_list.dart';
+import 'constants.dart';
 
-// ignore: constant_identifier_names
-// const APP_FONT = 'Lexend';
-const APP_FONT = 'Poppins';
-
-enum FontStyle {
+enum RichFontStyle {
   heading,
   heading2,
   subheading,
@@ -27,12 +22,9 @@ enum FontStyle {
   secondaryText,
 }
 
-// ignore: non_constant_identifier_names
-Color APP_TEXT_GREY = const Color.fromRGBO(135, 135, 135, 1);
-
-class CustomText extends ConsumerWidget {
-  CustomText(
-    this.text, {
+class CustomRichText extends ConsumerWidget {
+  const CustomRichText(
+   {
     this.maxLines,
     this.style,
     this.color,
@@ -40,36 +32,33 @@ class CustomText extends ConsumerWidget {
     this.fontWeight,
     this.overflow,
     this.textAlign = TextAlign.center,
-    this.type = FontStyle.title,
+    this.type = RichFontStyle.title,
+    required this.widgets,
     final Key? key,
   }) : super(key: key);
-  final String text;
   final int? maxLines;
   final TextStyle? style;
   final TextAlign? textAlign;
   final double? fontSize;
   final FontWeight? fontWeight;
   final Color? color;
-  final FontStyle? type;
+  final RichFontStyle? type;
   final TextOverflow? overflow;
+  final List<InlineSpan> widgets;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var style = getStyle(type, themeProvider);
 
-    return Text(
-      text.toString(),
-      maxLines: maxLines,
-      textAlign: textAlign ?? TextAlign.start,
-      overflow: overflow ?? TextOverflow.visible,
-      style: style.merge(style),
+    return RichText(
+      text: TextSpan(children: widgets, style: style.merge(style)),
     );
   }
 
-  TextStyle getStyle(FontStyle? type, ThemeProvider themeProvider) {
+  TextStyle getStyle(RichFontStyle? type, ThemeProvider themeProvider) {
     switch (type) {
-      case FontStyle.mainHeading:
+      case RichFontStyle.mainHeading:
         return TextStyle(
           fontSize: fontSize ?? 24,
           fontWeight: fontWeight ?? FontWeight.w600,
@@ -80,7 +69,7 @@ class CustomText extends ConsumerWidget {
               : lightPrimaryTextColor,
         );
 
-      case FontStyle.description:
+      case RichFontStyle.description:
         return TextStyle(
             fontSize: fontSize ?? 16,
             fontWeight: fontWeight ?? FontWeight.w400,
@@ -91,7 +80,7 @@ class CustomText extends ConsumerWidget {
                     ? darkPrimaryTextColor
                     : lightPrimaryTextColor));
 
-      case FontStyle.smallText:
+      case RichFontStyle.smallText:
         return TextStyle(
           fontSize: fontSize ?? 13,
           fontWeight: fontWeight ?? FontWeight.w400,
@@ -102,7 +91,7 @@ class CustomText extends ConsumerWidget {
               : lightPrimaryTextColor,
         );
 
-      case FontStyle.text:
+      case RichFontStyle.text:
         return TextStyle(
           fontSize: fontSize ?? 16,
           fontWeight: fontWeight ?? FontWeight.w400,
@@ -114,7 +103,7 @@ class CustomText extends ConsumerWidget {
                   : lightPrimaryTextColor),
         );
 
-      case FontStyle.secondaryText:
+      case RichFontStyle.secondaryText:
         return TextStyle(
           fontSize: fontSize ?? 16,
           fontWeight: fontWeight ?? FontWeight.w400,
@@ -125,10 +114,10 @@ class CustomText extends ConsumerWidget {
               : lightSecondaryTextColor,
         );
 
-      case FontStyle.heading:
+      case RichFontStyle.heading:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 24,
-        //     color: color ?? Colors.blacklack,
+        //     color: color ?? Colors.black,
         //     fontWeight: fontWeight ?? FontWeight.bold);
         return TextStyle(
           fontSize: fontSize ?? 26,
@@ -140,10 +129,10 @@ class CustomText extends ConsumerWidget {
                   ? darkPrimaryTextColor
                   : lightPrimaryTextColor),
         );
-      case FontStyle.heading2:
+      case RichFontStyle.heading2:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 19,
-        //     color: color ?? Colors.blacklack,
+        //     color: color ?? Colors.black,
         //     letterSpacing: 0.8,
         //     fontWeight: fontWeight ?? FontWeight.bold);
         return TextStyle(
@@ -155,7 +144,7 @@ class CustomText extends ConsumerWidget {
               ? darkPrimaryTextColor
               : lightPrimaryTextColor,
         );
-      case FontStyle.title:
+      case RichFontStyle.title:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 16,
         //     color: color ?? themeProvider.secondaryTextColor,
@@ -169,7 +158,7 @@ class CustomText extends ConsumerWidget {
                 (themeProvider.isDarkThemeEnabled
                     ? darkSecondaryTextColor
                     : lightSecondaryTextColor));
-      case FontStyle.subheading:
+      case RichFontStyle.subheading:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 18,
         //     color: color ??
@@ -186,10 +175,10 @@ class CustomText extends ConsumerWidget {
               ? darkSecondaryTextColor
               : lightSecondaryTextColor,
         );
-      case FontStyle.boldTitle:
+      case RichFontStyle.boldTitle:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 18,
-        //     color: color ?? Colors.blacklack,
+        //     color: color ?? Colors.black,
         //     fontWeight: fontWeight ?? FontWeight.bold);
         return TextStyle(
           fontSize: fontSize ?? 18,
@@ -201,7 +190,7 @@ class CustomText extends ConsumerWidget {
                   ? darkPrimaryTextColor
                   : lightPrimaryTextColor),
         );
-      case FontStyle.subtitle:
+      case RichFontStyle.subtitle:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 14,
         //     color: color ?? const Color(0xff222222),
@@ -215,7 +204,7 @@ class CustomText extends ConsumerWidget {
                 (themeProvider.isDarkThemeEnabled
                     ? darkStrokeColor
                     : lightStrokeColor));
-      case FontStyle.boldSubtitle:
+      case RichFontStyle.boldSubtitle:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 16,
         //     color: color ?? const Color(0xff222222),
@@ -230,7 +219,7 @@ class CustomText extends ConsumerWidget {
                   ? darkPrimaryTextColor
                   : lightPrimaryTextColor),
         );
-      case FontStyle.buttonText:
+      case RichFontStyle.buttonText:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 17,
         //     color: color ?? Colors.white,
@@ -241,7 +230,7 @@ class CustomText extends ConsumerWidget {
           fontFamily: 'SF Pro Display',
           color: color ?? Colors.white,
         );
-      case FontStyle.appbarTitle:
+      case RichFontStyle.appbarTitle:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 18,
         //     color: color ?? const Color(0xff222222),
@@ -265,5 +254,6 @@ class CustomText extends ConsumerWidget {
         );
     }
   }
+
 
 }

@@ -275,7 +275,9 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                         const BoxConstraints(maxWidth: 340, maxHeight: 400),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: themeProvider.isDarkThemeEnabled
+                          ? Colors.black
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: Colors.grey.shade300,

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:plane_startup/config/enums.dart';
+import 'package:plane_startup/utils/custom_rich_text.dart';
 import 'package:plane_startup/widgets/loading_widget.dart';
 
 import '../provider/provider_list.dart';
 import '../utils/button.dart';
 import '../utils/constants.dart';
 import '../utils/custom_text.dart';
-import '../utils/text_styles.dart';
 import 'home_screen.dart';
 
 class InviteCOWorkers extends ConsumerStatefulWidget {
@@ -31,7 +31,7 @@ class _InviteCOWorkersState extends ConsumerState<InviteCOWorkers> {
     return Scaffold(
       body: LoadingWidget(
         loading: prov.workspaceInvitationState == AuthStateEnum.loading,
-        widgetClass : SafeArea(
+        widgetClass: SafeArea(
           child: Container(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 24),
             child: Form(
@@ -43,7 +43,13 @@ class _InviteCOWorkersState extends ConsumerState<InviteCOWorkers> {
                   const SizedBox(
                     height: 30,
                   ),
-                  const Text('Email *', style: TextStylingWidget.description),
+                  const CustomRichText(
+                    widgets: [
+                      TextSpan(text: 'Email'),
+                      TextSpan(text: '*', style: TextStyle(color: Colors.red))
+                    ],
+                    type: RichFontStyle.text,
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
@@ -65,8 +71,8 @@ class _InviteCOWorkersState extends ConsumerState<InviteCOWorkers> {
                           }
                         },
                         child: Container(
-                          margin:
-                              const EdgeInsets.only(right: 10, top: 5, bottom: 5),
+                          margin: const EdgeInsets.only(
+                              right: 10, top: 5, bottom: 5),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                             color: validEmail ? primaryColor : lightGreeyColor,
@@ -130,71 +136,11 @@ class _InviteCOWorkersState extends ConsumerState<InviteCOWorkers> {
                                             ),
                                             Row(
                                               children: [
-                                                CustomText('Invited',
-                                                    type: FontStyle.title,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: greyColor),
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 20),
-                                                  width: 85,
-                                                  height: 25,
-                                                  child: DropdownButtonFormField(
-                                                      decoration:
-                                                          const InputDecoration(
-                                                        border: InputBorder.none,
-                                                      ),
-                                                      value: emails[index]
-                                                              ['role'] ??
-                                                          '',
-                                                      items: [
-                                                        DropdownMenuItem(
-                                                          value: 'Admin',
-                                                          child: CustomText(
-                                                            'Admin',
-                                                            type: FontStyle
-                                                                .subtitle,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        DropdownMenuItem(
-                                                          value: 'Member',
-                                                          child: CustomText(
-                                                            'Member',
-                                                            type: FontStyle
-                                                                .subtitle,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        DropdownMenuItem(
-                                                          value: 'Owner',
-                                                          child: CustomText(
-                                                            'Owner',
-                                                            type: FontStyle
-                                                                .subtitle,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        DropdownMenuItem(
-                                                          value: 'Guest',
-                                                          child: CustomText(
-                                                            'Guest',
-                                                            type: FontStyle
-                                                                .subtitle,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                      onChanged: (val) {
-                                                        setState(() {
-                                                          emails[index]['role'] =
-                                                              val;
-                                                        });
-                                                      }),
+                                                CustomText(
+                                                  'Invited',
+                                                  type: FontStyle.title,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: greyColor,
                                                 ),
                                               ],
                                             )
@@ -230,14 +176,14 @@ class _InviteCOWorkersState extends ConsumerState<InviteCOWorkers> {
                       disable: emails.isEmpty ? true : false,
                       ontap: () async {
                         if (emails.isEmpty) return;
-      
+
                         var roles = {
                           'Admin': "15",
                           'Member': "10",
                           'Owner': "20",
                           'Guest': "5",
                         };
-      
+
                         var data = emails
                             .map((e) => {
                                   "email": e['email'],

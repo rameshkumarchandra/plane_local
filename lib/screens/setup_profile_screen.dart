@@ -12,6 +12,7 @@ import 'package:plane_startup/widgets/loading_widget.dart';
 // import '../Provider/provider_list.dart';
 import '../utils/button.dart';
 import '../utils/constants.dart';
+import '../utils/custom_rich_text.dart';
 import '../utils/custom_text.dart';
 import '../utils/text_styles.dart';
 
@@ -79,8 +80,13 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text('First name *',
-                                    style: TextStylingWidget.description),
+                                const CustomRichText(
+                                widgets: [
+                                  TextSpan(text: 'First name'),
+                                  TextSpan(text: '*', style: TextStyle(color: Colors.red))
+                                ],
+                                type: RichFontStyle.text,
+                              ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -97,8 +103,13 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                const Text('Last name *',
-                                    style: TextStylingWidget.description),
+                                const CustomRichText(
+                                widgets: [
+                                  TextSpan(text: 'Last name'),
+                                  TextSpan(text: '*', style: TextStyle(color: Colors.red))
+                                ],
+                                type: RichFontStyle.text,
+                              ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -114,8 +125,13 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                const Text('What is your role? *',
-                                    style: TextStylingWidget.description),
+                                const CustomRichText(
+                                widgets: [
+                                  TextSpan(text: 'What is your Role?'),
+                                  TextSpan(text: '*', style: TextStyle(color: Colors.red))
+                                ],
+                                type: RichFontStyle.text,
+                              ),
                                 const SizedBox(
                                   height: 10,
                                 ),

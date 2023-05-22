@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/screens/estimates_page.dart';
 import 'package:plane_startup/screens/features_page.dart';
 import 'package:plane_startup/screens/general_page.dart';
@@ -9,8 +11,8 @@ import 'package:plane_startup/screens/members.dart';
 import 'package:plane_startup/screens/states_pages.dart';
 import 'package:plane_startup/utils/button.dart';
 import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_rich_text.dart';
 
-import '../provider/provider_list.dart';
 import '../utils/custom_appBar.dart';
 import '../utils/custom_text.dart';
 
@@ -60,9 +62,11 @@ class _SettingScreenState extends State<SettingScreen> {
                   showModalBottomSheet(
                     enableDrag: true,
                     shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20))),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
                     context: context,
                     builder: (context) {
                       return const BottomSheet();
@@ -163,14 +167,14 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 }
 
-class BottomSheet extends StatefulWidget {
+class BottomSheet extends ConsumerStatefulWidget {
   const BottomSheet({super.key});
 
   @override
-  State<BottomSheet> createState() => _BottomSheetState();
+  ConsumerState<BottomSheet> createState() => _BottomSheetState();
 }
 
-class _BottomSheetState extends State<BottomSheet> {
+class _BottomSheetState extends ConsumerState<BottomSheet> {
   @override
   TextEditingController lableController = TextEditingController();
   Widget lable = Container(
@@ -292,6 +296,7 @@ class _BottomSheetState extends State<BottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     // List<Widget> generateWidget() {
     //   for (int i = 0; i < colors.length; i++) {
     //       colorList.add(
@@ -369,9 +374,17 @@ class _BottomSheetState extends State<BottomSheet> {
                     const SizedBox(
                       height: 20,
                     ),
-                    CustomText(
-                      'Title *',
-                      type: FontStyle.title,
+                    const CustomRichText(
+                      widgets: [
+                        TextSpan(text: 'Title'),
+                        TextSpan(
+                          text: '*',
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ],
+                      type: RichFontStyle.text,
                     ),
                     const SizedBox(
                       height: 10,
@@ -402,7 +415,9 @@ class _BottomSheetState extends State<BottomSheet> {
                     width: 300,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: themeProvider.isDarkThemeEnabled
+                          ? darkSecondaryBackgroundColor
+                          : lightBackgroundColor,
                       boxShadow: const [
                         BoxShadow(blurRadius: 2.0, color: greyColor),
                       ],

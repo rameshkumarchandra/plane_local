@@ -215,7 +215,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               //   style: TextStylingWidget.subHeading,
               // ),
               CustomText(
-                'Ramesh Kumar',
+                profileProvider.userProfile.first_name ?? 'User name',
                 type: FontStyle.boldTitle,
               ),
               const SizedBox(
@@ -226,7 +226,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               //   style: TextStylingWidget.description.copyWith(color: greyColor),
               // )
               CustomText(
-                'rameshkumar2299@gmail.com',
+                profileProvider.userProfile.email ?? 'rameshkumar2299@gmail.com',
                 type: FontStyle.secondaryText,
               ),
             ],

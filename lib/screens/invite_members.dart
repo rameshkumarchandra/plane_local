@@ -45,11 +45,11 @@ class _InviteMembersState extends ConsumerState<InviteMembers> {
                 child: Row(
                   children: [
                     CustomText(
-                      'Email ',
+                      'Email',
                       type: FontStyle.title,
                     ),
                     CustomText(
-                      ' *',
+                      '*',
                       type: FontStyle.appbarTitle,
                       color: Colors.red,
                     ),
@@ -75,11 +75,11 @@ class _InviteMembersState extends ConsumerState<InviteMembers> {
                 child: Row(
                   children: [
                     CustomText(
-                      'Role ',
+                      'Role',
                       type: FontStyle.title,
                     ),
                     CustomText(
-                      ' *',
+                      '*',
                       type: FontStyle.appbarTitle,
                       color: Colors.red,
                     ),

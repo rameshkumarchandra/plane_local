@@ -17,7 +17,6 @@ class FileUploadProvider extends ChangeNotifier {
   FileUploadProvider(ChangeNotifierProviderRef<FileUploadProvider> this.ref);
   Ref? ref;
   static String? _downloadUrl;
-  List downloadUrls = [];
   AuthStateEnum fileUploadState = AuthStateEnum.empty;
 
   Future uploadFile(File pickedFile, String fileType) async {

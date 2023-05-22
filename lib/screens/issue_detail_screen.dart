@@ -6,7 +6,6 @@ import 'package:plane_startup/utils/custom_text.dart';
 
 import '../provider/provider_list.dart';
 import '../utils/custom_appBar.dart';
-import '../utils/settings_screen.dart';
 
 class IssueDetail extends ConsumerStatefulWidget {
   const IssueDetail({super.key});

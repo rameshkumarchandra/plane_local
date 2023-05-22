@@ -20,61 +20,77 @@ class _EstimatsPageState extends ConsumerState<EstimatsPage> {
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
 
-    return estimates.isEmpty
-        ? const EmptyEstimatesWidget()
-        : ListView.builder(
-            itemCount: 1,
-            itemBuilder: (context, index) {
-              return Container(
-                alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.all(16),
-                margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
-                decoration: BoxDecoration(
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      color: themeProvider.isDarkThemeEnabled
+          ? darkSecondaryBackgroundColor
+          : lightSecondaryBackgroundColor,
+      child: estimates.isEmpty
+          ? const EmptyEstimatesWidget()
+          : ListView.builder(
+              itemCount: 1,
+              itemBuilder: (context, index) {
+                return Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.all(16),
+                  margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                  decoration: BoxDecoration(
                     color: themeProvider.isDarkThemeEnabled
                         ? darkBackgroundColor
                         : lightBackgroundColor,
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: Colors.grey.shade300)),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomText(
-                      'Estimates name',
-                      textAlign: TextAlign.left,
-                      type: FontStyle.appbarTitle,
+                    border: Border.all(
+                      color: Colors.grey.shade300,
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomText(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiud tempor.',
-                      textAlign: TextAlign.left,
-                      maxLines: 3,
-                      type: FontStyle.title,
-                      color: const Color.fromRGBO(133, 142, 150, 1),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomText(
-                      'Estimates (1,2,3,4,5,6,)',
-                      textAlign: TextAlign.left,
-                      type: FontStyle.appbarTitle,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomText(
+                        'Estimates name',
+                        textAlign: TextAlign.left,
+                        type: FontStyle.appbarTitle,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomText(
+                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiud tempor.',
+                        textAlign: TextAlign.left,
+                        maxLines: 3,
+                        type: FontStyle.title,
+                        color: const Color.fromRGBO(133, 142, 150, 1),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomText(
+                        'Estimates (1,2,3,4,5,6,)',
+                        textAlign: TextAlign.left,
+                        type: FontStyle.appbarTitle,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+    );
   }
 }
 
-class EmptyEstimatesWidget extends StatelessWidget {
+class EmptyEstimatesWidget extends ConsumerStatefulWidget {
   const EmptyEstimatesWidget({super.key});
 
   @override
+  ConsumerState<EmptyEstimatesWidget> createState() =>
+      _EmptyEstimatesWidgetState();
+}
+
+class _EmptyEstimatesWidgetState extends ConsumerState<EmptyEstimatesWidget> {
+  @override
   Widget build(BuildContext context) {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +107,9 @@ class EmptyEstimatesWidget extends StatelessWidget {
                   width: 70,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: themeProvider.isDarkThemeEnabled
+                        ? darkBackgroundColor
+                        : lightBackgroundColor,
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(5),
                   ),
@@ -121,7 +139,9 @@ class EmptyEstimatesWidget extends StatelessWidget {
                   width: 70,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: themeProvider.isDarkThemeEnabled
+                        ? darkBackgroundColor
+                        : lightBackgroundColor,
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(5),
                   ),
@@ -151,7 +171,9 @@ class EmptyEstimatesWidget extends StatelessWidget {
                   width: 70,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: themeProvider.isDarkThemeEnabled
+                        ? darkBackgroundColor
+                        : lightBackgroundColor,
                     border: Border.all(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.circular(5),
                   ),
