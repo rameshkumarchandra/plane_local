@@ -69,7 +69,7 @@ class BoardListsData {
               GestureDetector(
                 child: const SizedBox(
                     // padding: const EdgeInsets.all(5),
-                    child:  Icon(Icons.more_vert)),
+                    child: Icon(Icons.more_vert)),
               ),
             ],
           ),

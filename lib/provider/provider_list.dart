@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/provider/auth_provider.dart';
 import 'package:plane_startup/provider/file_upload_provider.dart';
 import 'package:plane_startup/provider/profile_provider.dart';
+import 'package:plane_startup/provider/projects_provider.dart';
 import 'package:plane_startup/provider/workspace_provider.dart';
 
 import 'theme_provider.dart';
@@ -14,11 +15,12 @@ class ProviderList {
       ChangeNotifierProvider<ProfileProvider>((_) => ProfileProvider());
 
   static final workspaceProvider =
-      ChangeNotifierProvider<WorkspaceProvider>((_) => WorkspaceProvider());
-
+      ChangeNotifierProvider<WorkspaceProvider>((ref) => WorkspaceProvider(ref));
    static var themeProvider =
       ChangeNotifierProvider<ThemeProvider>((_) => ThemeProvider());
-
-  static var fileUploadProvider =
-      ChangeNotifierProvider<FileUploadProvider>((_) => FileUploadProvider());
+         static var projectProvider =
+      ChangeNotifierProvider<ProjectsProvider>((_) => ProjectsProvider());
+      static var fileUploadProvider =
+      ChangeNotifierProvider<FileUploadProvider>((ref) => FileUploadProvider(ref));
 }
+

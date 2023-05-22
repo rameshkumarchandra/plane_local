@@ -184,7 +184,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                         //   style: TextStyle(
                         //     fontSize: 17,
                         //     fontWeight: FontWeight.w400,
-                        //     color: Colors.black,
+                        //     color: Colors.blacklack,
                         //   ),
                         // ),
                         hint: CustomText(
@@ -257,7 +257,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                         //   style: TextStyle(
                         //     fontSize: 17,
                         //     fontWeight: FontWeight.w400,
-                        //     color: Colors.black,
+                        //     color: Colors.blacklack,
                         //   ),
                         // ),
                         hint: CustomText(
@@ -333,7 +333,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                         //   style: TextStyle(
                         //     fontSize: 17,
                         //     fontWeight: FontWeight.w400,
-                        //     color: Colors.black,
+                        //     color: Colors.blacklack,
                         //   ),
                         // ),
                         hint: CustomText(
@@ -484,7 +484,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                                 //   style: TextStyle(
                                 //     fontSize: 16,
                                 //     fontWeight: FontWeight.w400,
-                                //     color: Colors.black,
+                                //     color: Colors.blacklack,
                                 //   ),
                                 // ),
                                 CustomText(

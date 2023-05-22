@@ -321,7 +321,7 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
       setState(() {
         pickedImage = File(image.path);
       });
-      FileUploadProvider().uploadFile(pickedImage!, 'image');
+    //  FileUploadProvider().uploadFile(pickedImage!, 'image');
     } on PlatformException catch (e) {
       print(e);
     }

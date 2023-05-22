@@ -18,7 +18,6 @@ class BoardListProvider extends ChangeNotifier {
       {required int listIndex,
       required BuildContext context,
       required VoidCallback setstate}) {
-    
     if (!context.mounted) return;
     var prov = ref.read(ProviderList.boardProvider);
     prov.board.lists[listIndex].context = context;

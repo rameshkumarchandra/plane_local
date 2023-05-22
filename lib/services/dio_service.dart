@@ -30,8 +30,8 @@ class DioConfig {
     BaseOptions options;
     // Adding Additional Options
     options = BaseOptions(
-      receiveTimeout: const Duration(seconds: 5),
-      connectTimeout: const Duration(seconds: 5),
+      receiveTimeout: const Duration(seconds: 15),
+      connectTimeout: const Duration(seconds: 15),
       headers: requestHeaders,
     );
 

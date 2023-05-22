@@ -14,7 +14,7 @@ class RetryInterceptor extends Interceptor {
     this.retryDelays = const [
       Duration(seconds: 1),
       Duration(seconds: 3),
-      Duration(seconds: 5),
+      Duration(seconds: 15),
     ],
     required RetryEvaluator retryEvaluator,
   }) : _retryEvaluator = retryEvaluator ;

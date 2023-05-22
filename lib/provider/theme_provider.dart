@@ -5,6 +5,7 @@ import 'package:plane_startup/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider extends ChangeNotifier {
+  BuildContext? context;
   SharedPreferences? prefs;
   bool isDarkThemeEnabled = false;
   // Color primaryTextColor = lightPrimaryTextColor;

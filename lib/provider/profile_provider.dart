@@ -34,6 +34,7 @@ class ProfileProvider extends ChangeNotifier {
   AuthStateEnum getProfileState = AuthStateEnum.empty;
   AuthStateEnum updateProfileState = AuthStateEnum.empty;
   UserProfile userProfile = UserProfile.initialize();
+  
   Future getProfile() async {
     getProfileState = AuthStateEnum.loading;
 
@@ -56,7 +57,7 @@ class ProfileProvider extends ChangeNotifier {
       // return response.data;
     } on DioError catch (e) {
       print('----- ERROR ------');
-      log(e.response.toString());
+      log(e.error.toString());
       getProfileState = AuthStateEnum.error;
       notifyListeners();
     }

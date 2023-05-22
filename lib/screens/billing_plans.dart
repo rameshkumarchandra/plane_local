@@ -55,7 +55,7 @@ class _BillingPlansState extends ConsumerState<BillingPlans> {
       //       onPressed: () => Navigator.of(context).pop(),
       //       icon: const Icon(
       //         Icons.close,
-      //         color: Colors.black,
+      //         color: Colors.blacklack,
       //       )),
       // ),
       appBar: CustomAppBar(
