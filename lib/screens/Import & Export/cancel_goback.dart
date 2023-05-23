@@ -7,6 +7,7 @@ import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_appBar.dart';
 
 import '../../provider/provider_list.dart';
+import '../../provider/theme_provider.dart';
 import '../../utils/custom_text.dart';
 
 class ImportExportCancel extends ConsumerStatefulWidget {
@@ -232,13 +233,13 @@ class _ImportExportCancelState extends ConsumerState<ImportExportCancel> {
                             ],
                           ),
                         )
-                      : upload()))
+                      : upload(themeProvider)))
         ],
       ),
     );
   }
 
-  upload() {
+  upload(ThemeProvider themeProvider) {
     return Column(
       children: [
         Container(
@@ -269,6 +270,9 @@ class _ImportExportCancelState extends ConsumerState<ImportExportCancel> {
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(4)),
           child: DropdownButtonFormField(
+              dropdownColor: themeProvider.isDarkThemeEnabled
+                  ? darkSecondaryBackgroundColor
+                  : Colors.white,
               decoration: const InputDecoration(
                 border: InputBorder.none,
               ),
@@ -336,6 +340,9 @@ class _ImportExportCancelState extends ConsumerState<ImportExportCancel> {
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(4)),
           child: DropdownButtonFormField(
+              dropdownColor: themeProvider.isDarkThemeEnabled
+                  ? darkSecondaryBackgroundColor
+                  : Colors.white,
               decoration: const InputDecoration(
                 border: InputBorder.none,
               ),

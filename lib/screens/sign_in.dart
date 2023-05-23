@@ -27,7 +27,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   int currentpge = 0;
   TextEditingController email = TextEditingController();
   TextEditingController code = TextEditingController();
-  bool sentCode = true;
+  bool sentCode = false;
 
   @override
   Widget build(BuildContext context) {
@@ -189,7 +189,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                       ],
                                     )
                                   : Container(),
-                              
                               sentCode
                                   ? const SizedBox(
                                       height: 30,
@@ -267,40 +266,40 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                           ),
                         ),
                       ),
-                      sentCode ?
-                      Positioned(
-                        bottom: 0,
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.arrow_back,
-                                color: greyColor,
-                                size: 18,
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    sentCode = false;
-                                  });
-                                },
-                                child: CustomText(
-                                  'Go back',
-                                  type: FontStyle.heading2,
-                                  color: greyColor,
-                                  fontWeight: FontWeight.w600,
+                      sentCode
+                          ? Positioned(
+                              bottom: 0,
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.arrow_back,
+                                      color: greyColor,
+                                      size: 18,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          sentCode = false;
+                                        });
+                                      },
+                                      child: CustomText(
+                                        'Go back',
+                                        type: FontStyle.heading2,
+                                        color: greyColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                      )
-                      : Container()
+                              ),
+                            )
+                          : Container()
                     ],
                   ),
                 ),

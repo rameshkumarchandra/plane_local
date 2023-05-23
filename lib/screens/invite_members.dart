@@ -101,8 +101,8 @@ class _InviteMembersState extends ConsumerState<InviteMembers> {
                   borderRadius: BorderRadius.circular(4)),
               child: DropdownButtonFormField(
                   dropdownColor: themeProvider.isDarkThemeEnabled
-                      ? darkBackgroundColor
-                      : lightBackgroundColor,
+                      ? darkSecondaryBackgroundColor
+                      : lightSecondaryBackgroundColor,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                   ),

@@ -32,7 +32,7 @@ class _SelectWorkspaceState extends ConsumerState<SelectWorkspace> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        //color: Colors.white,
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(10), topRight: Radius.circular(10)),
       ),
@@ -50,7 +50,10 @@ class _SelectWorkspaceState extends ConsumerState<SelectWorkspace> {
                   ),
                   IconButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Icons.close))
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.grey,
+                      ))
                 ],
               ),
               Container(
@@ -91,9 +94,7 @@ class _SelectWorkspaceState extends ConsumerState<SelectWorkspace> {
                                 ),
                                 CustomText(
                                   prov.workspaces[index]['name'],
-                                  type: FontStyle.appbarTitle,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
+                                  type: FontStyle.heading2,
                                 ),
                                 const Spacer(),
                                 ref
@@ -128,7 +129,9 @@ class _SelectWorkspaceState extends ConsumerState<SelectWorkspace> {
                 onTap: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const SetupWorkspace(fromHomeScreen: true,)));
+                      builder: (_) => const SetupWorkspace(
+                            fromHomeScreen: true,
+                          )));
                 },
                 child: Row(
                   children: [

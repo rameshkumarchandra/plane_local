@@ -101,9 +101,21 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                           child: GestureDetector(
                             onTap: () async {
                               showModalBottomSheet(
-                                backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  enableDrag: true,
+                                  constraints: BoxConstraints(
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height *
+                                              0.70),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30),
+                                  )),
                                   context: context,
-                                  builder: (_) => SelectCoverImage());
+                                  builder: (ctx) {
+                                    return SelectCoverImage();
+                                  });
                               // var file = await ImagePicker.platform
                               //     .pickImage(source: ImageSource.gallery);
                               // if (file != null) {
@@ -156,6 +168,15 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                             height: 50,
                             width: 80,
                             child: DropdownButtonFormField(
+                                dropdownColor: themeProvider.isDarkThemeEnabled
+                                    ? darkSecondaryBackgroundColor
+                                    : Colors.white,
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: themeProvider.isDarkThemeEnabled
+                                      ? darkPrimaryTextColor
+                                      : lightPrimaryTextColor,
+                                ),
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
                                 ),
@@ -167,7 +188,6 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                                       'Public',
                                       type: FontStyle.title,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black,
                                     ),
                                   ),
                                   DropdownMenuItem(
@@ -176,7 +196,6 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                                       'Private',
                                       type: FontStyle.title,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.black,
                                     ),
                                   ),
                                 ],
@@ -201,8 +220,10 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                         decoration: InputDecoration(
                           hintText: 'Enter Project Name',
                           hintStyle: TextStyle(
-                            // color: themeProvider.strokeColor,
-                            fontSize: 20,
+                            color: themeProvider.isDarkThemeEnabled
+                                ? darkSecondaryTextColor
+                                : lightSecondaryTextColor,
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                           border: OutlineInputBorder(
@@ -239,8 +260,10 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                         decoration: InputDecoration(
                           hintText: 'Enter Project Description',
                           hintStyle: TextStyle(
-                            // color: themeProvider.strokeColor,
-                            fontSize: 17,
+                            color: themeProvider.isDarkThemeEnabled
+                                ? darkSecondaryTextColor
+                                : lightSecondaryTextColor,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),
                           border: OutlineInputBorder(
@@ -294,7 +317,6 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                                           .last_workspace_id)
                                   .first['slug'],
                               data: {
-                                
                                 "cover_image": projectProvider.coverUrl,
                                 "name": name.text,
                                 "identifier":
