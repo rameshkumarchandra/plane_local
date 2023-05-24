@@ -1,15 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/screens/setup_workspace.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_text.dart';
-import 'package:plane_startup/widgets/loading_widget.dart';
 
 import '../provider/provider_list.dart';
 
@@ -29,6 +26,7 @@ class _SelectWorkspaceState extends ConsumerState<SelectWorkspace> {
   @override
   Widget build(BuildContext context) {
     var prov = ref.watch(ProviderList.workspaceProvider);
+    var profileProvider = ref.watch(ProviderList.profileProvider);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
@@ -65,7 +63,36 @@ class _SelectWorkspaceState extends ConsumerState<SelectWorkspace> {
                   itemBuilder: (ctx, index) {
                     return GestureDetector(
                       onTap: () {
-                        prov.selectWorkspace(id: prov.workspaces[index]["id"]);
+                        prov
+                            .selectWorkspace(id: prov.workspaces[index]["id"])
+                            .then(
+                          (value) {
+                            ref.read(ProviderList.projectProvider).getProjects(
+                                slug: ref
+                                    .read(ProviderList.workspaceProvider)
+                                    .workspaces
+                                    .where((element) =>
+                                        element['id'] ==
+                                        profileProvider
+                                            .userProfile.last_workspace_id)
+                                    .first['slug']);
+                            ref
+                                .read(ProviderList.projectProvider)
+                                .favouriteProjects(
+                                  index: 0,
+                                  slug: ref
+                                      .read(ProviderList.workspaceProvider)
+                                      .workspaces
+                                      .where((element) =>
+                                          element['id'] ==
+                                          profileProvider
+                                              .userProfile.last_workspace_id)
+                                      .first['slug'],
+                                  method: HttpMethod.get,
+                                  projectID: "",
+                                );
+                          },
+                        );
                       },
                       child: Column(
                         children: [
@@ -164,8 +191,8 @@ class _SelectWorkspaceState extends ConsumerState<SelectWorkspace> {
                   // height: 25,
                   // width: 25,
                   child: Wrap(
-                    children: [
-                      const SizedBox(
+                    children: const [
+                      SizedBox(
                         height: 25,
                         width: 25,
                         child: LoadingIndicator(

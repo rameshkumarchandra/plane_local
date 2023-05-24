@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plane_startup/config/enums.dart';
+import 'package:plane_startup/screens/home_screen.dart';
 import 'package:plane_startup/screens/setup_profile_screen.dart';
 import 'package:plane_startup/utils/button.dart';
 import 'package:plane_startup/utils/constants.dart';
@@ -33,6 +34,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var authProvider = ref.watch(ProviderList.authProvider);
+    var profileProvider = ref.watch(ProviderList.profileProvider);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -215,16 +217,28 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                                 token: code.text)
                                             .then((value) {
                                           if (authProvider.validateCodeState ==
-                                              AuthStateEnum.success) {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const SetupProfileScreen(),
-                                              ),
-                                            );
-                                          }
-                                        });
+                                            AuthStateEnum.success) {
+                                              if(profileProvider.userProfile.is_onboarded!){
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const HomeScreen(),
+                                                  ),
+                                                );
+                                              }
+                                              else {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const SetupProfileScreen(),
+                                                  ),
+                                                );
+                                              }
+                                            }
+                                          },
+                                        );
                                       }
                                     }
                                   },

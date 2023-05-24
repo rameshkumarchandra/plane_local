@@ -62,13 +62,13 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
         },
         text: 'General',
       ),
-      body: LoadingWidget(
-        loading: profileProvier.updateProfileState == AuthStateEnum.loading,
-        widgetClass: SingleChildScrollView(
-          child: Form(
+      body: SingleChildScrollView(
+        child: LoadingWidget(
+          loading: profileProvier.updateProfileState == AuthStateEnum.loading,
+          widgetClass: Form(
             child: SafeArea(
               child: SizedBox(
-                height: MediaQuery.of(context).size.height - 100,
+                height: MediaQuery.of(context).size.height,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
@@ -113,7 +113,8 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
                                           : Container()
                                     ],
                                   )
-                                : profileProvier.userProfile.avatar != null
+                                : profileProvier.userProfile.avatar != null &&
+                                        profileProvier.userProfile.avatar != ""
                                     ? CircleAvatar(
                                         radius: 50,
                                         backgroundImage: NetworkImage(
@@ -249,6 +250,7 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
                           },
                         ),
                       ),
+
                       const SizedBox(
                         height: 30,
                       ),
@@ -302,6 +304,9 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
                         }),
                         text: 'Update',
                       ),
+                      const SizedBox(
+                        height: 20,
+                      )
                     ],
                   ),
                 ),

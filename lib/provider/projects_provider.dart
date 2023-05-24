@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:plane_startup/config/const.dart';
 
 import '../config/apis.dart';
 import '../config/enums.dart';
@@ -12,6 +13,7 @@ class ProjectsProvider extends ChangeNotifier {
   var starredProjects = [];
   var projectState = AuthStateEnum.empty;
   var unsplashImageState = AuthStateEnum.empty;
+  var createProjectState = AuthStateEnum.empty;
   var unsplashImages = [];
   var coverUrl =
       "https://app.plane.so/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1575116464504-9e7652fddcb3%3Fcrop%3Dentropy%26cs%3Dtinysrgb%26fit%3Dmax%26fm%3Djpg%26ixid%3DMnwyODUyNTV8MHwxfHNlYXJjaHwxOHx8cGxhbmV8ZW58MHx8fHwxNjgxNDY4NTY5%26ixlib%3Drb-4.0.3%26q%3D80%26w%3D1080&w=1920&q=75";
@@ -107,7 +109,7 @@ class ProjectsProvider extends ChangeNotifier {
   }
 
   Future createProjects({required String slug, required data}) async {
-    projectState = AuthStateEnum.loading;
+    createProjectState = AuthStateEnum.loading;
     notifyListeners();
     log(slug);
     try {
@@ -120,12 +122,14 @@ class ProjectsProvider extends ChangeNotifier {
       );
       log(response.data.toString());
       await getProjects(slug: slug);
-      projectState = AuthStateEnum.success;
+      createProjectState = AuthStateEnum.success;
       notifyListeners();
       // log(response.data.toString());
     } on DioError catch (e) {
+      print('---- ERROR ------');
+      ScaffoldMessenger.of(Const.globalKey.currentContext!).showSnackBar(const SnackBar(content: Text('Identifier already exists')));
       log(e.error.toString());
-      projectState = AuthStateEnum.error;
+      createProjectState = AuthStateEnum.error;
       notifyListeners();
     }
   }

@@ -25,9 +25,10 @@ InputDecoration kTextFieldDecoration = InputDecoration(
       fontFamily: 'SF Pro Display',
       fontSize: 14,
       color: Colors.red,
-      fontWeight: FontWeight.bold),
+      fontWeight: FontWeight.w400),
   //contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
   labelText: '',
+  alignLabelWithHint: true,
   floatingLabelBehavior: FloatingLabelBehavior.never,
   errorBorder: const OutlineInputBorder(
     borderSide: BorderSide(color: Color.fromARGB(255, 253, 17, 0)),

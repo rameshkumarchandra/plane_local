@@ -37,10 +37,10 @@ class _AppState extends ConsumerState<App> {
                   ),
                 ),
               )
-            : profileProv.userProfile.first_name!.isEmpty
+            : !profileProv.userProfile.is_onboarded!
                 ? const SetupProfileScreen()
-                : workspaceProv.workspaces.isEmpty
-                    ? const SetupWorkspace()
+                // : workspaceProv.workspaces.isEmpty
+                //     ? const SetupWorkspace()
                     : const HomeScreen());
   }
 }

@@ -194,7 +194,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
            Hero(
             tag: 'photo',
             child: 
-            profileProvider.userProfile.avatar != null 
+            profileProvider.userProfile.avatar != null && profileProvider.userProfile.avatar != ""
             ? CircleAvatar(
               radius: 40,
               backgroundImage: NetworkImage(profileProvider.userProfile.avatar!),
