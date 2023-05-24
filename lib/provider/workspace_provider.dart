@@ -15,6 +15,7 @@ class WorkspaceProvider extends ChangeNotifier {
   var workspaceInvitations = [];
   var workspaces = [];
   var urlNotAvailable = false;
+  var currentWorkspace = {};
   AuthStateEnum workspaceInvitationState = AuthStateEnum.loading;
   AuthStateEnum selectWorkspaceState = AuthStateEnum.empty;
 

@@ -5,22 +5,23 @@ import 'package:plane_startup/provider/profile_provider.dart';
 import 'package:plane_startup/provider/projects_provider.dart';
 import 'package:plane_startup/provider/workspace_provider.dart';
 
+import 'issues_provider.dart';
 import 'theme_provider.dart';
 
 class ProviderList {
-    static final authProvider =
+  static final authProvider =
       ChangeNotifierProvider<AuthProvider>((ref) => AuthProvider(ref));
-      
   static final profileProvider =
       ChangeNotifierProvider<ProfileProvider>((_) => ProfileProvider());
-
   static final workspaceProvider =
       ChangeNotifierProvider<WorkspaceProvider>((ref) => WorkspaceProvider(ref));
-   static var themeProvider =
+  static var themeProvider =
       ChangeNotifierProvider<ThemeProvider>((_) => ThemeProvider());
-         static var projectProvider =
+  static var projectProvider =
       ChangeNotifierProvider<ProjectsProvider>((_) => ProjectsProvider());
-      static var fileUploadProvider =
+  static var fileUploadProvider =
       ChangeNotifierProvider<FileUploadProvider>((ref) => FileUploadProvider(ref));
+  static var issuesProvider =
+      ChangeNotifierProvider<IssuesProvider>((ref) => IssuesProvider(ref));
 }
 

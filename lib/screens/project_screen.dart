@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/screens/Project%20Detail/project_detail.dart';
 import 'package:plane_startup/screens/create_view_screen.dart';
@@ -302,7 +303,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                   true
                               ? Container()
                               : ListTile(
-                                  onTap: () {
+                                  onTap: () {projectProvider.currentProject = projectProvider.projects[index];
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

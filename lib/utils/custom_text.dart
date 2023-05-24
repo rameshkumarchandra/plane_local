@@ -77,7 +77,7 @@ class CustomText extends ConsumerWidget {
           // color: color ?? themeProvider.primaryTextColor,
           color: themeProvider.isDarkThemeEnabled
               ? darkPrimaryTextColor
-              : lightPrimaryTextColor,
+              : Colors.black,
         );
 
       case FontStyle.description:
@@ -89,7 +89,7 @@ class CustomText extends ConsumerWidget {
             color: color ??
                 (themeProvider.isDarkThemeEnabled
                     ? darkPrimaryTextColor
-                    : lightPrimaryTextColor));
+                    : Colors.black));
 
       case FontStyle.smallText:
         return TextStyle(
@@ -99,7 +99,7 @@ class CustomText extends ConsumerWidget {
           // color: color ?? themeProvider.primaryTextColor,
           color: themeProvider.isDarkThemeEnabled
               ? darkPrimaryTextColor
-              : lightPrimaryTextColor,
+              : Colors.black,
         );
 
       case FontStyle.text:
@@ -111,7 +111,7 @@ class CustomText extends ConsumerWidget {
           color: color ??
               (themeProvider.isDarkThemeEnabled
                   ? darkPrimaryTextColor
-                  : lightPrimaryTextColor),
+                  : Colors.black),
         );
 
       case FontStyle.secondaryText:
@@ -122,7 +122,7 @@ class CustomText extends ConsumerWidget {
           // color: color ?? themeProvider.secondaryTextColor,
           color: themeProvider.isDarkThemeEnabled
               ? darkSecondaryTextColor
-              : lightSecondaryTextColor,
+              : Colors.black,
         );
 
       case FontStyle.heading:
@@ -138,7 +138,7 @@ class CustomText extends ConsumerWidget {
           color: color ??
               (themeProvider.isDarkThemeEnabled
                   ? darkPrimaryTextColor
-                  : lightPrimaryTextColor),
+                  : Colors.black),
         );
       case FontStyle.heading2:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
@@ -153,7 +153,7 @@ class CustomText extends ConsumerWidget {
           // color: color ?? themeProvider.primaryTextColor,
           color: themeProvider.isDarkThemeEnabled
               ? darkPrimaryTextColor
-              : lightPrimaryTextColor,
+              : Colors.black,
         );
       case FontStyle.title:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
@@ -168,7 +168,7 @@ class CustomText extends ConsumerWidget {
             color: color ??
                 (themeProvider.isDarkThemeEnabled
                     ? darkSecondaryTextColor
-                    : lightSecondaryTextColor));
+                    : Colors.black));
       case FontStyle.subheading:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 18,
@@ -178,14 +178,16 @@ class CustomText extends ConsumerWidget {
         //             : lightPrimaryTextColor),
         //     fontWeight: fontWeight ?? FontWeight.w500);
         return TextStyle(
-            fontSize: fontSize ?? 18,
-            fontWeight: fontWeight ?? FontWeight.w400,
-            fontFamily: 'SF Pro Display',
-            // color: color ?? themeProvider.secondaryTextColor,
-            color: color ??
-                (themeProvider.isDarkThemeEnabled
-                    ? darkSecondaryTextColor
-                    : lightSecondaryTextColor));
+          fontSize: fontSize ?? 18,
+          fontWeight: fontWeight ?? FontWeight.w400,
+          fontFamily: 'SF Pro Display',
+          // color: color ?? themeProvider.secondaryTextColor,
+          color: 
+          color??
+          (themeProvider.isDarkThemeEnabled
+              ? darkSecondaryTextColor
+              : Colors.black),
+        );
       case FontStyle.boldTitle:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 18,
@@ -199,7 +201,7 @@ class CustomText extends ConsumerWidget {
           color: color ??
               (themeProvider.isDarkThemeEnabled
                   ? darkPrimaryTextColor
-                  : lightPrimaryTextColor),
+                  : Colors.black),
         );
       case FontStyle.subtitle:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
@@ -214,7 +216,7 @@ class CustomText extends ConsumerWidget {
             color: color ??
                 (themeProvider.isDarkThemeEnabled
                     ? darkStrokeColor
-                    : lightStrokeColor));
+                    : Colors.black));
       case FontStyle.boldSubtitle:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 16,
@@ -228,7 +230,7 @@ class CustomText extends ConsumerWidget {
           color: color ??
               (themeProvider.isDarkThemeEnabled
                   ? darkPrimaryTextColor
-                  : lightPrimaryTextColor),
+                  : Colors.black),
         );
       case FontStyle.buttonText:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
@@ -254,7 +256,7 @@ class CustomText extends ConsumerWidget {
           color: color ??
               (themeProvider.isDarkThemeEnabled
                   ? darkPrimaryTextColor
-                  : lightPrimaryTextColor),
+                  : Colors.black),
         );
       default:
         return TextStyle(

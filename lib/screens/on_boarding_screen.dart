@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:plane_startup/screens/sign_in.dart';
-import 'package:plane_startup/utils/button.dart';
+
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/text_styles.dart';
 
 import '../provider/provider_list.dart';
+import '../utils/button.dart';
 import '../utils/custom_text.dart';
 import '../widgets/status_widgt.dart';
 import '../widgets/three_dots_widget.dart';
+import 'sign_in.dart';
 
 class OnBoardingScreen extends ConsumerStatefulWidget {
   const OnBoardingScreen({super.key});
