@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/screens/home_screen.dart';
 import 'package:plane_startup/screens/setup_profile_screen.dart';
+import 'package:plane_startup/services/shared_preference_service.dart';
 import 'package:plane_startup/utils/button.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_rich_text.dart';
@@ -12,6 +15,7 @@ import 'package:plane_startup/widgets/resend_code_button.dart';
 
 import '../provider/provider_list.dart';
 import '../utils/custom_text.dart';
+import 'setup_workspace.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -230,10 +234,23 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                               else {
                                                 Navigator.push(
                                                   context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const SetupProfileScreen(),
-                                                  ),
+                                            
+                                                         MaterialPageRoute(
+                                                  builder: (context) => ref
+                                                          .read(ProviderList
+                                                              .profileProvider)
+                                                          .userProfile
+                                                          .first_name!
+                                                          .isEmpty
+                                                      ? const SetupProfileScreen()
+                                                      : ref
+                                                              .read(ProviderList
+                                                                  .workspaceProvider)
+                                                              .workspaces
+                                                              .isEmpty
+                                                          ? const SetupWorkspace()
+                                                          : const HomeScreen()),
+                                                
                                                 );
                                               }
                                             }

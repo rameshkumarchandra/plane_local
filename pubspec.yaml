@@ -46,6 +46,7 @@ dependencies:
   emoji_picker_flutter: ^1.5.4
   image_picker: ^0.8.7+5
   rename: ^2.1.1
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
@@ -106,6 +107,9 @@ flutter:
     - assets/svg_images/slack.svg
     - assets/svg_images/view_card.svg
     - assets/svg_images/page_card.svg
+    - assets/svg_images/done.svg
+    - assets/svg_images/cancelled.svg
+    - assets/svg_images/in_progress.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

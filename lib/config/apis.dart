@@ -18,5 +18,8 @@ class APIs {
   static String createProjects = '$baseApi/api/workspaces/\$SLUG/projects/';
   static String favouriteProjects =
       '$baseApi/api/workspaces/\$SLUG/user-favorite-projects/';
-  static String unsplashImages = 'https://app.plane.so/api/unsplash?page=1&per_page=20&query=';
+ static String unsplashImages = 'https://app.plane.so/api/unsplash?page=1&per_page=20&query=';
+ static String states = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/states/';
+ static String projectMembers = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/members/';
+ static String projectIssues = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issues/';
 }

@@ -289,7 +289,7 @@ class UserProfile {
       is_email_verified: map['is_email_verified'],
       is_password_autoset: map['is_password_autoset'],
       is_onboarded: map['is_onboarded'],
-      token: map['token'],
+      token: map['access_token'],
       billing_address_country: map['billing_address_country'],
       billing_address: map['billing_address'],
       has_billing_address: map['has_billing_address'],

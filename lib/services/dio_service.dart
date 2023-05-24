@@ -11,12 +11,12 @@ import '../config/enums.dart';
 
 class DioConfig {
   // Static Dio created to directly access Dio client
+  static var dio = Dio();
   static Dio getDio({
     dynamic data,
     bool hasAuth = true,
     bool hasBody = true,
   }) {
-    var dio = Dio();
     Map<String, String> requestHeaders;
 
     // Passing Headers
@@ -35,8 +35,7 @@ class DioConfig {
       headers: requestHeaders,
     );
 
-    dio = Dio(options);
-
+    dio.options = options;
     dio.interceptors.addAll([
       InterceptorsWrapper(onRequest:
           (RequestOptions options, RequestInterceptorHandler handler) async {
@@ -95,7 +94,7 @@ class DioConfig {
       );
       return response;
     } finally {
-      dio.close();
+      // dio.close();
     }
   }
 }

@@ -34,7 +34,7 @@ void main() async {
   if (!prefs!.containsKey('isDarkThemeEnabled')) {
     await prefs!.setBool('isDarkThemeEnabled', false);
   }
-  //SharedPrefrenceServices.sharedPreferences!.clear();
+  // SharedPrefrenceServices.sharedPreferences!.clear();
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -52,27 +52,33 @@ class _MyAppState extends ConsumerState<MyApp> {
       var prov = ref.read(ProviderList.profileProvider);
       prov.getProfile().then((value) {
         ref.read(ProviderList.workspaceProvider).getWorkspaces().then((value) {
+          if (ref.read(ProviderList.workspaceProvider).workspaces.isEmpty) {
+            return;
+          }
           log(prov.userProfile.last_workspace_id.toString());
 
           ref.read(ProviderList.projectProvider).getProjects(
-              slug: ref
-                  .read(ProviderList.workspaceProvider)
-                  .workspaces
-                  .where((element) =>
-                      element['id'] == prov.userProfile.last_workspace_id)
-                  .first['slug']);
-                 ref.read(ProviderList.projectProvider).favouriteProjects(
-                  index: 0,
+                  slug: ref
+                      .read(ProviderList.workspaceProvider)
+                      .workspaces
+                      .where((element) {
+                if (element['id'] == prov.userProfile.last_workspace_id) {
+                  ref.read(ProviderList.workspaceProvider).currentWorkspace =
+                      element;
+                  return true;
+                }
+                return false;
+              }).first['slug']);
+          ref.read(ProviderList.projectProvider).favouriteProjects(
+              index: 0,
               slug: ref
                   .read(ProviderList.workspaceProvider)
                   .workspaces
                   .where((element) =>
                       element['id'] == prov.userProfile.last_workspace_id)
                   .first['slug'],
-                  method: HttpMethod.get,
-                  projectID: ""
-                  
-                  );
+              method: HttpMethod.get,
+              projectID: "");
         });
       });
     }

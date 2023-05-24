@@ -45,7 +45,7 @@ class AuthProvider extends ChangeNotifier {
   Future validateMagicCode({required String key, required token}) async {
     validateCodeState = AuthStateEnum.loading;
     notifyListeners();
-    try  {
+    try {
       log({"key": key, "token": token}.toString());
       var response = await DioConfig().dioServe(
           hasAuth: false,
@@ -53,22 +53,71 @@ class AuthProvider extends ChangeNotifier {
           hasBody: true,
           httpMethod: HttpMethod.post,
           data: {"key": key, "token": token});
-          Const.appBearerToken = response.data["access_token"];
+      Const.appBearerToken = response.data["access_token"];
       SharedPrefrenceServices.sharedPreferences!
           .setString("token", response.data["access_token"]);
-      await ref.read(ProviderList.profileProvider).getProfile();
+      // await ref.read(ProviderList.profileProvider).getProfile();
       // .userProfile = UserProfile.fromMap(response.data);
-          validateCodeState = AuthStateEnum.success;
-      
+      validateCodeState = AuthStateEnum.success;
+
+      await ref
+          .read(ProviderList.profileProvider)
+          .getProfile()
+          .then((value) async {
+        await ref
+            .read(ProviderList.workspaceProvider)
+            .getWorkspaces()
+            .then((value) {
+          if (ref.read(ProviderList.workspaceProvider).workspaces.isEmpty ||
+              ref
+                      .read(ProviderList.profileProvider)
+                      .userProfile
+                      .last_workspace_id ==
+                  null) {
+            return;
+          }
+          log(ref
+              .read(ProviderList.profileProvider)
+              .userProfile
+              .last_workspace_id
+              .toString());
+
+          ref.read(ProviderList.projectProvider).getProjects(
+              slug: ref
+                  .read(ProviderList.workspaceProvider)
+                  .workspaces
+                  .where((element) =>
+                      element['id'] ==
+                      ref
+                          .read(ProviderList.profileProvider)
+                          .userProfile
+                          .last_workspace_id)
+                  .first['slug']);
+          ref.read(ProviderList.projectProvider).favouriteProjects(
+              index: 0,
+              slug: ref
+                  .read(ProviderList.workspaceProvider)
+                  .workspaces
+                  .where((element) =>
+                      element['id'] ==
+                      ref
+                          .read(ProviderList.profileProvider)
+                          .userProfile
+                          .last_workspace_id)
+                  .first['slug'],
+              method: HttpMethod.get,
+              projectID: "");
+        });
+      });
       log(response.data.toString());
       notifyListeners();
     } on DioError catch (e) {
       validateCodeState = AuthStateEnum.failed;
       ScaffoldMessenger.of(Const.globalKey.currentContext!).showSnackBar(
-          SnackBar(
-            content: Text(e.response.toString()),
-          ),
-        );
+        SnackBar(
+          content: Text(e.response.toString()),
+        ),
+      );
       log(e.response.toString());
       notifyListeners();
     }
