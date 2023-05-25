@@ -22,4 +22,5 @@ class APIs {
  static String states = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/states/';
  static String projectMembers = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/members/';
  static String projectIssues = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issues/';
+ static String issueLabels = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issue-labels/';
 }

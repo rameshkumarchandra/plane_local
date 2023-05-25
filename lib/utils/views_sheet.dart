@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/utils/button.dart';
+import 'package:plane_startup/utils/constants.dart';
 
 import 'custom_text.dart';
 
-class ViewsSheet extends StatelessWidget {
+class ViewsSheet extends ConsumerStatefulWidget {
   ViewsSheet({super.key});
 
+  @override
+  ConsumerState<ViewsSheet> createState() => _ViewsSheetState();
+}
+
+class _ViewsSheetState extends ConsumerState<ViewsSheet> {
   List<String> tags = [
     'Assignees',
     'ID',
@@ -20,6 +28,7 @@ class ViewsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var isseProvider = ref.read(ProviderList.issuesProvider);
     return Padding(
       padding: const EdgeInsets.only(top: 23, left: 23, right: 23),
       child: Column(
@@ -149,22 +158,21 @@ class ViewsSheet extends StatelessWidget {
             width: double.infinity,
             child: Row(
               children: [
-                Icon(
-                  Icons.arrow_forward_ios,
-                  color: Color.fromRGBO(65, 65, 65, 1),
-                ),
-                SizedBox(width: 10),
-                // Text(
-                //   'Show empty states',
-                //   style: TextStyle(
-                //     fontSize: 18,
-                //     fontWeight: FontWeight.w400,
-                //   ),
-                // ),
+                const SizedBox(width: 10),
                 CustomText(
                   'Show empty states',
                   type: FontStyle.subheading,
                 ),
+                const SizedBox(width: 10),
+                Checkbox(
+                    activeColor: primaryColor,
+                    value: isseProvider.showEmptyStates,
+                    onChanged: (val) {
+                      setState(() {
+                        isseProvider.showEmptyStates = val!;
+                        isseProvider.setsState();
+                      });
+                    })
               ],
             ),
           ),

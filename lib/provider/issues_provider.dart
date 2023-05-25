@@ -21,9 +21,12 @@ class IssuesProvider extends ChangeNotifier {
   AuthStateEnum statesState = AuthStateEnum.empty;
   AuthStateEnum membersState = AuthStateEnum.empty;
   AuthStateEnum issueState = AuthStateEnum.empty;
+  AuthStateEnum labelState = AuthStateEnum.empty;
   var createIssueState = AuthStateEnum.empty;
+  bool showEmptyStates = false;
   var createIssuedata = {};
   var issues = [];
+  var labels = [];
   var states = {};
   var members = [];
 
@@ -44,56 +47,20 @@ class IssuesProvider extends ChangeNotifier {
             .addEntries({subList[j]['id']: stateIndexMapping.length}.entries);
         data.add(BoardListsData(
           items: [],
-          header: SizedBox(
-            height: 50,
-            child: Row(
-              children: [
-                SvgPicture.asset(
-                  states.keys.elementAt(i) == 'backlog'
-                      ? 'assets/svg_images/circle.svg'
-                      : states.keys.elementAt(i) == 'cancelled'
-                          ? 'assets/svg_images/cancelled.svg'
-                          : states.keys.elementAt(i) == 'completed'
-                              ? 'assets/svg_images/done.svg'
-                              : states.keys.elementAt(i) == 'started'
-                                  ? 'assets/svg_images/in_progress.svg'
-                                  : 'assets/svg_images/circle.svg',
-                  height: 25,
-                  width: 25,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                CustomText(
-                  subList[j]['name'],
-                  type: FontStyle.heading,
-                  fontSize: 20,
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(
-                    left: 15,
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: const Color.fromRGBO(222, 226, 230, 1)),
-                  height: 25,
-                  width: 35,
-                  child: CustomText(
-                    "15",
-                    type: FontStyle.subtitle,
-                  ),
-                ),
-                const Spacer(),
-                const Icon(Icons.zoom_in_map,
-                    color: Color.fromRGBO(133, 142, 150, 1)),
-                const SizedBox(
-                  width: 10,
-                ),
-                const Icon(Icons.add, color: Color.fromRGBO(133, 142, 150, 1)),
-              ],
-            ),
+          leading: SvgPicture.asset(
+            states.keys.elementAt(i) == 'backlog'
+                ? 'assets/svg_images/circle.svg'
+                : states.keys.elementAt(i) == 'cancelled'
+                    ? 'assets/svg_images/cancelled.svg'
+                    : states.keys.elementAt(i) == 'completed'
+                        ? 'assets/svg_images/done.svg'
+                        : states.keys.elementAt(i) == 'started'
+                            ? 'assets/svg_images/in_progress.svg'
+                            : 'assets/svg_images/circle.svg',
+            height: 22,
+            width: 22,
           ),
+          title: subList[j]['name'],
           // backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
           backgroundColor:
               ref!.read(ProviderList.themeProvider).isDarkThemeEnabled
@@ -102,7 +69,7 @@ class IssuesProvider extends ChangeNotifier {
         ));
       }
     }
-    // log(stateIndexMapping.toString());
+    // log(issues.length.toString());
     for (int i = 0; i < issues.length; i++) {
       data[stateIndexMapping[issues[i]["state_detail"]["id"]]]
           .items
@@ -191,7 +158,111 @@ class IssuesProvider extends ChangeNotifier {
             ),
           ));
     }
+
+    for (var element in data) {
+      element.header = SizedBox(
+        height: 50,
+        child: Row(
+          children: [
+            SvgPicture.asset(
+              states.keys.elementAt(data.indexOf(element)) == 'backlog'
+                  ? 'assets/svg_images/circle.svg'
+                  : states.keys.elementAt(data.indexOf(element)) == 'cancelled'
+                      ? 'assets/svg_images/cancelled.svg'
+                      : states.keys.elementAt(data.indexOf(element)) ==
+                              'completed'
+                          ? 'assets/svg_images/done.svg'
+                          : states.keys.elementAt(data.indexOf(element)) ==
+                                  'started'
+                              ? 'assets/svg_images/in_progress.svg'
+                              : 'assets/svg_images/circle.svg',
+              height: 25,
+              width: 25,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            CustomText(
+              element.title.toString(),
+              type: FontStyle.heading,
+              fontSize: 20,
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(
+                left: 15,
+              ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: const Color.fromRGBO(222, 226, 230, 1)),
+              height: 25,
+              width: 35,
+              child: CustomText(
+                element.items.length.toString(),
+                type: FontStyle.subtitle,
+              ),
+            ),
+            const Spacer(),
+            const Icon(Icons.zoom_in_map,
+                color: Color.fromRGBO(133, 142, 150, 1)),
+            const SizedBox(
+              width: 10,
+            ),
+            const Icon(Icons.add, color: Color.fromRGBO(133, 142, 150, 1)),
+          ],
+        ),
+      );
+    }
     return data;
+  }
+
+  Future getLabels({required String slug, required String projID}) async {
+    labelState = AuthStateEnum.loading;
+    // notifyListeners();
+    try {
+      var response = await DioConfig().dioServe(
+        hasAuth: true,
+        url: APIs.issueLabels
+            .replaceAll("\$SLUG", slug)
+            .replaceAll('\$PROJECTID', projID),
+        hasBody: false,
+        httpMethod: HttpMethod.get,
+      );
+      //   log(response.data.toString());
+      labels = response.data;
+      labelState = AuthStateEnum.success;
+      notifyListeners();
+    } on DioError catch (e) {
+      log(e.error.toString());
+      labelState = AuthStateEnum.error;
+      notifyListeners();
+    }
+  }
+
+  Future createLabels(
+      {required String slug,
+      required String projID,
+      required dynamic data}) async {
+    labelState = AuthStateEnum.loading;
+    notifyListeners();
+    try {
+      var response = await DioConfig().dioServe(
+          hasAuth: true,
+          url: APIs.issueLabels
+              .replaceAll("\$SLUG", slug)
+              .replaceAll('\$PROJECTID', projID),
+          hasBody: true,
+          httpMethod: HttpMethod.post,
+          data: data);
+      //   log(response.data.toString());
+      await getLabels(slug: slug, projID: projID);
+      labelState = AuthStateEnum.success;
+      notifyListeners();
+    } on DioError catch (e) {
+      log(e.error.toString());
+      labelState = AuthStateEnum.error;
+      notifyListeners();
+    }
   }
 
   Future getStates({required String slug, required String projID}) async {
@@ -206,7 +277,7 @@ class IssuesProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-     //   log(response.data.toString());
+      //   log(response.data.toString());
       states = response.data;
 
       statesState = AuthStateEnum.success;
@@ -267,8 +338,8 @@ class IssuesProvider extends ChangeNotifier {
                   DateFormat('yyyy-MM-dd').format(createIssuedata['due_date'])
           });
       // log(response.data.toString());
-      issues.add(response.data);
-      initializeBoard();
+      await getIssues(slug: slug, projID: projID);
+      // initializeBoard();
       createIssueState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
@@ -306,7 +377,7 @@ class IssuesProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-     //  log(response.data.toString());
+      log("DONE");
       issues = response.data;
       issueState = AuthStateEnum.success;
       notifyListeners();
