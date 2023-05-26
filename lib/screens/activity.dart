@@ -143,10 +143,7 @@ class _ActivityState extends ConsumerState<Activity> {
                   type: FontStyle.title,
                 ),
                 GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Members()));
-                    },
+                    onTap: () {},
                     child: Icon(
                       Icons.ios_share_outlined,
                       color: Colors.blue,

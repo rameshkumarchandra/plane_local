@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/widgets/issue_card_widget.dart';
 
 import '../config/apis.dart';
 import '../kanban/models/inputs.dart';
@@ -22,6 +23,7 @@ class IssuesProvider extends ChangeNotifier {
   AuthStateEnum membersState = AuthStateEnum.empty;
   AuthStateEnum issueState = AuthStateEnum.empty;
   AuthStateEnum labelState = AuthStateEnum.empty;
+  AuthStateEnum orderByState = AuthStateEnum.empty;
   var createIssueState = AuthStateEnum.empty;
   bool showEmptyStates = false;
   var createIssuedata = {};
@@ -29,6 +31,25 @@ class IssuesProvider extends ChangeNotifier {
   var labels = [];
   var states = {};
   var members = [];
+  bool assignee = false;
+  bool dueDate = false;
+  bool id = false;
+  bool label = false;
+  bool state = false;
+  bool subIsseCount = false;
+  bool priority = false;
+
+  List tags = [
+    {'tag': 'Assignees', 'selected': false},
+    {'tag': 'ID', 'selected': false},
+    {'tag': 'Due Date', 'selected': false},
+    {'tag': 'Labels', 'selected': false},
+    {'tag': 'Priority', 'selected': false},
+    {'tag': 'States', 'selected': false},
+    {'tag': 'Sub Issue Count', 'selected': false},
+    {'tag': 'Attachment Count', 'selected': false},
+    {'tag': 'Link', 'selected': false}
+  ];
 
   void setsState() {
     notifyListeners();
@@ -69,94 +90,12 @@ class IssuesProvider extends ChangeNotifier {
         ));
       }
     }
-    // log(issues.length.toString());
+    // log(stateIndexMapping.toString());
+    log(issues.toString());
     for (int i = 0; i < issues.length; i++) {
       data[stateIndexMapping[issues[i]["state_detail"]["id"]]]
           .items
-          .add(Container(
-            margin: const EdgeInsets.only(bottom: 15),
-            decoration: BoxDecoration(
-                color: themeProvider.isDarkThemeEnabled
-                    ? lightPrimaryTextColor
-                    : darkPrimaryTextColor,
-                border: Border.all(color: Colors.grey.shade200, width: 2),
-                borderRadius: BorderRadius.circular(10)),
-            constraints: const BoxConstraints(maxWidth: 500),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        child: Row(
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(6),
-                                  color: Colors.orange.shade100),
-                              margin: const EdgeInsets.only(right: 15),
-                              height: 25,
-                              width: 25,
-                              child: const Icon(
-                                Icons.signal_cellular_alt,
-                                color: Colors.orange,
-                                size: 18,
-                              ),
-                            ),
-                            CustomText(
-                              issues[i]['project_detail']['identifier'],
-                              type: FontStyle.title,
-                            ),
-                          ],
-                        ),
-                      ),
-                      Stack(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(left: 30, top: 5),
-                            height: 15,
-                            width: 15,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: const Color.fromRGBO(247, 174, 89, 1)),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 15, top: 5),
-                            height: 15,
-                            width: 15,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: const Color.fromRGBO(140, 193, 255, 1)),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 5),
-                            height: 15,
-                            width: 15,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25),
-                                color: const Color.fromRGBO(30, 57, 88, 1)),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomText(
-                    issues[i]['name'],
-                    type: FontStyle.title,
-                    maxLines: 10,
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-              ),
-            ),
-          ));
+          .add(IssueCardWidget(i: i));
     }
 
     for (var element in data) {
@@ -291,6 +230,7 @@ class IssuesProvider extends ChangeNotifier {
 
   Future createIssue({required String slug, required String projID}) async {
     createIssueState = AuthStateEnum.loading;
+
     notifyListeners();
     try {
       // log({
@@ -337,9 +277,9 @@ class IssuesProvider extends ChangeNotifier {
               "target_date":
                   DateFormat('yyyy-MM-dd').format(createIssuedata['due_date'])
           });
-      // log(response.data.toString());
-      await getIssues(slug: slug, projID: projID);
-      // initializeBoard();
+      log(response.data.toString());
+      issues.add(response.data);
+      initializeBoard();
       createIssueState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
@@ -434,6 +374,81 @@ class IssuesProvider extends ChangeNotifier {
     } on DioError catch (e) {
       log(e.response.toString());
       membersState = AuthStateEnum.error;
+      notifyListeners();
+    }
+  }
+
+  Future orderByIssues({
+    required String slug,
+    required String projID,
+    required String orderBy,
+    required String groupBy,
+    required String type,
+  }) async {
+    orderByState = AuthStateEnum.loading;
+    notifyListeners();
+
+    if (orderBy == '') {
+      orderBy = '-created_at';
+    }
+    if (groupBy == '') {
+      groupBy = 'state';
+    }
+    if (type == '') {
+      type = 'all';
+    }
+    // var url = (orderBy != '' && groupBy != '')
+    //     ? APIs.orderByGroupByIssues
+    //         .replaceAll("\$SLUG", slug)
+    //         .replaceAll('\$PROJECTID', projID)
+    //         .replaceAll('\$ORDERBY', orderBy)
+    //         .replaceAll('\$GROUPBY', groupBy)
+    //     : orderBy != ''
+    //         ? APIs.orderByGroupByIssues
+    //             .replaceAll("\$SLUG", slug)
+    //             .replaceAll('\$PROJECTID', projID)
+    //             .replaceAll('\$ORDERBY', orderBy)
+    //             .replaceAll('\$GROUPBY', 'priority')
+    //         : APIs.groupByIssues
+    //             .replaceAll("\$SLUG", slug)
+    //             .replaceAll('\$PROJECTID', projID)
+    //             .replaceAll('\$GROUPBY', groupBy);
+
+    var url = (type != 'all')
+        ? APIs.orderByGroupByTypeIssues
+            .replaceAll("\$SLUG", slug)
+            .replaceAll('\$PROJECTID', projID)
+            .replaceAll('\$ORDERBY', orderBy)
+            .replaceAll('\$GROUPBY', groupBy)
+            .replaceAll('\$TYPE', type)
+        : APIs.orderByGroupByIssues
+            .replaceAll("\$SLUG", slug)
+            .replaceAll('\$PROJECTID', projID)
+            .replaceAll('\$ORDERBY', orderBy)
+            .replaceAll('\$GROUPBY', groupBy);
+    log('URL: $url');
+    try {
+      var response = await DioConfig().dioServe(
+        hasAuth: true,
+        url: url,
+        hasBody: false,
+        httpMethod: HttpMethod.get,
+      );
+
+      log(response.data.toString());
+      issues = [];
+
+      (response.data as Map).forEach((key, value) {
+        (value as List).forEach((element) {
+          issues.add(element);
+        });
+      });
+      orderByState = AuthStateEnum.success;
+      notifyListeners();
+    } on DioError catch (e) {
+      log('error');
+      log(e.response.toString());
+      orderByState = AuthStateEnum.error;
       notifyListeners();
     }
   }

@@ -50,15 +50,21 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   @override
   void initState() {
     var prov = ref.read(ProviderList.issuesProvider);
-      if (prov.issues.isEmpty) {
-    prov.getStates(
+    prov.getProjectMembers(
         slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
 
-    prov.getIssues(
-        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
-        projID: ref.read(ProviderList.projectProvider).currentProject['id']);
-      }
+    if (prov.issues.isEmpty) {
+      prov.getStates(
+          slug:
+              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+
+      prov.getIssues(
+          slug:
+              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+    }
 
     pages = [
       issues(),
@@ -213,10 +219,25 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                           Expanded(
                               child: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
+                              // showModalBottomSheet(
+                              //     isScrollControlled: true,
+                              //     enableDrag: true,
+                              //     constraints: BoxConstraints(
+                              //         maxHeight:
+                              //             MediaQuery.of(context).size.height *
+                              //                 0.85),
+                              //     shape: const RoundedRectangleBorder(
+                              //         borderRadius: BorderRadius.only(
+                              //       topLeft: Radius.circular(30),
+                              //       topRight: Radius.circular(30),
+                              //     )),
+                              //     context: context,
+                              //     builder: (ctx) {
+                              //       return const FilterSheet();
+                              //     });
+                              Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => const CreateIssue(),
+                                  builder: (context) => CreateIssue(),
                                 ),
                               );
                             },

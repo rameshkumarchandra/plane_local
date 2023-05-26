@@ -192,7 +192,7 @@ class _InviteCOWorkersState extends ConsumerState<InviteCOWorkers> {
                             .toList();
                         log(data.toString());
                         await prov.inviteToWorkspace(
-                            slug: prov.workspaces.last['slug'], data: data);
+                            slug: prov.workspaces.last['slug'], email: data);
                         // ignore: use_build_context_synchronously
                         Navigator.pushReplacement(
                           context,

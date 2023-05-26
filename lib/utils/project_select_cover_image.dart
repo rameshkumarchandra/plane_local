@@ -31,7 +31,7 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
   var page = 1;
   final per_page = 18;
   bool isLoading = false;
-  bool isSearching = false;
+  bool isSearched = false;
 
   @override
   void initState() {
@@ -50,6 +50,9 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
   Future getImages(bool isFirstReq) async {
     if (!isFirstReq) {
       FocusScope.of(context).unfocus();
+    } else {
+      isSearched = false;
+      searchController.text = '';
     }
 
     setState(() {
@@ -73,6 +76,7 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
       );
       //var res = jsonDecode(response.toString());
       // log(response.toString());
+
       searchController.text.isEmpty
           ? response.data.forEach((e) {
               images.add(e['urls']['regular']);
@@ -83,7 +87,7 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
       log(images.length.toString());
       log(images.toString());
       isLoading = false;
-      // isSearching = false;
+      if (!isFirstReq) isSearched = true;
       setState(() {});
     } catch (e) {
       log(e.toString());
@@ -98,7 +102,7 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
           images.isNotEmpty &&
           searchController.text.isNotEmpty) {
         page++;
-        getImages(true);
+        getImages(false);
       }
     }
     return false;
@@ -211,7 +215,8 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                               onTap: () {
                                 images.clear();
                                 page = 1;
-                                getImages(false);
+
+                                isSearched ? getImages(true) : getImages(false);
                               },
                               child: Container(
                                 height: 50,
@@ -221,7 +226,7 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                                 child: CustomText(
-                                  'Search',
+                                  isSearched ? 'Clear' : 'Search',
                                   type: FontStyle.buttonText,
                                 ),
                               ),
@@ -371,8 +376,13 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                           Button(
                             text: 'UPLOAD',
                             ontap: () async {
-                              await fileProvider.uploadFile(coverImage!,
-                                  coverImage!.path.split('.').last);
+                              var url = await fileProvider.uploadFile(
+                                coverImage!,
+                                coverImage!.path.split('.').last,
+                              );
+                              if (url != null) {
+                                projectProvider.changeCoverUrl(url: url);
+                              }
                               Navigator.of(context).pop();
                             },
                           ),

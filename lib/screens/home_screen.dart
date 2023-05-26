@@ -38,10 +38,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ProfileScreen(),
     ];
     return Scaffold(
-      body: SafeArea(
-        child: screens[currentIndex]
-      
-      ),
+      body: SafeArea(child: screens[currentIndex]),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {
           setState(() {

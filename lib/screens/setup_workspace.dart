@@ -47,6 +47,7 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
   Widget build(BuildContext context) {
     var prov = ref.watch(ProviderList.workspaceProvider);
     log(widget.fromHomeScreen.toString());
+    var themeProv = ref.watch(ProviderList.themeProvider);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -230,11 +231,15 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                 //     fontWeight: FontWeight.normal),
                                 decoration: kTextFieldDecoration.copyWith(
                                   isDense: true,
-                                  prefixIcon: const Padding(
+                                  prefixIcon: Padding(
                                     padding: EdgeInsets.only(left: 15),
-                                    child: Text(
-                                      "https://takeoff.plane.so/",
-                                      style: TextStyle(fontSize: 16),
+                                    // child: Text(
+                                    //   "https://takeoff.plane.so/",
+                                    //   style: TextStyle(fontSize: 16),
+                                    // ),
+                                    child: CustomText(
+                                      'https://takeoff.plane.so/',
+                                      type: FontStyle.text,
                                     ),
                                   ),
                                   prefixIconConstraints: const BoxConstraints(
@@ -274,9 +279,13 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                 // padding: const EdgeInsets.symmetric(
                                 //     horizontal: 10, vertical: 4),
                                 child: DropdownButtonFormField(
+                                  dropdownColor: themeProv.isDarkThemeEnabled
+                                      ? darkSecondaryBackgroundColor
+                                      : Colors.white,
                                   value: dropDownValue,
                                   elevation: 1,
-
+                                  //padding to dropdown
+                                  isExpanded: false,
                                   decoration: kTextFieldDecoration.copyWith(
                                       labelText: 'Select company size'),
 
@@ -334,17 +343,35 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                     }
                                     if (await prov.checkWorspaceSlug(
                                         slug: urlController.text)) {
-                                      await prov.createWorkspace(
+                                      var res = await prov.createWorkspace(
                                         name: nameController.text,
                                         slug: urlController.text,
                                         size: dropDownValue!,
                                       );
-                                      // ignore: use_build_context_synchronously
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const InviteCOWorkers()));
+                                      if (prov.workspaceInvitationState ==
+                                          AuthStateEnum.success) {
+                                        // ignore: use_build_context_synchronously
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const InviteCOWorkers()));
+                                      } else {
+                                        // ignore: use_build_context_synchronously
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                backgroundColor:
+                                                    Colors.red[400],
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                content: const Text(
+                                                  'Workspace URL already  taken!',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                )));
+                                      }
                                     }
                                   })
                             ],
