@@ -19,7 +19,7 @@ class FileUploadProvider extends ChangeNotifier {
   static String? _downloadUrl;
   AuthStateEnum fileUploadState = AuthStateEnum.empty;
 
-  Future uploadFile(File pickedFile, String fileType) async {
+  Future<String?> uploadFile(File pickedFile, String fileType) async {
     fileUploadState = AuthStateEnum.loading;
     notifyListeners();
     var type = pickedFile.path.split('.').last;
@@ -46,11 +46,12 @@ class FileUploadProvider extends ChangeNotifier {
       throw e;
     });
     _downloadUrl = response.data['asset'];
-    ref!.read(ProviderList.projectProvider).coverUrl= _downloadUrl!;
+
     fileUploadState = AuthStateEnum.success;
     print(_downloadUrl);
+
     notifyListeners();
-    return response.data;
+    return _downloadUrl;
   }
 
   String? get downloadUrl => _downloadUrl;

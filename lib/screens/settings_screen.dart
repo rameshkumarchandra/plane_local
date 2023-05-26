@@ -148,7 +148,9 @@ class _SettingScreenState extends State<SettingScreen> {
                     : selectedIndex == 1
                         ? Container()
                         : selectedIndex == 2
-                            ? const MembersListWidget()
+                            ? MembersListWidget(
+                                fromWorkspace: false,
+                              )
                             : selectedIndex == 3
                                 ? const FeaturesPage()
                                 : selectedIndex == 4

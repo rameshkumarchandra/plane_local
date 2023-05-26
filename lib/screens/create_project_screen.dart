@@ -227,11 +227,11 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                           controller: name,
                           decoration: kTextFieldDecoration.copyWith(
                               labelText: 'Enter project name'),
-                              onChanged: (value) {
-                                if(value.length < 6){
-                                  getIdentifier(name.text);
-                                }
-                              },
+                          onChanged: (value) {
+                            if (value.length < 6) {
+                              getIdentifier(name.text);
+                            }
+                          },
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Name is required';
@@ -256,11 +256,12 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Identifier is required';
-                            } 
-                            if(!value.contains(RegExp(r'^[A-Z]+$',))){
-                              return 'Identifier must be uppercase text.';
                             }
-                            else {
+                            if (!value.contains(RegExp(
+                              r'^[A-Z]+$',
+                            ))) {
+                              return 'Identifier must be uppercase text.';
+                            } else {
                               return null;
                             }
                           },
@@ -319,7 +320,8 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                                     "description": description.text,
                                     "network": selectedVal
                                   });
-                              if(projectProvider.createProjectState == AuthStateEnum.success){
+                              if (projectProvider.createProjectState ==
+                                  AuthStateEnum.success) {
                                 Navigator.pop(context);
                               }
                             }

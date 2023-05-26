@@ -19,12 +19,10 @@ class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  ConsumerState<ProfileScreen> createState() =>
-      _ProfileScreenState();
-  }
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-
   List menus = [
     {
       'menu': 'Profile Setttings',
@@ -89,7 +87,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const Members(),
+                builder: (context) => Members(
+                  fromWorkspace: true,
+                ),
               ),
             );
           }
@@ -179,7 +179,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Widget profileCard(ThemeProvider themeProvider, ProfileProvider profileProvider) {
+  Widget profileCard(
+      ThemeProvider themeProvider, ProfileProvider profileProvider) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -188,21 +189,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             : lightSecondaryBackgroundColor,
       ),
       padding: const EdgeInsets.all(15),
-      child: 
-      Row(
+      child: Row(
         children: [
-           Hero(
+          Hero(
             tag: 'photo',
-            child: 
-            profileProvider.userProfile.avatar != null && profileProvider.userProfile.avatar != ""
-            ? CircleAvatar(
-              radius: 40,
-              backgroundImage: NetworkImage(profileProvider.userProfile.avatar!),
-            ) :
-            const CircleAvatar(
-              radius: 40,
-              backgroundImage: AssetImage('assets/cover.png'),
-            ),
+            child: profileProvider.userProfile.avatar != null &&
+                    profileProvider.userProfile.avatar != ""
+                ? CircleAvatar(
+                    radius: 40,
+                    backgroundImage:
+                        NetworkImage(profileProvider.userProfile.avatar!),
+                  )
+                : const CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage('assets/cover.png'),
+                  ),
           ),
           const SizedBox(
             width: 15,
@@ -226,7 +227,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               //   style: TextStylingWidget.description.copyWith(color: greyColor),
               // )
               CustomText(
-                profileProvider.userProfile.email ?? 'rameshkumar2299@gmail.com',
+                profileProvider.userProfile.email ??
+                    'rameshkumar2299@gmail.com',
                 type: FontStyle.secondaryText,
               ),
             ],
@@ -316,4 +318,3 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 }
-

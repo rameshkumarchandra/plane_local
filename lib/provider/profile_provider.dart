@@ -20,6 +20,7 @@ class ProfileProvider extends ChangeNotifier {
   // }
   // static Ref? ref;
   String? dropDownValue;
+  String? slug;
   List<String> dropDownItems = [
     'Founder or learship team',
     'Product manager',
@@ -34,7 +35,7 @@ class ProfileProvider extends ChangeNotifier {
   AuthStateEnum getProfileState = AuthStateEnum.empty;
   AuthStateEnum updateProfileState = AuthStateEnum.empty;
   UserProfile userProfile = UserProfile.initialize();
-  
+
   Future getProfile() async {
     getProfileState = AuthStateEnum.loading;
 
@@ -46,11 +47,14 @@ class ProfileProvider extends ChangeNotifier {
         httpMethod: HttpMethod.get,
       );
       userProfile = UserProfile.fromMap(response.data["user"]);
+
       firstName.text = userProfile.first_name!;
       lastName.text = userProfile.last_name!;
       // dropDownValue = userProfile.role!;
       //  await Future.delayed(Duration(seconds: 1));
       getProfileState = AuthStateEnum.success;
+      slug = response.data["slug"];
+      log('----- SUCCESS ------ $slug');
       // log("DONE" + response.data.toString());
       notifyListeners();
 

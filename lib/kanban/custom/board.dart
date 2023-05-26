@@ -12,7 +12,7 @@ import 'text_field.dart';
 class KanbanBoard extends StatefulWidget {
   const KanbanBoard(
     this.list, {
-    this.groupEmptyStates=false,
+    this.groupEmptyStates = false,
     this.backgroundColor = Colors.white,
     this.cardPlaceHolderColor,
     this.boardScrollConfig,
@@ -107,7 +107,7 @@ class _KanbanBoardState extends State<KanbanBoard> {
 class Board extends ConsumerStatefulWidget {
   const Board(
     this.list, {
-    this.groupEmptyStates=false,
+    this.groupEmptyStates = false,
     this.backgroundColor = Colors.white,
     this.cardPlaceHolderColor,
     this.listPlaceHolderColor,
@@ -245,35 +245,35 @@ class _BoardState extends ConsumerState<Board> {
 
   @override
   void didUpdateWidget(covariant Board oldWidget) {
-   // if (oldWidget. == widget.list) {
-      var boardProv = ref.read(ProviderList.boardProvider);
-      // var boardListProv = ref.read(ProviderList.boardListProvider);
-      //log("UPDATE WIDGET");
-      boardProv.initializeBoard(
-          groupEmptyStates: widget.groupEmptyStates!,
-          data: widget.list,
-          boardScrollConfig: widget.boardScrollConfig,
-          listScrollConfig: widget.listScrollConfig,
-          displacementX: widget.displacementX,
-          displacementY: widget.displacementY,
-          backgroundColor: widget.backgroundColor,
-          boardDecoration: widget.boardDecoration,
-          cardPlaceHolderColor: widget.cardPlaceHolderColor,
-          listPlaceHolderColor: widget.listPlaceHolderColor,
-          listDecoration: widget.listDecoration,
-          textStyle: widget.textStyle,
-          onItemTap: widget.onItemTap,
-          onItemLongPress: widget.onItemLongPress,
-          onListTap: widget.onListTap,
-          onListLongPress: widget.onListLongPress,
-          onItemReorder: widget.onItemReorder,
-          onListReorder: widget.onListReorder,
-          onListRename: widget.onListRename,
-          onNewCardInsert: widget.onNewCardInsert,
-          cardTransitionBuilder: widget.cardTransitionBuilder,
-          listTransitionBuilder: widget.listTransitionBuilder,
-          cardTransitionDuration: widget.cardTransitionDuration,
-          listTransitionDuration: widget.listTransitionDuration);
+    // if (oldWidget. == widget.list) {
+    var boardProv = ref.read(ProviderList.boardProvider);
+    // var boardListProv = ref.read(ProviderList.boardListProvider);
+    //log("UPDATE WIDGET");
+    boardProv.initializeBoard(
+        groupEmptyStates: widget.groupEmptyStates!,
+        data: widget.list,
+        boardScrollConfig: widget.boardScrollConfig,
+        listScrollConfig: widget.listScrollConfig,
+        displacementX: widget.displacementX,
+        displacementY: widget.displacementY,
+        backgroundColor: widget.backgroundColor,
+        boardDecoration: widget.boardDecoration,
+        cardPlaceHolderColor: widget.cardPlaceHolderColor,
+        listPlaceHolderColor: widget.listPlaceHolderColor,
+        listDecoration: widget.listDecoration,
+        textStyle: widget.textStyle,
+        onItemTap: widget.onItemTap,
+        onItemLongPress: widget.onItemLongPress,
+        onListTap: widget.onListTap,
+        onListLongPress: widget.onListLongPress,
+        onItemReorder: widget.onItemReorder,
+        onListReorder: widget.onListReorder,
+        onListRename: widget.onListRename,
+        onNewCardInsert: widget.onNewCardInsert,
+        cardTransitionBuilder: widget.cardTransitionBuilder,
+        listTransitionBuilder: widget.listTransitionBuilder,
+        cardTransitionDuration: widget.cardTransitionDuration,
+        listTransitionDuration: widget.listTransitionDuration);
     //}
     super.didUpdateWidget(oldWidget);
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:plane_startup/config/enums.dart';
@@ -94,6 +95,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                   ),
                 )
               : SingleChildScrollView(
+                  // physics: NeverScrollableScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -117,6 +119,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                           : const SizedBox.shrink(),
                       projectProvider.starredProjects.isNotEmpty
                           ? ListView.separated(
+                              physics: BouncingScrollPhysics(),
                               shrinkWrap: true,
                               separatorBuilder: (context, index) {
                                 return Container(
@@ -155,8 +158,10 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        projectProvider.starredProjects[index]
-                                            ['project_detail']['emoji'],
+                                        String.fromCharCode(int.parse(
+                                            projectProvider
+                                                    .starredProjects[index]
+                                                ['project_detail']['emoji'])),
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 22,
@@ -276,6 +281,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                           : Container(),
                       const SizedBox(height: 7),
                       ListView.separated(
+                        physics: BouncingScrollPhysics(),
                         shrinkWrap: true,
                         separatorBuilder: (context, index) {
                           return projectProvider.projects[index]
@@ -303,7 +309,9 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                   true
                               ? Container()
                               : ListTile(
-                                  onTap: () {projectProvider.currentProject = projectProvider.projects[index];
+                                  onTap: () {
+                                    projectProvider.currentProject =
+                                        projectProvider.projects[index];
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -323,7 +331,15 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                     child: Center(
                                       child: Text(
                                         projectProvider.projects[index]
-                                            ['emoji'],
+                                                        ['emoji'] !=
+                                                    '' &&
+                                                projectProvider.projects[index]
+                                                        ['emoji'] !=
+                                                    null
+                                            ? String.fromCharCode(int.parse(
+                                                projectProvider.projects[index]
+                                                    ['emoji']))
+                                            : '',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 22,

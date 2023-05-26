@@ -12,6 +12,7 @@ class FilterSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
+    var issueProvider = ref.watch(ProviderList.issuesProvider);
     return Container(
       padding: const EdgeInsets.only(top: 23, left: 23, right: 23),
       // color: themeProvider.isDarkThemeEnabled
