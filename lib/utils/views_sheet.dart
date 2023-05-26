@@ -296,6 +296,18 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
               color: Colors.grey[300],
               height: 1,
             ),
+            Row(
+              children: [
+                CustomText('Show empty states'),
+                Checkbox(
+                    activeColor: primaryColor,
+                    value: issueProvider.showEmptyStates,
+                    onChanged: (val) {
+                      issueProvider.showEmptyStates = val!;
+                      issueProvider.setsState();
+                    })
+              ],
+            ),
             const SizedBox(height: 20),
             CustomText('Display Properties',
                 type: FontStyle.title,
@@ -388,15 +400,15 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                 ontap: () {
                   if (orderBy == '' && groupBy == '' && issueType == '') {
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: Colors.red[400],
-                        content: const Text(
-                          'Please select atleast one filter',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    );
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //     backgroundColor: Colors.red[400],
+                    //     content: const Text(
+                    //       'Please select atleast one filter',
+                    //       style: TextStyle(color: Colors.white),
+                    //     ),
+                    //   ),
+                    // );
                     return;
                   }
 

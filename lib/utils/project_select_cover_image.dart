@@ -395,17 +395,23 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                     fileProvider.fileUploadState == AuthStateEnum.loading
                 ? Container(
                     alignment: Alignment.center,
-                    color: Colors.white.withOpacity(0.7),
+                    color: themeProvider.isDarkThemeEnabled
+                        ? darkSecondaryBackgroundColor.withOpacity(0.7)
+                        : lightSecondaryBackgroundColor.withOpacity(0.7),
                     // height: 25,
                     // width: 25,
                     child: Wrap(
-                      children: const [
+                      children: [
                         SizedBox(
                           height: 25,
                           width: 25,
                           child: LoadingIndicator(
                             indicatorType: Indicator.lineSpinFadeLoader,
-                            colors: [Colors.black],
+                            colors: [
+                              themeProvider.isDarkThemeEnabled
+                                  ? darkPrimaryTextColor
+                                  : lightPrimaryTextColor
+                            ],
                             strokeWidth: 1.0,
                             backgroundColor: Colors.transparent,
                           ),

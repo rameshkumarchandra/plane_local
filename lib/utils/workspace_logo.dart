@@ -134,17 +134,23 @@ class _WorkspaceLogoState extends ConsumerState<WorkspaceLogo> {
           fileProvider.fileUploadState == AuthStateEnum.loading
               ? Container(
                   alignment: Alignment.center,
-                  color: Colors.white.withOpacity(0.7),
+                  color: themeProvider.isDarkThemeEnabled
+                      ? Colors.black.withOpacity(0.7)
+                      : Colors.white.withOpacity(0.7),
                   // height: 25,
                   // width: 25,
                   child: Wrap(
-                    children: const [
+                    children: [
                       SizedBox(
                         height: 25,
                         width: 25,
                         child: LoadingIndicator(
                           indicatorType: Indicator.lineSpinFadeLoader,
-                          colors: [Colors.black],
+                          colors: [
+                            themeProvider.isDarkThemeEnabled
+                                ? Colors.white
+                                : Colors.black
+                          ],
                           strokeWidth: 1.0,
                           backgroundColor: Colors.transparent,
                         ),

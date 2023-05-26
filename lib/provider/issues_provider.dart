@@ -31,11 +31,11 @@ class IssuesProvider extends ChangeNotifier {
   var labels = [];
   var states = {};
   var members = [];
-  bool assignee = false;
+  bool assignee = true;
   bool dueDate = false;
-  bool id = false;
+  bool id = true;
   bool label = false;
-  bool state = false;
+  bool state = true;
   bool subIsseCount = false;
   bool priority = false;
 
@@ -281,10 +281,14 @@ class IssuesProvider extends ChangeNotifier {
             "estimate_point": null,
             "labels": createIssuedata["labels"] == null
                 ? []
-                :(createIssuedata['labels'] as List).map((e) => e["id"]).toList(),
+                : (createIssuedata['labels'] as List)
+                    .map((e) => e["id"])
+                    .toList(),
             "labels_list": createIssuedata["labels"] == null
                 ? []
-                :(createIssuedata['labels'] as List).map((e) =>e["id"]).toList(),
+                : (createIssuedata['labels'] as List)
+                    .map((e) => e["id"])
+                    .toList(),
             "name": createIssuedata['title'],
             "priority": createIssuedata['priority']['name'] == 'None'
                 ? null
