@@ -173,6 +173,7 @@ class _InviteCOWorkersState extends ConsumerState<InviteCOWorkers> {
                     tag: 'button2',
                     child: Button(
                       text: 'Continue',
+                      textColor: Colors.grey[600],
                       disable: emails.isEmpty ? true : false,
                       ontap: () async {
                         if (emails.isEmpty) return;

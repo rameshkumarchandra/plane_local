@@ -9,6 +9,7 @@ import 'package:plane_startup/provider/provider_list.dart';
 
 import '../config/apis.dart';
 import '../config/enums.dart';
+import '../models/user_profile_model.dart';
 import '../models/workspace_model.dart';
 import '../services/dio_service.dart';
 
@@ -141,12 +142,19 @@ class WorkspaceProvider extends ChangeNotifier {
     workspaceInvitationState = AuthStateEnum.loading;
     notifyListeners();
     try {
+      log(APIs.inviteToWorkspace.replaceAll('\$SLUG', slug));
+      log(role == null ? "ROLE NULL" : "ROLE NOT NULL");
       var response = await DioConfig().dioServe(
         hasAuth: true,
         url: APIs.inviteToWorkspace.replaceAll('\$SLUG', slug),
         hasBody: true,
-        data:
-            role == null ? {"emails": email} : {"emails": email, "role": role},
+        data: role == null
+            ? {"emails": email}
+            : {
+                "emails": [
+                  {"email": email, "role": role}
+                ]
+              },
         httpMethod: HttpMethod.post,
       );
       workspaceInvitationState = AuthStateEnum.success;
@@ -176,6 +184,28 @@ class WorkspaceProvider extends ChangeNotifier {
       );
       workspaceInvitationState = AuthStateEnum.success;
       workspaces = response.data;
+
+      var isWorkspacePresent = workspaces.where((element) {
+        if (element['id'] ==
+            ref!
+                .read(ProviderList.profileProvider)
+                .userProfile
+                .last_workspace_id) {
+          currentWorkspace = element;
+          selectedWorkspace = WorkspaceModel.fromJson(element);
+          return true;
+        }
+        return false;
+      });
+
+      if (isWorkspacePresent.isEmpty) {
+        currentWorkspace = workspaces[0];
+        selectedWorkspace = WorkspaceModel.fromJson(workspaces[0]);
+        log('AFTER DELETE WORKSPACE ${selectedWorkspace!.workspaceName}  ${currentWorkspace['id']}');
+      }
+
+      log(response.data.toString());
+      log('SELECTED WORKSPACE ${selectedWorkspace!.workspaceName}');
       notifyListeners();
     } catch (e) {
       log(e.toString());
@@ -196,6 +226,9 @@ class WorkspaceProvider extends ChangeNotifier {
         httpMethod: HttpMethod.patch,
       );
       selectWorkspaceState = AuthStateEnum.success;
+      ref!.read(ProviderList.profileProvider).userProfile =
+          UserProfile.fromMap(response.data);
+
       ref!.read(ProviderList.profileProvider).userProfile.last_workspace_id =
           id;
 
@@ -221,7 +254,7 @@ class WorkspaceProvider extends ChangeNotifier {
       log(response.data.toString());
       notifyListeners();
       // return response.data;
-    } catch (e) {
+    } on DioError catch (e) {
       log(e.toString());
       selectWorkspaceState = AuthStateEnum.error;
       notifyListeners();
@@ -285,7 +318,7 @@ class WorkspaceProvider extends ChangeNotifier {
     }
   }
 
-  Future deleteWorkspace() async {
+  Future<bool> deleteWorkspace() async {
     selectWorkspaceState = AuthStateEnum.loading;
     notifyListeners();
     try {
@@ -300,23 +333,23 @@ class WorkspaceProvider extends ChangeNotifier {
       );
       selectWorkspaceState = AuthStateEnum.success;
       log(response.data.toString());
-      // response = jsonDecode(response.data);
-      selectedWorkspace = WorkspaceModel.fromJson(response.data);
+      await getWorkspaces();
 
-      log('SELECTED WORKSPACE');
-      log(selectedWorkspace!.toString());
+      // response = jsonDecode(response.data);
 
       notifyListeners();
+      return true;
       // log(response.data.toString());
     } catch (e) {
       log(e.toString());
       selectWorkspaceState = AuthStateEnum.error;
       notifyListeners();
+      return false;
     }
   }
 
   Future getWorkspaceMembers() async {
-    selectWorkspaceState = AuthStateEnum.loading;
+    getMembersState = AuthStateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -328,7 +361,7 @@ class WorkspaceProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-      selectWorkspaceState = AuthStateEnum.success;
+      getMembersState = AuthStateEnum.success;
       log(response.data.toString());
       workspaceMembers = response.data;
       // response = jsonDecode(response.data);
@@ -337,7 +370,7 @@ class WorkspaceProvider extends ChangeNotifier {
       // log(response.data.toString());
     } catch (e) {
       log(e.toString());
-      selectWorkspaceState = AuthStateEnum.error;
+      getMembersState = AuthStateEnum.error;
       notifyListeners();
     }
   }

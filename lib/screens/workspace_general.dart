@@ -31,26 +31,19 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
   @override
   void initState() {
     super.initState();
-    _workspaceNameController.text = ref
-        .read(ProviderList.workspaceProvider)
-        .selectedWorkspace!
-        .workspaceName;
+    _workspaceNameController.text =
+        ref.read(ProviderList.workspaceProvider).currentWorkspace['name'];
 
     dropDownValue = ref
         .read(ProviderList.workspaceProvider)
-        .selectedWorkspace!
-        .workspaceSize
+        .currentWorkspace['company_size']
         .toString();
 
-    _workspaceUrlController.text = ref
-        .read(ProviderList.workspaceProvider)
-        .selectedWorkspace!
-        .workspaceUrl;
+    _workspaceUrlController.text =
+        'https://takeoff.plane.so/${ref.read(ProviderList.workspaceProvider).currentWorkspace['slug']}';
 
-    imageUrl = ref
-        .read(ProviderList.workspaceProvider)
-        .selectedWorkspace!
-        .workspaceLogo;
+    imageUrl =
+        ref.read(ProviderList.workspaceProvider).currentWorkspace['logo'];
   }
 
   void refreshImage() {
@@ -388,8 +381,44 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
                       color: Colors.grey,
                     ),
                     GestureDetector(
-                      onTap: () {
-                        workspaceProvider.deleteWorkspace();
+                      onTap: () async {
+                        var isSuccesfullyDeleted =
+                            await workspaceProvider.deleteWorkspace();
+                        if (isSuccesfullyDeleted) {
+                          //show snackbar
+                          await ref
+                              .watch(ProviderList.profileProvider)
+                              .updateProfile(data: {
+                            'last_workspace_id': workspaceProvider
+                                .selectedWorkspace!.workspaceId,
+                          });
+                          await ref
+                              .watch(ProviderList.projectProvider)
+                              .getProjects(
+                                  slug: workspaceProvider
+                                      .selectedWorkspace!.workspaceSlug);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: CustomText(
+                                'Workspace deleted successfully',
+                                color: Colors.white,
+                              ),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                          Navigator.of(context).pop();
+                        } else {
+                          //show snackbar
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: CustomText(
+                                'Workspace could not be deleted',
+                                color: Colors.white,
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
                       },
                       child: Container(
                           height: 45,

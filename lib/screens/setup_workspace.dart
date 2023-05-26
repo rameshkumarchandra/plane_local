@@ -77,77 +77,81 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                     const SizedBox(
                       height: 30,
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(5)),
-                      padding: const EdgeInsets.all(6),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  newWorkSpace = true;
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: newWorkSpace
-                                        ? primaryColor
-                                        : Colors.transparent),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 8),
-                                child: Center(
-                                  child: Text(
-                                    'New Workspace',
-                                    style: TextStylingWidget.buttonText
-                                        .copyWith(
-                                            color: newWorkSpace
-                                                ? Colors.white
-                                                : greyColor),
+                    !widget.fromHomeScreen
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(5)),
+                            padding: const EdgeInsets.all(6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        newWorkSpace = true;
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: newWorkSpace
+                                              ? primaryColor
+                                              : Colors.transparent),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 8),
+                                      child: Center(
+                                        child: Text(
+                                          'New Workspace',
+                                          style: TextStylingWidget.buttonText
+                                              .copyWith(
+                                                  color: newWorkSpace
+                                                      ? Colors.white
+                                                      : greyColor),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  newWorkSpace = false;
-                                });
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: !newWorkSpace
-                                        ? primaryColor
-                                        : Colors.transparent),
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 8),
-                                child: Center(
-                                  child: Text(
-                                    'Join Workspace',
-                                    style: TextStylingWidget.buttonText
-                                        .copyWith(
-                                            color: !newWorkSpace
-                                                ? Colors.white
-                                                : greyColor),
-                                  ),
+                                const SizedBox(
+                                  width: 10,
                                 ),
-                              ),
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        newWorkSpace = false;
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: !newWorkSpace
+                                              ? primaryColor
+                                              : Colors.transparent),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 8),
+                                      child: Center(
+                                        child: Text(
+                                          'Join Workspace',
+                                          style: TextStylingWidget.buttonText
+                                              .copyWith(
+                                                  color: !newWorkSpace
+                                                      ? Colors.white
+                                                      : greyColor),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           )
-                        ],
-                      ),
-                    ),
+                        : const SizedBox(),
                     newWorkSpace
                         ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
