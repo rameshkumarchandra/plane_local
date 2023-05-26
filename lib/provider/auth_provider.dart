@@ -36,7 +36,7 @@ class AuthProvider extends ChangeNotifier {
       log(response.data.toString());
       notifyListeners();
     } on DioError catch (e) {
-      log(e.error.toString());
+      log(e.message.toString());
       sendCodeState = AuthStateEnum.failed;
       notifyListeners();
     }

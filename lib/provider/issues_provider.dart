@@ -25,7 +25,7 @@ class IssuesProvider extends ChangeNotifier {
   AuthStateEnum labelState = AuthStateEnum.empty;
   AuthStateEnum orderByState = AuthStateEnum.empty;
   var createIssueState = AuthStateEnum.empty;
-  bool showEmptyStates = false;
+  bool showEmptyStates = true;
   var createIssuedata = {};
   var issues = [];
   var labels = [];
@@ -51,6 +51,7 @@ class IssuesProvider extends ChangeNotifier {
     {'tag': 'Link', 'selected': false}
   ];
 
+  var shrinkStates = [];
   void setsState() {
     notifyListeners();
   }
@@ -59,15 +60,21 @@ class IssuesProvider extends ChangeNotifier {
     var themeProvider = ref!.read(ProviderList.themeProvider);
     List<BoardListsData> data = [];
     var stateIndexMapping = {};
+    int count = 0;
     for (int i = 0; i < states.length; i++) {
       // stateIndexMapping
       //     .addEntries({states[i]['id']: stateIndexMapping.length - 1}.entries);
       var subList = states.values.elementAt(i);
       for (int j = 0; j < subList.length; j++) {
+        if (shrinkStates.length <= count) {
+          shrinkStates.add(false);
+        }
         stateIndexMapping
             .addEntries({subList[j]['id']: stateIndexMapping.length}.entries);
         data.add(BoardListsData(
           items: [],
+          index: count,
+          shrink: shrinkStates[count++],
           leading: SvgPicture.asset(
             states.keys.elementAt(i) == 'backlog'
                 ? 'assets/svg_images/circle.svg'
@@ -142,8 +149,15 @@ class IssuesProvider extends ChangeNotifier {
               ),
             ),
             const Spacer(),
-            const Icon(Icons.zoom_in_map,
-                color: Color.fromRGBO(133, 142, 150, 1)),
+            GestureDetector(
+              onTap: () {
+                shrinkStates[element.index] = !shrinkStates[element.index];
+
+                notifyListeners();
+              },
+              child: const Icon(Icons.zoom_in_map,
+                  color: Color.fromRGBO(133, 142, 150, 1)),
+            ),
             const SizedBox(
               width: 10,
             ),
@@ -265,8 +279,12 @@ class IssuesProvider extends ChangeNotifier {
                 : (createIssuedata["members"] as Map).keys.toList(),
             "cycle": null,
             "estimate_point": null,
-            "labels": [],
-            "labels_list": [],
+            "labels": createIssuedata["labels"] == null
+                ? []
+                :(createIssuedata['labels'] as List).map((e) => e["id"]).toList(),
+            "labels_list": createIssuedata["labels"] == null
+                ? []
+                :(createIssuedata['labels'] as List).map((e) =>e["id"]).toList(),
             "name": createIssuedata['title'],
             "priority": createIssuedata['priority']['name'] == 'None'
                 ? null

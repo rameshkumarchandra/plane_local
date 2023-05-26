@@ -10,12 +10,16 @@ class BoardListsData {
   Color? backgroundColor;
   double width;
   Widget? leading;
+  bool? shrink;
+  int index;
   BoardListsData({
+    this.shrink = false,
     this.title,
     this.leading,
     this.header,
     this.footer,
     required this.items,
+    required this.index,
     this.footerBackgroundColor = const Color.fromRGBO(247, 248, 252, 1),
     this.headerBackgroundColor = const Color.fromARGB(255, 247, 248, 252),
     this.backgroundColor = const Color.fromARGB(

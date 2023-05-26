@@ -333,10 +333,13 @@ class _BoardState extends ConsumerState<Board> {
                 BoxDecoration(color: widget.backgroundColor),
             // margin: const EdgeInsets.only(top: 24),
             child: Stack(
+              alignment: Alignment.topLeft,
               fit: StackFit.passthrough,
               clipBehavior: Clip.none,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Expanded(
                       child: SizedBox(
@@ -359,6 +362,7 @@ class _BoardState extends ConsumerState<Board> {
                               transform: Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0,
                                   1, 0, 0, 0, 0, 1),
                               child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                   children: boardProv.board.lists
                                       .map(
                                           (e) =>
@@ -431,6 +435,7 @@ class _BoardState extends ConsumerState<Board> {
                                                                                 setState(() {
                                                                                   boardListProv.newList = false;
                                                                                   boardProv.board.lists.add(board_list.BoardList(
+                                                                                    index: boardProv.board.lists.length,
                                                                                     width: 300,
                                                                                     scrollController: ScrollController(),
                                                                                     items: [],

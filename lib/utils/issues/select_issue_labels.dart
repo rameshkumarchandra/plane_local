@@ -46,6 +46,12 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
         slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     colorController.text = '#BC009E';
+  
+    selectedLabels.addAll((ref
+            .read(ProviderList.issuesProvider)
+            .createIssuedata['labels']??[] as List)
+        .map((e) => e['index'])
+        .toList());
     super.initState();
   }
 
@@ -56,12 +62,20 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
     return WillPopScope(
       onWillPop: () async {
         var prov = ref.read(ProviderList.issuesProvider);
-        prov.createIssuedata['labels'] = null;
+        prov.createIssuedata['labels'] = selectedLabels.isEmpty
+            ? null
+            : selectedLabels
+                .map((e) => {
+                      'id': issueProvider.labels[e]['id'],
+                      'color': issueProvider.labels[e]['color'],
+                      'index': e
+                    })
+                .toList();
         prov.setsState();
         return true;
       },
       child: Container(
-        margin: const EdgeInsets.only(top:26),
+        margin: const EdgeInsets.only(top: 26),
         padding: const EdgeInsets.all(16),
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -117,9 +131,9 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                                 height: 30,
                                 width: 30,
                                 decoration: BoxDecoration(
-                               color: Color(int.parse(
-                                          "FF${issueProvider.labels[index]['color'].toString().toUpperCase().replaceAll("#", "")}",
-                                          radix: 16)),
+                                  color: Color(int.parse(
+                                      "FF${issueProvider.labels[index]['color'].toString().toUpperCase().replaceAll("#", "")}",
+                                      radix: 16)),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 alignment: Alignment.center,
@@ -376,7 +390,7 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
             ),
             issueProvider.labelState == AuthStateEnum.loading
                 ? Center(
-                  child: Container(
+                    child: Container(
                       alignment: Alignment.center,
                       color: Colors.white.withOpacity(0.7),
                       // height: 25,
@@ -397,8 +411,8 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                         ],
                       ),
                     ),
-                )
-                :  Container(),
+                  )
+                : Container(),
           ],
         ),
       ),

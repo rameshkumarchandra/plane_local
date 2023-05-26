@@ -50,21 +50,15 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   @override
   void initState() {
     var prov = ref.read(ProviderList.issuesProvider);
-    prov.getProjectMembers(
+  //    if (prov.issues.isEmpty) {
+    prov.getStates(
         slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
 
-    if (prov.issues.isEmpty) {
-      prov.getStates(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
-          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
-
-      prov.getIssues(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
-          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
-    }
+    prov.getIssues(
+        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+   //   }
 
     pages = [
       issues(),
@@ -487,7 +481,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
             ? Container()
             : KanbanBoard(
                 issueProvider.initializeBoard(),
-                groupEmptyStates: issueProvider.showEmptyStates,
+                groupEmptyStates: !issueProvider.showEmptyStates,
                 backgroundColor: themeProvider.isDarkThemeEnabled
                     ? darkSecondaryBackgroundColor
                     : lightSecondaryBackgroundColor,

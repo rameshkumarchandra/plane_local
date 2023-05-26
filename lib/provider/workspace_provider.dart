@@ -176,21 +176,6 @@ class WorkspaceProvider extends ChangeNotifier {
       );
       workspaceInvitationState = AuthStateEnum.success;
       workspaces = response.data;
-
-      workspaces.firstWhere((element) {
-        if (element['id'] ==
-            ref!
-                .read(ProviderList.profileProvider)
-                .userProfile
-                .last_workspace_id) {
-          selectedWorkspace = WorkspaceModel.fromJson(element);
-          return true;
-        }
-        return false;
-      });
-
-      log(response.data.toString());
-      log('SELECTED WORKSPACE ' + selectedWorkspace!.workspaceName.toString());
       notifyListeners();
     } catch (e) {
       log(e.toString());
@@ -213,13 +198,27 @@ class WorkspaceProvider extends ChangeNotifier {
       selectWorkspaceState = AuthStateEnum.success;
       ref!.read(ProviderList.profileProvider).userProfile.last_workspace_id =
           id;
-      await ref!.read(ProviderList.profileProvider).getProfile();
 
-      var slug = ref!.read(ProviderList.profileProvider).slug;
-      log("SLUG  " + slug.toString());
-      await retrieveWorkspace(slug: slug!);
+      currentWorkspace = workspaces.where((element) {
+        if (element['id'] ==
+            ref!
+                .read(ProviderList.profileProvider)
+                .userProfile
+                .last_workspace_id) {
+          currentWorkspace = element;
+          return true;
+        }
+        return false;
+      }).first;
 
-      log(response.toString());
+      // ref!.read(ProviderList.projectProvider).getProjects(
+      //         slug: currentWorkspace['slug']);
+      // ref!.read(ProviderList.projectProvider).favouriteProjects(
+      //     index: 0,
+      //     slug: currentWorkspace['slug'],
+      //     method: HttpMethod.get,
+      //     projectID: "");
+      log(response.data.toString());
       notifyListeners();
       // return response.data;
     } catch (e) {

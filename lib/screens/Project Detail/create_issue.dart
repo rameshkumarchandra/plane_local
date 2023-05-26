@@ -109,8 +109,8 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
 
                     const SizedBox(height: 10),
                     TextFormField(
-                      validator: (val){
-                        if(val!.isEmpty){
+                      validator: (val) {
+                        if (val!.isEmpty) {
                           return '*required';
                         }
                         return null;
@@ -118,12 +118,10 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                       controller: title,
                       decoration: InputDecoration(
                         errorStyle: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w600
-                        ),
-                       
-                     
+                            fontSize: 16,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w600),
+
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(
                               color: Colors.grey.shade200, width: 1.0),
@@ -522,12 +520,12 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                   GestureDetector(
                                     onTap: () {
                                       showModalBottomSheet(
-                                          // constraints: BoxConstraints(
-                                          //   minHeight: MediaQuery.of(context)
-                                          //           .size
-                                          //           .height *
-                                          //       0.6,
-                                          // ),
+                                          constraints: BoxConstraints(
+                                            maxHeight: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.85,
+                                          ),
                                           isScrollControlled: true,
                                           backgroundColor: Colors.transparent,
                                           context: context,
@@ -573,45 +571,26 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                                           'labels'] as List)
                                                       .map((e) => Positioned(
                                                             right: (issueProvider
-                                                                            .createIssuedata['members']
-                                                                        as Map)
-                                                                    .values
-                                                                    .toList()
+                                                                            .createIssuedata['labels']
+                                                                        as List)
                                                                     .indexOf(
                                                                         e) *
-                                                                00.0,
+                                                                15.0,
                                                             child: Container(
                                                               height: 25,
                                                               alignment:
                                                                   Alignment
                                                                       .center,
                                                               width: 25,
-                                                              decoration:
-                                                                  const BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                color: Color
-                                                                    .fromRGBO(
-                                                                        55,
-                                                                        65,
-                                                                        81,
-                                                                        1),
-                                                                // image: DecorationImage(
-                                                                //   image: NetworkImage(
-                                                                //       e['profileUrl']),
-                                                                //   fit: BoxFit.cover,
-                                                                // ),
-                                                              ),
-                                                              child: CustomText(
-                                                                e.value['name']
-                                                                        [0]
-                                                                    .toString()
-                                                                    .toUpperCase(),
-                                                                type: FontStyle
-                                                                    .title,
-                                                                color: Colors
-                                                                    .white,
-                                                              ),
+                                                              decoration: BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: Color(
+                                                                      int.parse(
+                                                                          "FF${e['color'].toString().toUpperCase().replaceAll("#", "")}",
+                                                                          radix:
+                                                                              16)))
+                                                                
                                                             ),
                                                           ))
                                                       .toList(),

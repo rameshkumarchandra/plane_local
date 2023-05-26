@@ -17,10 +17,15 @@ class BoardList {
   List<ListItem> items = [];
   TextEditingController nameController = TextEditingController();
   ScrollController scrollController;
-
+  bool shrink;
   String title;
+  int index;
+  Widget? leading;
   BoardList(
       {required this.items,
+      required this.index,
+      this.shrink = false,
+      this.leading,
       this.context,
       this.height,
       this.width,
