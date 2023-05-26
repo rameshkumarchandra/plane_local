@@ -9,12 +9,12 @@ class BoardState {
   VoidCallback? setstate;
   int? dragListIndex = 0;
   int? dragItemIndex = 0;
-  int? previousDragListIndex = 0; 
+  int? previousDragListIndex = 0;
   int? dragItemOfListIndex = 0;
-   int? prevItemOfListIndex = 0;
+  int? prevItemOfListIndex = 0;
   double? displacementX;
   double? displacementY;
-  
+
   bool isElementDragged = false;
   bool isListDragged = false;
   TextEditingController newCardTextController = TextEditingController();
@@ -25,12 +25,16 @@ class BoardState {
   Function(int? itemIndex, int? listIndex)? onItemLongPress;
   Function(int? listIndex)? onListTap;
   Function(int? listIndex)? onListLongPress;
-  final void Function(int? oldCardIndex,int? newCardIndex, int? oldListIndex,int?newListIndex)? onItemReorder;
-  final void Function(int? oldListIndex,int?newListIndex)? onListReorder;
-  final void Function(String?oldName, String?newName)? onListRename;
-  final void Function(String?cardIndex, String?listIndex, String?text)? onNewCardInsert;
-  final Widget Function(Widget child,Animation<double> animation)? cardTransitionBuilder; 
-  final Widget Function(Widget child,Animation<double> animation)? listTransitionBuilder;   
+  final void Function(int? oldCardIndex, int? newCardIndex, int? oldListIndex,
+      int? newListIndex)? onItemReorder;
+  final void Function(int? oldListIndex, int? newListIndex)? onListReorder;
+  final void Function(String? oldName, String? newName)? onListRename;
+  final void Function(String? cardIndex, String? listIndex, String? text)?
+      onNewCardInsert;
+  final Widget Function(Widget child, Animation<double> animation)?
+      cardTransitionBuilder;
+  final Widget Function(Widget child, Animation<double> animation)?
+      listTransitionBuilder;
   Color? backgroundColor;
   Color? cardPlaceholderColor;
   Color? listPlaceholderColor;
@@ -39,12 +43,14 @@ class BoardState {
   TextStyle? textStyle;
   Decoration? listDecoration;
   Decoration? boardDecoration;
+  final bool? groupEmptyStates;
   final Duration cardTransitionDuration;
   final Duration listTransitionDuration;
   BoardState(
       {required this.lists,
       required this.controller,
       this.dragListIndex,
+      this.groupEmptyStates,
       this.onItemTap,
       this.onItemLongPress,
       this.boardScrollConfig,
@@ -71,14 +77,13 @@ class BoardState {
       this.boardDecoration,
       this.dragItemOfListIndex,
       this.isElementDragged = false,
-      this.cardTransitionDuration= const Duration(milliseconds: 150),
-      this.listTransitionDuration= const Duration(milliseconds: 150),
+      this.cardTransitionDuration = const Duration(milliseconds: 150),
+      this.listTransitionDuration = const Duration(milliseconds: 150),
       this.isListDragged = false}) {
     textStyle = textStyle ??
         TextStyle(
             color: Colors.grey.shade800,
             fontSize: 19,
             fontWeight: FontWeight.w400);
-
   }
 }

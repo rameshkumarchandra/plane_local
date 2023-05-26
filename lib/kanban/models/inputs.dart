@@ -9,8 +9,10 @@ class BoardListsData {
   final List<Widget> items;
   Color? backgroundColor;
   double width;
+  Widget? leading;
   BoardListsData({
     this.title,
+    this.leading,
     this.header,
     this.footer,
     required this.items,

@@ -32,7 +32,14 @@ InputDecoration kTextFieldDecoration = InputDecoration(
   floatingLabelBehavior: FloatingLabelBehavior.never,
   errorBorder: const OutlineInputBorder(
     borderSide: BorderSide(color: Color.fromARGB(255, 253, 17, 0)),
-    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    borderRadius: BorderRadius.all(Radius.circular(6.0)),
+  ),
+  focusedErrorBorder: OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.red.shade600, width: 2.0),
+    borderRadius: const BorderRadius.only(
+      topRight: Radius.circular(6),
+      bottomRight: Radius.circular(6),
+    ),
   ),
   border: const OutlineInputBorder(
     borderSide: BorderSide(color: greyColor),

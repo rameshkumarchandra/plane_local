@@ -1,6 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/utils/constants.dart';
+import '../../utils/custom_text.dart';
 import '../models/board.dart';
 import '../models/board_list.dart';
 import '../models/inputs.dart';
@@ -63,13 +66,14 @@ class BoardProvider extends ChangeNotifier {
       Color? cardPlaceHolderColor,
       Color? listPlaceHolderColor,
       ScrollConfig? boardScrollConfig,
-      ScrollConfig? listScrollConfig}) {
+      ScrollConfig? listScrollConfig, required bool groupEmptyStates}) {
     board = BoardState(
         textStyle: textStyle,
         lists: [],
         displacementX: displacementX,
         displacementY: displacementY,
         onItemTap: onItemTap,
+        groupEmptyStates: groupEmptyStates,
         onItemLongPress: onItemLongPress,
         onListTap: onListTap,
         onListLongPress: onListLongPress,
@@ -89,8 +93,53 @@ class BoardProvider extends ChangeNotifier {
         listPlaceholderColor: listPlaceHolderColor,
         listDecoration: listDecoration,
         boardDecoration: boardDecoration);
-
+    // log("LENGTH=${data.length}");
+    BoardList emptyStates = BoardList(
+        // footer: data[i].footer,
+        headerBackgroundColor: data.first.headerBackgroundColor,
+        footerBackgroundColor: data.first.footerBackgroundColor,
+        backgroundColor: data.first.backgroundColor,
+        items: [],
+        width: data.first.width,
+        scrollController: ScrollController(),
+        title: 'Hidden groups');
     for (int i = 0; i < data.length; i++) {
+      var themeProvider = ref.read(ProviderList.themeProvider);
+      if (data[i].items.isEmpty && groupEmptyStates) {
+        var widget = Container(
+          height: 50,
+          margin: const EdgeInsets.only(bottom: 15),
+          decoration: BoxDecoration(
+            color: themeProvider.isDarkThemeEnabled
+                ? lightPrimaryTextColor
+                : darkPrimaryTextColor,
+            border: Border.all(color: Colors.grey.shade200, width: 2),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 10,
+              ),
+              data[i].leading!,
+              const SizedBox(
+                width: 10,
+              ),
+              CustomText(
+                data[i].title!,
+                type: FontStyle.title,
+                // fontSize: 20,
+              ),
+            ],
+          ),
+        );
+        emptyStates.items.add(ListItem(
+            child: widget,
+            listIndex: data.length,
+            index: emptyStates.items.length,
+            prevChild: widget));
+      //  continue;
+      }
       List<ListItem> listItems = [];
       for (int j = 0; j < data[i].items.length; j++) {
         listItems.add(ListItem(
@@ -109,6 +158,40 @@ class BoardProvider extends ChangeNotifier {
           width: data[i].width,
           scrollController: ScrollController(),
           title: data[i].title ?? 'LIST ${i + 1}'));
+    }
+    if (emptyStates.items.isNotEmpty && groupEmptyStates) {
+      emptyStates.header = Container(
+          width: data.first.width,
+          height: 50,
+          alignment: Alignment.centerLeft,
+       
+          child: Row(
+            children: [
+              CustomText(
+                'Hidden groups',
+                type: FontStyle.heading,
+                fontSize: 20,
+              ),
+                Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(
+                    left: 15,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: const Color.fromRGBO(222, 226, 230, 1)),
+                  height: 25,
+                  width: 35,
+                  child: CustomText(
+                  emptyStates.items.length.toString(),
+                    type: FontStyle.subtitle,
+                  ),
+                ),
+            ],
+          ),
+        );
+
+      board.lists.add(emptyStates);
     }
   }
 

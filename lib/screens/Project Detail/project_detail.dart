@@ -50,17 +50,15 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   @override
   void initState() {
     var prov = ref.read(ProviderList.issuesProvider);
-  //  if (prov.issues.isEmpty) {
-      prov.getStates(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
-          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
-          
-      prov.getIssues(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
-          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
-  //  }
+      if (prov.issues.isEmpty) {
+    prov.getStates(
+        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+
+    prov.getIssues(
+        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+      }
 
     pages = [
       issues(),
@@ -77,7 +75,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.watch(ProviderList.issuesProvider);
-    print(issueProvider.statesState);
+    issueProvider.issueState = AuthStateEnum.success;
+
+    //  print(issueProvider.statesState);
     return Scaffold(
       appBar: CustomAppBar(
         onPressed: () {
@@ -125,8 +125,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                       left: 10,
                     ),
                     child: CustomText(
-                      ref.read(ProviderList.projectProvider).currentProject[
-                          'name'], // 'Project Name'
+                      ref
+                          .read(ProviderList.projectProvider)
+                          .currentProject['name'], // 'Project Name'
                       type: FontStyle.heading2,
                     ),
                   ),
@@ -197,7 +198,8 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                 },
                 itemBuilder: (ctx, index) {
                   return Container(
-                      alignment: Alignment.center, child: index==0?issues() :pages[index]);
+                      alignment: Alignment.center,
+                      child: index == 0 ? issues() : pages[index]);
                 },
                 itemCount: 5,
               )),
@@ -211,22 +213,12 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                           Expanded(
                               child: GestureDetector(
                             onTap: () {
-                              showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  enableDrag: true,
-                                  constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.height *
-                                              0.85),
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(30),
-                                    topRight: Radius.circular(30),
-                                  )),
-                                  context: context,
-                                  builder: (ctx) {
-                                    return const FilterSheet();
-                                  });
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const CreateIssue(),
+                                ),
+                              );
                             },
                             child: SizedBox(
                               child: Row(
@@ -474,158 +466,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
             ? Container()
             : KanbanBoard(
                 issueProvider.initializeBoard(),
-                // List.generate(
-                //   5,
-                //   (index) => BoardListsData(
-                //     items: List.generate(
-                //         200,
-                //         (index) => GestureDetector(
-                //               onTap: () {
-                //                 Navigator.of(context).push(MaterialPageRoute(
-                //                     builder: (ctx) => const IssueDetail()));
-                //               },
-                //               child: Container(
-                //                 margin: const EdgeInsets.only(bottom: 15),
-                //                 decoration: BoxDecoration(
-                //                     color: themeProvider.isDarkThemeEnabled
-                //                         ? lightPrimaryTextColor
-                //                         : darkPrimaryTextColor,
-                //                     border: Border.all(
-                //                         color: Colors.grey.shade200, width: 2),
-                //                     borderRadius: BorderRadius.circular(10)),
-                //                 constraints: const BoxConstraints(maxWidth: 500),
-                //                 child: Padding(
-                //                   padding: const EdgeInsets.all(15.0),
-                //                   child: Column(
-                //                     crossAxisAlignment: CrossAxisAlignment.start,
-                //                     children: [
-                //                       Row(
-                //                         mainAxisAlignment:
-                //                             MainAxisAlignment.spaceBetween,
-                //                         children: [
-                //                           SizedBox(
-                //                             child: Row(
-                //                               children: [
-                //                                 Container(
-                //                                   alignment: Alignment.center,
-                //                                   decoration: BoxDecoration(
-                //                                       borderRadius:
-                //                                           BorderRadius.circular(6),
-                //                                       color: Colors.orange.shade100),
-                //                                   margin: const EdgeInsets.only(
-                //                                       right: 15),
-                //                                   height: 25,
-                //                                   width: 25,
-                //                                   child: const Icon(
-                //                                     Icons.signal_cellular_alt,
-                //                                     color: Colors.orange,
-                //                                     size: 18,
-                //                                   ),
-                //                                 ),
-                //                                 CustomText(
-                //                                   'FC-7',
-                //                                   type: FontStyle.title,
-                //                                 ),
-                //                               ],
-                //                             ),
-                //                           ),
-                //                           Stack(
-                //                             children: [
-                //                               Container(
-                //                                 margin: const EdgeInsets.only(
-                //                                     left: 30, top: 5),
-                //                                 height: 15,
-                //                                 width: 15,
-                //                                 decoration: BoxDecoration(
-                //                                     borderRadius:
-                //                                         BorderRadius.circular(25),
-                //                                     color: const Color.fromRGBO(
-                //                                         247, 174, 89, 1)),
-                //                               ),
-                //                               Container(
-                //                                 margin: const EdgeInsets.only(
-                //                                     left: 15, top: 5),
-                //                                 height: 15,
-                //                                 width: 15,
-                //                                 decoration: BoxDecoration(
-                //                                     borderRadius:
-                //                                         BorderRadius.circular(25),
-                //                                     color: const Color.fromRGBO(
-                //                                         140, 193, 255, 1)),
-                //                               ),
-                //                               Container(
-                //                                 margin: const EdgeInsets.only(top: 5),
-                //                                 height: 15,
-                //                                 width: 15,
-                //                                 decoration: BoxDecoration(
-                //                                     borderRadius:
-                //                                         BorderRadius.circular(25),
-                //                                     color: const Color.fromRGBO(
-                //                                         30, 57, 88, 1)),
-                //                               ),
-                //                             ],
-                //                           ),
-                //                         ],
-                //                       ),
-                //                       const SizedBox(
-                //                         height: 10,
-                //                       ),
-                //                       CustomText(
-                //                         'Issue details activities and comments API endpoints and documnetaion',
-                //                         type: FontStyle.title,
-                //                         maxLines: 10,
-                //                         textAlign: TextAlign.start,
-                //                       ),
-                //                     ],
-                //                   ),
-                //                 ),
-                //               ),
-                //             )
-                //             ),
-                // //     header: SizedBox(
-                // //       height: 50,
-                // //       child: Row(
-                // //         children: [
-                // //           SvgPicture.asset("assets/svg_images/circle.svg"),
-                // //           const SizedBox(
-                // //             width: 10,
-                // //           ),
-                // //           CustomText(
-                // //             "Backlogs",
-                // //             type: FontStyle.heading,
-                // //           ),
-                // //           Container(
-                // //             alignment: Alignment.center,
-                // //             margin: const EdgeInsets.only(
-                // //               left: 15,
-                // //             ),
-                // //             decoration: BoxDecoration(
-                // //                 borderRadius: BorderRadius.circular(15),
-                // //                 color: const Color.fromRGBO(222, 226, 230, 1)),
-                // //             height: 25,
-                // //             width: 35,
-                // //             child: CustomText(
-                // //               "15",
-                // //               type: FontStyle.subtitle,
-                // //             ),
-                // //           ),
-                // //           const Spacer(),
-                // //           const Icon(Icons.zoom_in_map,
-                // //               color: Color.fromRGBO(133, 142, 150, 1)),
-                // //           const SizedBox(
-                // //             width: 10,
-                // //           ),
-                // //           const Icon(Icons.add,
-                // //               color: Color.fromRGBO(133, 142, 150, 1)),
-                // //         ],
-                // //       ),
-                // //     ),
-                // //     // backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
-                // //     backgroundColor: themeProvider.isDarkThemeEnabled
-                // //         ? darkSecondaryBackgroundColor
-                // //         : lightSecondaryBackgroundColor,
-                //   ),
-                // ),
+                groupEmptyStates: issueProvider.showEmptyStates,
                 backgroundColor: themeProvider.isDarkThemeEnabled
                     ? darkSecondaryBackgroundColor
                     : lightSecondaryBackgroundColor,
