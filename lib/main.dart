@@ -50,30 +50,26 @@ class _MyAppState extends ConsumerState<MyApp> {
   void initState() {
     if (Const.appBearerToken != null) {
       var prov = ref.read(ProviderList.profileProvider);
+      var workspaceProv = ref.read(ProviderList.workspaceProvider);
+      var projectProv = ref.read(ProviderList.projectProvider);
       prov.getProfile().then((value) {
-        ref.read(ProviderList.workspaceProvider).getWorkspaces().then((value) {
-          if (ref.read(ProviderList.workspaceProvider).workspaces.isEmpty) {
+        workspaceProv.getWorkspaces().then((value) {
+          if (workspaceProv.workspaces.isEmpty) {
             return;
           }
-          log(prov.userProfile.last_workspace_id.toString());
+          // log(prov.userProfile.last_workspace_id.toString());
 
-          ref.read(ProviderList.projectProvider).getProjects(
-                  slug: ref
-                      .read(ProviderList.workspaceProvider)
-                      .workspaces
-                      .where((element) {
-                if (element['id'] == prov.userProfile.last_workspace_id) {
-                  ref.read(ProviderList.workspaceProvider).currentWorkspace =
-                      element;
-                  return true;
-                }
-                return false;
-              }).first['slug']);
-          ref.read(ProviderList.projectProvider).favouriteProjects(
+          projectProv.getProjects(
+              slug: workspaceProv.workspaces.where((element) {
+            if (element['id'] == prov.userProfile.last_workspace_id) {
+              workspaceProv.currentWorkspace = element;
+              return true;
+            }
+            return false;
+          }).first['slug']);
+          projectProv.favouriteProjects(
               index: 0,
-              slug: ref
-                  .read(ProviderList.workspaceProvider)
-                  .workspaces
+              slug: workspaceProv.workspaces
                   .where((element) =>
                       element['id'] == prov.userProfile.last_workspace_id)
                   .first['slug'],

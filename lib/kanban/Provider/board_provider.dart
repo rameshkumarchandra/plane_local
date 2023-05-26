@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/provider/provider_list.dart';
@@ -96,6 +97,7 @@ class BoardProvider extends ChangeNotifier {
     // log("LENGTH=${data.length}");
     BoardList emptyStates = BoardList(
         // footer: data[i].footer,
+        index: double.maxFinite.toInt(),
         headerBackgroundColor: data.first.headerBackgroundColor,
         footerBackgroundColor: data.first.footerBackgroundColor,
         backgroundColor: data.first.backgroundColor,
@@ -149,8 +151,11 @@ class BoardProvider extends ChangeNotifier {
             prevChild: data[i].items[j]));
       }
       board.lists.add(BoardList(
+          index: i,
           header: data[i].header,
           footer: data[i].footer,
+          shrink: data[i].shrink!,
+          leading: data[i].leading,
           headerBackgroundColor: data[i].headerBackgroundColor,
           footerBackgroundColor: data[i].footerBackgroundColor,
           backgroundColor: data[i].backgroundColor,
@@ -190,7 +195,7 @@ class BoardProvider extends ChangeNotifier {
             ],
           ),
         );
-
+      emptyStates.index =board.lists.length;
       board.lists.add(emptyStates);
     }
   }

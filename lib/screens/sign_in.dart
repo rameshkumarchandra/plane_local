@@ -39,6 +39,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var authProvider = ref.watch(ProviderList.authProvider);
     var profileProvider = ref.watch(ProviderList.profileProvider);
+    var workspaceProvider = ref.watch(ProviderList.workspaceProvider);
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -47,7 +48,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             key: gkey,
             child: LoadingWidget(
               loading: authProvider.sendCodeState == AuthStateEnum.loading ||
-                  authProvider.validateCodeState == AuthStateEnum.loading,
+                  authProvider.validateCodeState == AuthStateEnum.loading ||
+                  workspaceProvider.workspaceInvitationState ==
+                      AuthStateEnum.loading,
               widgetClass: SizedBox(
                 height: height,
                 child: SafeArea(
@@ -219,10 +222,57 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                             .validateMagicCode(
                                                 key: "magic_${email.text}",
                                                 token: code.text)
-                                            .then((value) {
-                                          if (authProvider.validateCodeState ==
-                                            AuthStateEnum.success) {
-                                              if(profileProvider.userProfile.is_onboarded!){
+                                            .then(
+                                          (value) async {
+                                            if (authProvider
+                                                    .validateCodeState ==
+                                                AuthStateEnum.success) {
+                                              if (profileProvider
+                                                  .userProfile.is_onboarded!) {
+                                                await workspaceProvider
+                                                    .getWorkspaces()
+                                                    .then((value) {
+                                                  if (workspaceProvider
+                                                      .workspaces.isEmpty) {
+                                                    return;
+                                                  }
+                                                  //  log(prov.userProfile.last_workspace_id.toString());
+
+                                                  ref
+                                                      .read(ProviderList
+                                                          .projectProvider)
+                                                      .getProjects(
+                                                          slug: workspaceProvider
+                                                              .workspaces
+                                                              .where((element) {
+                                                        if (element['id'] ==
+                                                            profileProvider
+                                                                .userProfile
+                                                                .last_workspace_id) {
+                                                          workspaceProvider
+                                                              .currentWorkspace = element;
+                                                          return true;
+                                                        }
+                                                        return false;
+                                                      }).first['slug']);
+                                                  ref
+                                                      .read(ProviderList
+                                                          .projectProvider)
+                                                      .favouriteProjects(
+                                                          index: 0,
+                                                          slug: workspaceProvider
+                                                              .workspaces
+                                                              .where((element) =>
+                                                                  element[
+                                                                      'id'] ==
+                                                                  profileProvider
+                                                                      .userProfile
+                                                                      .last_workspace_id)
+                                                              .first['slug'],
+                                                          method:
+                                                              HttpMethod.get,
+                                                          projectID: "");
+                                                });
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -230,27 +280,24 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                                         const HomeScreen(),
                                                   ),
                                                 );
-                                              }
-                                              else {
+                                              } else {
                                                 Navigator.push(
                                                   context,
-                                            
-                                                         MaterialPageRoute(
-                                                  builder: (context) => ref
-                                                          .read(ProviderList
-                                                              .profileProvider)
-                                                          .userProfile
-                                                          .first_name!
-                                                          .isEmpty
-                                                      ? const SetupProfileScreen()
-                                                      : ref
+                                                  MaterialPageRoute(
+                                                      builder: (context) => ref
                                                               .read(ProviderList
-                                                                  .workspaceProvider)
-                                                              .workspaces
+                                                                  .profileProvider)
+                                                              .userProfile
+                                                              .first_name!
                                                               .isEmpty
-                                                          ? const SetupWorkspace()
-                                                          : const HomeScreen()),
-                                                
+                                                          ? const SetupProfileScreen()
+                                                          : ref
+                                                                  .read(ProviderList
+                                                                      .workspaceProvider)
+                                                                  .workspaces
+                                                                  .isEmpty
+                                                              ? const SetupWorkspace()
+                                                              : const HomeScreen()),
                                                 );
                                               }
                                             }

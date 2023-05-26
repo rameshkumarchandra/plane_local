@@ -185,6 +185,7 @@ class _CycleDetailState extends ConsumerState<CycleDetail> {
                           List.generate(
                             5,
                             (index) => BoardListsData(
+                              index: index,
                               items: List.generate(
                                 200,
                                 (index) => Container(

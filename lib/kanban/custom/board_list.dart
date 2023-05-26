@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../utils/custom_text.dart';
 import '../Provider/provider_list.dart';
 import '../models/item_state.dart';
 import 'list_item.dart';
@@ -18,7 +19,6 @@ class _BoardListState extends ConsumerState<BoardList> {
 
   @override
   Widget build(BuildContext context) {
-  
     var prov = ref.read(ProviderList.boardProvider);
     var listProv = ref.read(ProviderList.boardListProvider);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -27,9 +27,19 @@ class _BoardListState extends ConsumerState<BoardList> {
           context: context,
           setstate: () => setState(() {}));
     });
-    return prov.board.groupEmptyStates == true &&
-            prov.board.lists[widget.index].items.isEmpty
-        ? Container()
+    return
+    prov.board.groupEmptyStates == true &&
+            prov.board.lists[widget.index].items.isEmpty?Container():
+    
+     prov.board.lists[widget.index].shrink
+        ? Container(
+            margin: const EdgeInsets.only(right: 15, top: 15),
+            height: prov.board.lists[widget.index].width,
+            child: RotatedBox(
+              quarterTurns: 1,
+              child: prov.board.lists[widget.index].header,
+            ),
+          )
         : ValueListenableBuilder(
             valueListenable: prov.valueNotifier,
             builder: (context, a, b) {
@@ -376,28 +386,30 @@ class _BoardListState extends ConsumerState<BoardList> {
                                 ),
                               ),
                             ),
-                        Expanded(
-                          child: MediaQuery.removePadding(
-                            context: context,
-                            removeTop: true,
-                            child: ListView.builder(
-                              physics: const ClampingScrollPhysics(),
-                              controller: prov
-                                  .board.lists[widget.index].scrollController,
-                              itemCount:
-                                  prov.board.lists[widget.index].items.length,
-                              shrinkWrap: true,
-                              itemBuilder: (ctx, index) {
-                                return Item(
-                                  itemIndex: index,
-                                  listIndex: widget.index,
-                                );
-                              },
+                        prov.board.lists[widget.index].shrink
+                            ? Container()
+                            : Expanded(
+                                child: MediaQuery.removePadding(
+                                  context: context,
+                                  removeTop: true,
+                                  child: ListView.builder(
+                                    physics: const ClampingScrollPhysics(),
+                                    controller: prov.board.lists[widget.index]
+                                        .scrollController,
+                                    itemCount: prov
+                                        .board.lists[widget.index].items.length,
+                                    shrinkWrap: true,
+                                    itemBuilder: (ctx, index) {
+                                      return Item(
+                                        itemIndex: index,
+                                        listIndex: widget.index,
+                                      );
+                                    },
 
-                              // itemCount: prov.items.length,
-                            ),
-                          ),
-                        ),
+                                    // itemCount: prov.items.length,
+                                  ),
+                                ),
+                              ),
 
                         // Container(
                         //   padding: const EdgeInsets.only(left: 15),
