@@ -8,6 +8,7 @@ enum AuthStateEnum {
   empty,
   incomplete,
   pending,
+  restricted,
   idle,
 }
 

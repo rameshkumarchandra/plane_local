@@ -42,6 +42,7 @@ class _FeaturesPageState extends ConsumerState<FeaturesPage> {
   @override
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
+    var featuresProvider = ref.watch(ProviderList.featuresProvider);
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
@@ -69,8 +70,6 @@ class _FeaturesPageState extends ConsumerState<FeaturesPage> {
                           textAlign: TextAlign.left,
                           // color: Colors.black,
                           type: FontStyle.heading2,
-                          // fontSize: 20,
-                          // fontWeight: FontWeight.w500,
                         ),
                         const SizedBox(
                           height: 10,
@@ -86,21 +85,19 @@ class _FeaturesPageState extends ConsumerState<FeaturesPage> {
                     ),
                     InkWell(
                       onTap: () {
-                        setState(() {
-                          cardData[index]['switched'] =
-                              !cardData[index]['switched'];
-                        });
+                        featuresProvider.features[index+1]['show'] = !featuresProvider.features[index+1]['show'];
+                        featuresProvider.setState();
                       },
                       child: Container(
                         width: 20,
                         padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: cardData[index]['switched']
+                            color: featuresProvider.features[index+1]['show']
                                 ? Colors.green
                                 : greyColor),
                         child: Align(
-                          alignment: cardData[index]['switched']
+                          alignment: featuresProvider.features[index+1]['show']
                               ? Alignment.centerRight
                               : Alignment.centerLeft,
                           child: const CircleAvatar(radius: 3),

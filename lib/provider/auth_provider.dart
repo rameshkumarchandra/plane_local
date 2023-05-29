@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/src/change_notifier_provider.dart';
 import 'package:plane_startup/config/apis.dart';
 import 'package:plane_startup/config/const.dart';
 import 'package:plane_startup/config/enums.dart';
-import 'package:plane_startup/models/user_profile_model.dart';
 import 'package:plane_startup/services/shared_preference_service.dart';
 
 import '../services/dio_service.dart';

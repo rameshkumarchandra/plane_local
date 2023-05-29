@@ -34,12 +34,15 @@ class _LoadingWidgetState extends ConsumerState<LoadingWidget> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 30,
                         height: 30,
                         child: LoadingIndicator(
                           indicatorType: Indicator.lineSpinFadeLoader,
-                          colors: [Colors.black],
+                          colors: 
+                          themeProvider.isDarkThemeEnabled ?
+                          [Colors.white] :
+                          [Colors.black],
                           strokeWidth: 1.0,
                           backgroundColor: Colors.transparent,
                         ),

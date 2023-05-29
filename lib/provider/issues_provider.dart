@@ -98,11 +98,12 @@ class IssuesProvider extends ChangeNotifier {
       }
     }
     // log(stateIndexMapping.toString());
-    log(issues.toString());
     for (int i = 0; i < issues.length; i++) {
+      if(stateIndexMapping[issues[i]["state_detail"]["id"]] != null) {
       data[stateIndexMapping[issues[i]["state_detail"]["id"]]]
           .items
           .add(IssueCardWidget(i: i));
+      }
     }
 
     for (var element in data) {
@@ -110,21 +111,22 @@ class IssuesProvider extends ChangeNotifier {
         height: 50,
         child: Row(
           children: [
-            SvgPicture.asset(
-              states.keys.elementAt(data.indexOf(element)) == 'backlog'
-                  ? 'assets/svg_images/circle.svg'
-                  : states.keys.elementAt(data.indexOf(element)) == 'cancelled'
-                      ? 'assets/svg_images/cancelled.svg'
-                      : states.keys.elementAt(data.indexOf(element)) ==
-                              'completed'
-                          ? 'assets/svg_images/done.svg'
-                          : states.keys.elementAt(data.indexOf(element)) ==
-                                  'started'
-                              ? 'assets/svg_images/in_progress.svg'
-                              : 'assets/svg_images/circle.svg',
-              height: 25,
-              width: 25,
-            ),
+            element.leading!,
+            // SvgPicture.asset(
+            //   states.keys.elementAt(data.indexOf(element)) == 'backlog'
+            //       ? 'assets/svg_images/circle.svg'
+            //       : states.keys.elementAt(data.indexOf(element)) == 'cancelled'
+            //           ? 'assets/svg_images/cancelled.svg'
+            //           : states.keys.elementAt(data.indexOf(element)) ==
+            //                   'completed'
+            //               ? 'assets/svg_images/done.svg'
+            //               : states.keys.elementAt(data.indexOf(element)) ==
+            //                       'started'
+            //                   ? 'assets/svg_images/in_progress.svg'
+            //                   : 'assets/svg_images/circle.svg',
+            //   height: 25,
+            //   width: 25,
+            // ),
             const SizedBox(
               width: 10,
             ),
@@ -236,9 +238,15 @@ class IssuesProvider extends ChangeNotifier {
       statesState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
-      log(e.error.toString());
+      log(e.response!.statusCode.toString());
+      if(e.response!.statusCode == 403){
+        statesState = AuthStateEnum.restricted;
+        notifyListeners();
+      }
+      else{
       statesState = AuthStateEnum.error;
       notifyListeners();
+      }
     }
   }
 
@@ -313,7 +321,6 @@ class IssuesProvider extends ChangeNotifier {
 
   Future getIssues({required String slug, required String projID}) async {
     issueState = AuthStateEnum.loading;
-    //notifyListeners();
     try {
       // log({
       //   "assignees": (createIssuedata["members"] as Map).keys.toList(),
@@ -345,8 +352,16 @@ class IssuesProvider extends ChangeNotifier {
       notifyListeners();
     } on DioError catch (e) {
       log(e.response.toString());
-      issueState = AuthStateEnum.error;
+      if(e.response!.statusCode == 403){
+        issueState = AuthStateEnum.restricted;
       notifyListeners();
+
+      }
+      else{
+        issueState = AuthStateEnum.error;
+      notifyListeners();
+
+      }
     }
   }
 
@@ -457,7 +472,6 @@ class IssuesProvider extends ChangeNotifier {
         httpMethod: HttpMethod.get,
       );
 
-      log(response.data.toString());
       issues = [];
 
       (response.data as Map).forEach((key, value) {

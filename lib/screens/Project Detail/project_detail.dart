@@ -36,13 +36,13 @@ class ProjectDetail extends ConsumerStatefulWidget {
 }
 
 class _ProjectDetailState extends ConsumerState<ProjectDetail> {
-  var tabs = [
-    {'title': 'Issues', 'width': 60},
-    {'title': 'Cycles', 'width': 60},
-    {'title': 'Modules', 'width': 75},
-    {'title': 'Views', 'width': 60},
-    {'title': 'Pages', 'width': 50},
-  ];
+  // var tabs = [
+  //   {'title': 'Issues', 'width': 60},
+  //   {'title': 'Cycles', 'width': 60},
+  //   {'title': 'Modules', 'width': 75},
+  //   {'title': 'Views', 'width': 60},
+  //   {'title': 'Pages', 'width': 50},
+  // ];
   var controller = PageController(initialPage: 0);
 
   var selected = 0;
@@ -50,15 +50,26 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   @override
   void initState() {
     var prov = ref.read(ProviderList.issuesProvider);
-  //    if (prov.issues.isEmpty) {
-    prov.getStates(
+    var projectProv = ref.read(ProviderList.projectProvider);
+    prov.getProjectMembers(
         slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
 
-    prov.getIssues(
-        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
-        projID: ref.read(ProviderList.projectProvider).currentProject['id']);
-   //   }
+    // if (prov.issues.isEmpty) {
+      prov.getStates(
+          slug:
+              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+
+      prov.getIssues(
+          slug:
+              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+      projectProv.getProjectDetails(
+          slug:
+              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          projId: ref.read(ProviderList.projectProvider).currentProject['id']);
+    // }
 
     pages = [
       issues(),
@@ -75,6 +86,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.watch(ProviderList.issuesProvider);
+    var featuresProvider = ref.watch(ProviderList.featuresProvider);
     issueProvider.issueState = AuthStateEnum.success;
 
     //  print(issueProvider.statesState);
@@ -138,49 +150,55 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                   width: MediaQuery.of(context).size.width,
                   height: 46,
                   child: ListView.builder(
-                    itemCount: tabs.length,
+                    itemCount: featuresProvider.features.length,
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () {
-                          //  setState(() {
-                          controller.jumpToPage(index);
-                          //  selected = index;
-                          //});
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: index == 0 ? 20 : 0,
-                                  right: 25,
-                                  top: 10),
-                              child: CustomText(
-                                tabs[index]['title'].toString(),
-                                // color: index == selected
-                                //     ? primaryColor
-                                // : themeProvider.secondaryTextColor,
-                                color: index == selected ? primaryColor : null,
-                                type: FontStyle.secondaryText,
-                              ),
-                            ),
-                            selected == index
-                                ? Container(
-                                    margin: EdgeInsets.only(
-                                        left: index == 0 ? 20 : 0,
-                                        right: 25,
-                                        top: 10),
-                                    height: 7,
-                                    width: double.parse(
-                                        tabs[index]['width'].toString()),
-                                    color:
-                                        const Color.fromRGBO(63, 118, 255, 1),
-                                  )
-                                : Container()
-                          ],
-                        ),
-                      );
+                          onTap: () {
+                            //  setState(() {
+                            controller.jumpToPage(index);
+                            //  selected = index;
+                            //});
+                          },
+                          child: featuresProvider.features[index]['show']
+                              ? Column(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          left: index == 0 ? 20 : 0,
+                                          right: 25,
+                                          top: 10),
+                                      child: CustomText(
+                                        featuresProvider.features[index]
+                                                ['title']
+                                            .toString(),
+                                        // color: index == selected
+                                        //     ? primaryColor
+                                        // : themeProvider.secondaryTextColor,
+                                        color: index == selected
+                                            ? primaryColor
+                                            : null,
+                                        type: FontStyle.secondaryText,
+                                      ),
+                                    ),
+                                    selected == index
+                                        ? Container(
+                                            margin: EdgeInsets.only(
+                                                left: index == 0 ? 20 : 0,
+                                                right: 25,
+                                                top: 10),
+                                            height: 7,
+                                            width: double.parse(featuresProvider
+                                                .features[index]['width']
+                                                .toString()),
+                                            color: const Color.fromRGBO(
+                                                63, 118, 255, 1),
+                                          )
+                                        : Container()
+                                  ],
+                                )
+                              : Container());
                     },
                   )),
               Container(
@@ -198,7 +216,6 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                 },
                 itemBuilder: (ctx, index) {
                   return Container(
-                      alignment: Alignment.center,
                       child: index == 0 ? issues() : pages[index]);
                 },
                 itemCount: 5,
@@ -231,7 +248,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                               //     });
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => CreateIssue(),
+                                  builder: (context) => const CreateIssue(),
                                 ),
                               );
                             },
@@ -479,7 +496,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
         child: issueProvider.issueState == AuthStateEnum.loading ||
                 issueProvider.statesState == AuthStateEnum.loading
             ? Container()
-            : KanbanBoard(
+            : issueProvider.issueState == AuthStateEnum.success &&
+              issueProvider.statesState == AuthStateEnum.success
+            ? KanbanBoard(
                 issueProvider.initializeBoard(),
                 groupEmptyStates: !issueProvider.showEmptyStates,
                 backgroundColor: themeProvider.isDarkThemeEnabled
@@ -496,7 +515,19 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                     height: 1.3,
                     color: Colors.grey.shade800,
                     fontWeight: FontWeight.w500),
+              )
+            : issueProvider.issueState == AuthStateEnum.restricted ||
+              issueProvider.statesState == AuthStateEnum.restricted
+            ? Center(
+              child: CustomText(
+                'You are not a member of this project'
               ),
+            )
+            : Center(
+              child: CustomText(
+                'Something went wrong'
+              ),
+            )
       ),
     );
   }
@@ -508,21 +539,20 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
           ? darkSecondaryBackgroundColor
           : lightSecondaryBackgroundColor,
       padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-                child: CustomText(
-              ' Current Cycles',
-              type: FontStyle.heading,
-              // color: themeProvider.primaryTextColor,
-            )),
-            const CycleCard(),
-            const CycleCard(),
-            const CycleCard()
-          ],
-        ),
+      child: ListView(
+        // crossAxisAlignment: CrossAxisAlignment.start,
+        // mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+              child: CustomText(
+            ' Current Cycles',
+            type: FontStyle.heading,
+            // color: themeProvider.primaryTextColor,
+          )),
+          const CycleCard(),
+          const CycleCard(),
+          const CycleCard()
+        ],
       ),
     );
   }
@@ -592,4 +622,12 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
       ),
     );
   }
+
+  // bool checkVisbility(int index) {
+  //   var featuresProvider = ref.watch(ProviderList.featuresProvider);
+  //   if(featuresProvider.features[index]['title'] == featuresProvider.features[index]){
+  //     return true;
+  //   }
+  //   return false;
+  // }
 }

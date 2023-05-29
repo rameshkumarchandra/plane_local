@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/screens/control_page.dart';
 import 'package:plane_startup/screens/estimates_page.dart';
 import 'package:plane_startup/screens/features_page.dart';
 import 'package:plane_startup/screens/general_page.dart';
@@ -146,7 +147,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 child: selectedIndex == 0
                     ? const GeneralPage()
                     : selectedIndex == 1
-                        ? Container()
+                        ? const ControlPage()
                         : selectedIndex == 2
                             ? MembersListWidget(
                                 fromWorkspace: false,

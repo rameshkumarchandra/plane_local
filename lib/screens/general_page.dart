@@ -16,11 +16,21 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
   List<Widget> emojisWidgets = [];
   Widget? selectedEmoji;
   bool showEmojis = false;
+  TextEditingController name = TextEditingController();
+  TextEditingController description = TextEditingController();
+  TextEditingController identifier = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     generateEmojis();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      var projectProvider = ref.watch(ProviderList.projectProvider);
+      name.text = projectProvider.projectDetailModel!.name!;
+      description.text = projectProvider.projectDetailModel!.description!;
+      identifier.text = projectProvider.projectDetailModel!.identifier!;
+    });
   }
 
   generateEmojis() {
@@ -37,6 +47,7 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
   @override
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
+    var projectProvider = ref.watch(ProviderList.projectProvider);
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
@@ -88,13 +99,21 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                           color: greyColor,
                         ),
                       ),
-                      child: Center(child: selectedEmoji ?? Container()),
+                      child: Center(
+                        child: selectedEmoji ??
+                            CustomText(
+                              String.fromCharCode(int.parse(
+                                  projectProvider.projectDetailModel!.emoji!)),
+                            ),
+                      ),
                     ),
                   ),
+
                   const SizedBox(width: 10),
                   //textfield
                   Expanded(
                     child: TextField(
+                      controller: name,
                       decoration: kTextFieldDecoration.copyWith(
                         fillColor: themeProvider.isDarkThemeEnabled
                             ? darkBackgroundColor
@@ -123,6 +142,7 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
               const SizedBox(height: 5),
               //textfield
               TextField(
+                controller: description,
                 maxLines: 4,
                 decoration: kTextFieldDecoration.copyWith(
                   fillColor: themeProvider.isDarkThemeEnabled
@@ -148,13 +168,20 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
               ),
               const SizedBox(height: 5),
               //textfield
-              TextField(
-                maxLines: 4,
-                decoration: kTextFieldDecoration.copyWith(
-                  fillColor: themeProvider.isDarkThemeEnabled
-                      ? darkBackgroundColor
-                      : lightBackgroundColor,
-                  filled: true,
+              Container(
+                height: 150,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: themeProvider.isDarkThemeEnabled
+                            ? darkStrokeColor
+                            : Colors.transparent),
+                    borderRadius: BorderRadius.circular(10)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    projectProvider.projectDetailModel!.coverImage!,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -191,6 +218,7 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
               const SizedBox(height: 5),
               //textfield
               TextField(
+                controller: identifier,
                 decoration: kTextFieldDecoration.copyWith(
                   fillColor: themeProvider.isDarkThemeEnabled
                       ? darkBackgroundColor
@@ -199,69 +227,88 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  CustomText(
-                    'Network',
-                    type: FontStyle.title,
-                    // color: themeProvider.secondaryTextColor,
+              DropdownButtonFormField(
+                value: projectProvider.projectDetailModel!.network == 1 ? 'Secret' : 'Public',
+                decoration: kTextFieldDecoration.copyWith(
+                  fillColor: themeProvider.isDarkThemeEnabled
+                      ? darkBackgroundColor
+                      : lightBackgroundColor,
+                  filled: true,
+                ),
+                dropdownColor: themeProvider.isDarkThemeEnabled
+                    ? Colors.black
+                    : Colors.white,
+                items: [
+                  DropdownMenuItem(
+                    value: 'Secret',
+                    child: CustomText(
+                      'Secret',
+                      type: FontStyle.subtitle,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  CustomText(
-                    ' *',
-                    type: FontStyle.title,
-                    color: Colors.red,
-                  )
+                  DropdownMenuItem(
+                    value: 'Public',
+                    child: CustomText(
+                      'Public',
+                      type: FontStyle.subtitle,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
-              ),
-              const SizedBox(height: 5),
-              //textfield
-              TextField(
-                decoration: kTextFieldDecoration.copyWith(
-                  fillColor: themeProvider.isDarkThemeEnabled
-                      ? darkBackgroundColor
-                      : lightBackgroundColor,
-                  filled: true,
-                ),
+                onChanged: (val) {},
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  // Text(
-                  //   'Danger Zone',
-                  //   style: TextStyle(
-                  //     fontSize: 15,
-                  //     fontWeight: FontWeight.w400,
-                  //     color: themeProvider.secondaryTextColor,
-                  //   ),
-                  // ),
-                  // const Text(
-                  //   ' *',
-                  //   style: TextStyle(
-                  //     fontSize: 15,
-                  //     fontWeight: FontWeight.w400,
-                  //     color: Colors.red,
-                  //   ),
-                  // ),
-                  CustomText(
+              Container(
+                decoration: BoxDecoration(
+                    //light red
+                    // color: Colors.red[00],
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        color: const Color.fromRGBO(255, 12, 12, 1))),
+                child: ExpansionTile(
+                  childrenPadding:
+                      const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+                  iconColor: themeProvider.isDarkThemeEnabled
+                      ? Colors.white
+                      : greyColor,
+                  collapsedIconColor: themeProvider.isDarkThemeEnabled
+                      ? Colors.white
+                      : greyColor,
+                  backgroundColor: const Color.fromRGBO(255, 12, 12, 0.1),
+                  title: CustomText(
                     'Danger Zone',
-                    type: FontStyle.title,
-                    // color: themeProvider.secondaryTextColor,
+                    textAlign: TextAlign.left,
+                    type: FontStyle.heading2,
+                    color: const Color.fromRGBO(255, 12, 12, 1),
                   ),
-                  CustomText(
-                    ' *',
-                    type: FontStyle.title,
-                    color: Colors.red,
-                  )
-                ],
-              ),
-              const SizedBox(height: 5),
-              //textfield
-              TextField(
-                decoration: kTextFieldDecoration.copyWith(
-                  fillColor: themeProvider.isDarkThemeEnabled
-                      ? darkBackgroundColor
-                      : lightBackgroundColor,
-                  filled: true,
+                  children: [
+                    CustomText(
+                      'The danger zone of the project delete page is a critical area that requires careful consideration and attention. When deleting a project, all of the data and resources within that project will be permanently removed and cannot be recovered.',
+                      type: FontStyle.subtitle,
+                      maxLines: 8,
+                      textAlign: TextAlign.left,
+                      color: Colors.grey,
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                          height: 45,
+                          width: MediaQuery.of(context).size.width,
+                          margin: const EdgeInsets.only(
+                              top: 20, left: 20, right: 20),
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(255, 12, 12, 1),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Center(
+                              child: CustomText(
+                            'Delete Workspace',
+                            color: Colors.white,
+                            type: FontStyle.buttonText,
+                          ))),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 20),

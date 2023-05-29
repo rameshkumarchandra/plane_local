@@ -2,13 +2,11 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/config/enums.dart';
-import 'package:plane_startup/models/user_profile_model.dart';
 
 import '../config/apis.dart';
+import '../models/user_profile_model.dart';
 import '../services/dio_service.dart';
-import 'provider_list.dart';
 
 class ProfileProvider extends ChangeNotifier {
   // ProfileProvider(ChangeNotifierProviderRef<ProfileProvider> re) {

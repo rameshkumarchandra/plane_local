@@ -118,7 +118,7 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                 alignment: Alignment.center,
                                 child: CustomText(
                                   issuesProvider.members[index]['member']
-                                          ['first_name'][0]
+                                          ['email'][0]
                                       .toString()
                                       .toUpperCase(),
                                   type: FontStyle.subheading,

@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:plane_startup/config/const.dart';
+import 'package:plane_startup/kanban/models/project_detail_model.dart';
 
 import '../config/apis.dart';
 import '../config/enums.dart';
@@ -14,10 +16,12 @@ class ProjectsProvider extends ChangeNotifier {
   var projectState = AuthStateEnum.empty;
   var unsplashImageState = AuthStateEnum.empty;
   var createProjectState = AuthStateEnum.empty;
+  var projectDetailState = AuthStateEnum.empty;
   var unsplashImages = [];
   var currentProject={};
   var coverUrl =
       "https://app.plane.so/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1575116464504-9e7652fddcb3%3Fcrop%3Dentropy%26cs%3Dtinysrgb%26fit%3Dmax%26fm%3Djpg%26ixid%3DMnwyODUyNTV8MHwxfHNlYXJjaHwxOHx8cGxhbmV8ZW58MHx8fHwxNjgxNDY4NTY5%26ixlib%3Drb-4.0.3%26q%3D80%26w%3D1080&w=1920&q=75";
+  ProjectDetailModel? projectDetailModel;
 
   void changeCoverUrl({required String url}) {
     coverUrl = url;
@@ -134,4 +138,29 @@ class ProjectsProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future getProjectDetails({required String slug, required String projId}) async {
+    // projectDetailState = AuthStateEnum.loading;
+    // notifyListeners();
+    log("${APIs.project.replaceAll('\$SLUG', slug)}$projId");
+    try {
+      var response = await DioConfig().dioServe(
+        hasAuth: true,
+        url: "${APIs.project.replaceAll('\$SLUG', slug)}$projId/",
+        hasBody: false,
+        httpMethod: HttpMethod.get,
+      );
+      projectDetailModel = ProjectDetailModel.fromJson(response.data);
+      print('====== SUCCESS =====');
+      projectDetailState = AuthStateEnum.success;
+      notifyListeners();
+    } on DioError catch (e) {
+            print('====== FAILED =====');
+
+      log(e.error.toString());
+      projectDetailState = AuthStateEnum.error;
+      notifyListeners();
+    }
+  }
+
 }
