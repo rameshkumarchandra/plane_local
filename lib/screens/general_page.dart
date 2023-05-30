@@ -103,7 +103,8 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                         child: selectedEmoji ??
                             CustomText(
                               String.fromCharCode(int.parse(
-                                  projectProvider.projectDetailModel!.emoji!)),
+                                  projectProvider.projectDetailModel!.emoji ??
+                                      '')),
                             ),
                       ),
                     ),
@@ -228,7 +229,9 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
               ),
               const SizedBox(height: 20),
               DropdownButtonFormField(
-                value: projectProvider.projectDetailModel!.network == 1 ? 'Secret' : 'Public',
+                value: projectProvider.projectDetailModel!.network == 1
+                    ? 'Secret'
+                    : 'Public',
                 decoration: kTextFieldDecoration.copyWith(
                   fillColor: themeProvider.isDarkThemeEnabled
                       ? darkBackgroundColor
@@ -261,7 +264,7 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
               const SizedBox(height: 20),
               Container(
                 decoration: BoxDecoration(
-                    //light red
+                    //light redzz
                     // color: Colors.red[00],
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
@@ -276,6 +279,8 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                       ? Colors.white
                       : greyColor,
                   backgroundColor: const Color.fromRGBO(255, 12, 12, 0.1),
+                  collapsedBackgroundColor:
+                      const Color.fromRGBO(255, 12, 12, 0.1),
                   title: CustomText(
                     'Danger Zone',
                     textAlign: TextAlign.left,
@@ -296,7 +301,7 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                           height: 45,
                           width: MediaQuery.of(context).size.width,
                           margin: const EdgeInsets.only(
-                              top: 20, left: 20, right: 20),
+                              top: 20, left: 20, right: 20, bottom: 15),
                           decoration: BoxDecoration(
                             color: const Color.fromRGBO(255, 12, 12, 1),
                             borderRadius: BorderRadius.circular(6),

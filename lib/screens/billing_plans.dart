@@ -64,16 +64,21 @@ class _BillingPlansState extends ConsumerState<BillingPlans> {
         },
         text: 'Billings & Plans',
         actions: [
-          Row(
-            children: [
-              const Icon(
-                Icons.add,
-                color: Color.fromRGBO(63, 118, 255, 1),
-              ),
-              CustomText('Add',
-                  type: FontStyle.title,
-                  color: const Color.fromRGBO(63, 118, 255, 1)),
-            ],
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 15,
+            ),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.add,
+                  color: Color.fromRGBO(63, 118, 255, 1),
+                ),
+                CustomText('Add',
+                    type: FontStyle.title,
+                    color: const Color.fromRGBO(63, 118, 255, 1)),
+              ],
+            ),
           )
         ],
       ),
@@ -82,7 +87,7 @@ class _BillingPlansState extends ConsumerState<BillingPlans> {
         children: [
           Container(
             padding: const EdgeInsets.only(left: 16, right: 16),
-            height: 2,
+            height: 1,
             width: MediaQuery.of(context).size.width,
             color: Colors.grey[300],
           ),

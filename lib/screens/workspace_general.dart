@@ -80,7 +80,7 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
             children: [
               Container(
                 padding: const EdgeInsets.only(left: 16, right: 16),
-                height: 2,
+                height: 1,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.grey[300],
               ),
@@ -302,8 +302,13 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
                     return DropdownMenuItem(
                       value: items,
                       child: SizedBox(
-                          // width: MediaQuery.of(context).size.width - 80,
-                          child: Text(items)),
+                        // width: MediaQuery.of(context).size.width - 80,
+                        // child: Text(items),
+                        child: CustomText(
+                          items,
+                          type: FontStyle.title,
+                        ),
+                      ),
                     );
                   }).toList(),
                   onChanged: (String? newValue) {
@@ -351,7 +356,6 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
               Container(
                 decoration: BoxDecoration(
                     //light red
-                    // color: Colors.red[00],
                     borderRadius: BorderRadius.circular(6),
                     border: Border.all(
                         color: const Color.fromRGBO(255, 12, 12, 1))),
@@ -366,6 +370,8 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
                       ? Colors.white
                       : greyColor,
                   backgroundColor: const Color.fromRGBO(255, 12, 12, 0.1),
+                  collapsedBackgroundColor:
+                      const Color.fromRGBO(255, 12, 12, 0.1),
                   title: CustomText(
                     'Danger Zone',
                     textAlign: TextAlign.left,
@@ -424,7 +430,7 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
                           height: 45,
                           width: MediaQuery.of(context).size.width,
                           margin: const EdgeInsets.only(
-                              top: 20, left: 20, right: 20),
+                              top: 20, left: 20, right: 20, bottom: 15),
                           decoration: BoxDecoration(
                             color: const Color.fromRGBO(255, 12, 12, 1),
                             borderRadius: BorderRadius.circular(6),
@@ -438,7 +444,10 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
                     ),
                   ],
                 ),
-              )
+              ),
+              const SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),

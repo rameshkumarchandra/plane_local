@@ -34,7 +34,7 @@ class _ImportEportState extends ConsumerState<ImportEport> {
           children: [
             Container(
               padding: const EdgeInsets.only(left: 16, right: 16),
-              height: 2,
+              height: 1,
               width: MediaQuery.of(context).size.width,
               color: Colors.grey[300],
             ),

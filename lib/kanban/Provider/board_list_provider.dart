@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/utils/custom_text.dart';
 import '../custom/list_item.dart';
 import '../custom/text_field.dart';
 import '../models/item_state.dart';
@@ -103,12 +104,18 @@ class BoardListProvider extends ChangeNotifier {
               ),
               padding: const EdgeInsets.only(left: 15, bottom: 10),
               alignment: Alignment.centerLeft,
-              child: Text(
+              // child: Text(
+              //   prov.board.lists[listIndex].title,
+              //   style: const TextStyle(
+              //       fontSize: 20,
+              //       color: Colors.black,
+              //       fontWeight: FontWeight.bold),
+              // ),
+              child: CustomText(
                 prov.board.lists[listIndex].title,
-                style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
+                fontSize: 20,
+                type: FontStyle.heading2,
+                fontWeight: FontWeight.bold,
               ),
             ),
             Expanded(

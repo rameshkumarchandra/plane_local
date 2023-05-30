@@ -4,6 +4,7 @@ import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/screens/invite_members.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_appBar.dart';
+import 'package:plane_startup/utils/member_status.dart';
 import 'package:plane_startup/widgets/loading_widget.dart';
 
 import '../provider/provider_list.dart';
@@ -53,6 +54,9 @@ class _MembersState extends ConsumerState<Members> {
                     builder: (context) => const InviteMembers()));
               },
               child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 15,
+                ),
                 child: Row(
                   children: [
                     const Icon(
@@ -200,70 +204,140 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                   type: FontStyle.subtitle,
                 ),
               ),
-              trailing: SizedBox(
-                width: 82,
-                child: DropdownButtonFormField(
-                    value: widget.fromWorkspace
-                        ? workspaceProvider.workspaceMembers[index]['role'] ==
-                                20
-                            ? 'Admin'
-                            : workspaceProvider.workspaceMembers[index]
-                                        ['role'] ==
-                                    15
-                                ? 'Member'
-                                : workspaceProvider.workspaceMembers[index]
-                                            ['role'] ==
-                                        10
-                                    ? 'Viewer'
-                                    : 'Guest'
-                        : issueProvider.members[index]['role'] == 20
-                            ? 'Admin'
-                            : issueProvider.members[index]['role'] == 15
-                                ? 'Member'
-                                : issueProvider.members[index]['role'] == 10
-                                    ? 'Viewer'
-                                    : 'Guest',
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                    ),
-                    dropdownColor: themeProvider.isDarkThemeEnabled
-                        ? Colors.black
-                        : Colors.white,
-                    items: [
-                      DropdownMenuItem(
-                        value: 'Admin',
+              trailing: GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                      isScrollControlled: true,
+                      enableDrag: true,
+                      constraints: BoxConstraints(
+                          maxHeight: MediaQuery.of(context).size.height * 0.55),
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      )),
+                      context: context,
+                      builder: (ctx) {
+                        return MemberStatus(
+                          firstName: workspaceProvider.workspaceMembers[index]
+                              ['member']['first_name'],
+                          lastName: workspaceProvider.workspaceMembers[index]
+                              ['member']['last_name'],
+                          role: workspaceProvider.workspaceMembers[index]
+                              ['role'],
+                        );
+                      });
+                },
+                child: SizedBox(
+                  width: 85,
+
+                  //row containing role and a dropdown button
+                  child: Row(
+                    children: [
+                      //row containing role and a dropdown button
+                      SizedBox(
                         child: CustomText(
-                          'Admin',
-                          type: FontStyle.subtitle,
-                          fontWeight: FontWeight.bold,
+                          widget.fromWorkspace
+                              ? workspaceProvider.workspaceMembers[index]
+                                          ['role'] ==
+                                      20
+                                  ? 'Admin'
+                                  : workspaceProvider.workspaceMembers[index]
+                                              ['role'] ==
+                                          15
+                                      ? 'Member'
+                                      : workspaceProvider
+                                                      .workspaceMembers[index]
+                                                  ['role'] ==
+                                              10
+                                          ? 'Viewer'
+                                          : 'Guest'
+                              : issueProvider.members[index]['role'] == 20
+                                  ? 'Admin'
+                                  : issueProvider.members[index]['role'] == 15
+                                      ? 'Member'
+                                      : issueProvider.members[index]['role'] ==
+                                              10
+                                          ? 'Viewer'
+                                          : 'Guest',
+                          type: FontStyle.title,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      DropdownMenuItem(
-                        value: 'Member',
-                        child: CustomText(
-                          'Member',
-                          type: FontStyle.subtitle,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Viewer',
-                        child: CustomText(
-                          'Viewer',
-                          type: FontStyle.subtitle,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Guest',
-                        child: CustomText(
-                          'Guest',
-                          type: FontStyle.subtitle,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      const Spacer(),
+                      //dropdown icon
+                      Icon(
+                        Icons.keyboard_arrow_down,
+                        color: themeProvider.isDarkThemeEnabled
+                            ? darkPrimaryTextColor
+                            : lightPrimaryTextColor,
                       ),
                     ],
-                    onChanged: (val) {}),
+                  ),
+
+                  // DropdownButtonFormField(
+                  //     value: widget.fromWorkspace
+                  //         ? workspaceProvider.workspaceMembers[index]['role'] ==
+                  //                 20
+                  //             ? 'Admin'
+                  //             : workspaceProvider.workspaceMembers[index]
+                  //                         ['role'] ==
+                  //                     15
+                  //                 ? 'Member'
+                  //                 : workspaceProvider.workspaceMembers[index]
+                  //                             ['role'] ==
+                  //                         10
+                  //                     ? 'Viewer'
+                  //                     : 'Guest'
+                  //         : issueProvider.members[index]['role'] == 20
+                  //             ? 'Admin'
+                  //             : issueProvider.members[index]['role'] == 15
+                  //                 ? 'Member'
+                  //                 : issueProvider.members[index]['role'] == 10
+                  //                     ? 'Viewer'
+                  //                     : 'Guest',
+                  //     decoration: const InputDecoration(
+                  //       border: InputBorder.none,
+                  //     ),
+                  //     dropdownColor: themeProvider.isDarkThemeEnabled
+                  //         ? Colors.black
+                  //         : Colors.white,
+                  //     items: [
+                  //       DropdownMenuItem(
+                  //         value: 'Admin',
+                  //         child: CustomText(
+                  //           'Admin',
+                  //           type: FontStyle.subtitle,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //       DropdownMenuItem(
+                  //         value: 'Member',
+                  //         child: CustomText(
+                  //           'Member',
+                  //           type: FontStyle.subtitle,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //       DropdownMenuItem(
+                  //         value: 'Viewer',
+                  //         child: CustomText(
+                  //           'Viewer',
+                  //           type: FontStyle.subtitle,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //       DropdownMenuItem(
+                  //         value: 'Guest',
+                  //         child: CustomText(
+                  //           'Guest',
+                  //           type: FontStyle.subtitle,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //     onChanged: (val) {}),
+                ),
               ),
             );
           }),

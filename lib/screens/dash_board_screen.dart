@@ -19,7 +19,7 @@ class DashBoardScreen extends ConsumerStatefulWidget {
 class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
   @override
   Widget build(BuildContext context) {
-    var themeProvider = ref.read(ProviderList.themeProvider);
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
       //backgroundColor: themeProvider.backgroundColor,
       body: Padding(
@@ -27,12 +27,13 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomText(
                   'Dashboard',
                   type: FontStyle.heading,
                 ),
+                const Spacer(),
                 GestureDetector(
                   onTap: () {
                     showModalBottomSheet(
@@ -63,7 +64,23 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                       type: FontStyle.buttonText,
                     ),
                   ),
-                )
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                IconButton(
+                  onPressed: () async {
+                    await themeProvider.changeTheme();
+                  },
+                  icon: Icon(
+                    !themeProvider.isDarkThemeEnabled
+                        ? Icons.brightness_2_outlined
+                        : Icons.wb_sunny_outlined,
+                    color: !themeProvider.isDarkThemeEnabled
+                        ? Colors.black
+                        : Colors.white,
+                  ),
+                ),
               ],
             ),
             const SizedBox(
@@ -78,32 +95,39 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Align(
-                    alignment: Alignment.topRight,
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        // child: Text(
+                        //   'Plane is open source, support us by staring us on GitHub.',
+                        //   style: TextStylingWidget.description.copyWith(
+                        //       color: Colors.white, fontWeight: FontWeight.w600),
+                        // ),
+                        child: CustomText(
+                          'Plane is open source, support us by staring us on GitHub.',
+                          type: FontStyle.text,
+                          textAlign: TextAlign.start,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    // child: Text(
-                    //   'Plane is open source, support us by staring us on GitHub.',
-                    //   style: TextStylingWidget.description.copyWith(
-                    //       color: Colors.white, fontWeight: FontWeight.w600),
-                    // ),
-                    child: CustomText(
-                      'Plane is open source, support us by staring us on GitHub.',
-                      type: FontStyle.text,
-                      textAlign: TextAlign.start,
-                      color: Colors.white,
-                    ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   Row(
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white),
+                          backgroundColor: Colors.white,
+                        ),
                         onPressed: () {},
                         // child: Text(
                         //   'Star Plane',
@@ -147,10 +171,10 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                     border: Border.all(color: Colors.grey.shade400),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Center(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Text(
                         //   'Issues assigned by you',

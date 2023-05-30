@@ -48,15 +48,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         currentIndex: currentIndex,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: primaryColor,
+
         // unselectedItemColor: themeProvider.secondaryTextColor,
         unselectedItemColor: themeProvider.isDarkThemeEnabled
             ? darkSecondaryTextColor
             : lightSecondaryTextColor,
         // backgroundColor: themeProvider.secondaryBackgroundColor,
         backgroundColor: themeProvider.isDarkThemeEnabled
-            ? darkSecondaryBackgroundColor
-            : lightSecondaryBackgroundColor,
-        elevation: 1,
+            ? darkBackgroundColor
+            : lightBackgroundColor,
+
+        elevation: 5,
+
         items: [
           BottomNavigationBarItem(
             icon: SvgPicture.asset(

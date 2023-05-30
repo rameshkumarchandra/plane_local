@@ -34,7 +34,7 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
     final prov = ref.read(ProviderList.profileProvider);
     // });
-    
+
     super.initState();
   }
 
@@ -69,9 +69,13 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                           const SizedBox(
                             height: 30,
                           ),
-                          const Text(
+                          // const Text(
+                          //   'Setup up your profile',
+                          //   style: TextStylingWidget.mainHeading,
+                          // ),
+                          CustomText(
                             'Setup up your profile',
-                            style: TextStylingWidget.mainHeading,
+                            type: FontStyle.mainHeading,
                           ),
                           const SizedBox(
                             height: 30,
@@ -81,12 +85,14 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const CustomRichText(
-                                widgets: [
-                                  TextSpan(text: 'First name'),
-                                  TextSpan(text: '*', style: TextStyle(color: Colors.red))
-                                ],
-                                type: RichFontStyle.text,
-                              ),
+                                  widgets: [
+                                    TextSpan(text: 'First name'),
+                                    TextSpan(
+                                        text: '*',
+                                        style: TextStyle(color: Colors.red))
+                                  ],
+                                  type: RichFontStyle.text,
+                                ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -104,12 +110,14 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                   height: 20,
                                 ),
                                 const CustomRichText(
-                                widgets: [
-                                  TextSpan(text: 'Last name'),
-                                  TextSpan(text: '*', style: TextStyle(color: Colors.red))
-                                ],
-                                type: RichFontStyle.text,
-                              ),
+                                  widgets: [
+                                    TextSpan(text: 'Last name'),
+                                    TextSpan(
+                                        text: '*',
+                                        style: TextStyle(color: Colors.red))
+                                  ],
+                                  type: RichFontStyle.text,
+                                ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -126,12 +134,14 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                   height: 20,
                                 ),
                                 const CustomRichText(
-                                widgets: [
-                                  TextSpan(text: 'What is your Role?'),
-                                  TextSpan(text: '*', style: TextStyle(color: Colors.red))
-                                ],
-                                type: RichFontStyle.text,
-                              ),
+                                  widgets: [
+                                    TextSpan(text: 'What is your Role?'),
+                                    TextSpan(
+                                        text: '*',
+                                        style: TextStyle(color: Colors.red))
+                                  ],
+                                  type: RichFontStyle.text,
+                                ),
                                 const SizedBox(
                                   height: 10,
                                 ),
@@ -150,15 +160,21 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                     underline:
                                         Container(color: Colors.transparent),
                                     icon: const Icon(Icons.keyboard_arrow_down),
-                                    items: prov.dropDownItems.map((String items) {
+                                    items:
+                                        prov.dropDownItems.map((String items) {
                                       return DropdownMenuItem(
                                         value: items,
                                         child: SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width -
-                                                80,
-                                            child: Text(items)),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              80,
+                                          // child: Text(items),
+                                          child: CustomText(
+                                            items,
+                                            type: FontStyle.text,
+                                          ),
+                                        ),
                                       );
                                     }).toList(),
                                     onChanged: (String? newValue) {
@@ -168,7 +184,6 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                     },
                                   ),
                                 ),
-                                
                                 dropdownEmpty
                                     ? CustomText(
                                         "*required",
@@ -247,13 +262,19 @@ class _SetupProfileScreenState extends ConsumerState<SetupProfileScreen> {
                                     const SizedBox(
                                       width: 5,
                                     ),
-                                    Text(
+                                    // Text(
+                                    //   'Go back',
+                                    //   style: TextStylingWidget.description
+                                    //       .copyWith(
+                                    //     color: greyColor,
+                                    //     fontWeight: FontWeight.w600,
+                                    //   ),
+                                    // ),
+                                    CustomText(
                                       'Go back',
-                                      style: TextStylingWidget.description
-                                          .copyWith(
-                                        color: greyColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      type: FontStyle.description,
+                                      color: greyColor,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ],
                                 ),
