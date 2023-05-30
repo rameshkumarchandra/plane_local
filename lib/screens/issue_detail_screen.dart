@@ -163,18 +163,29 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                       ),
                       Expanded(child: Container()),
                       DropdownButton<String>(
-                        items: const [
+                        items: [
                           DropdownMenuItem<String>(
-                            child: Text('Low'),
+                            // child: Text('Low'),
+
                             value: 'Low',
+                            child: CustomText(
+                              'Low',
+                              type: FontStyle.title,
+                            ),
                           ),
                           DropdownMenuItem<String>(
-                            child: Text('Medium'),
                             value: 'Medium',
+                            child: CustomText(
+                              'Medium',
+                              type: FontStyle.title,
+                            ),
                           ),
                           DropdownMenuItem<String>(
-                            child: Text('High'),
                             value: 'High',
+                            child: CustomText(
+                              'High',
+                              type: FontStyle.title,
+                            ),
                           ),
                         ],
                         onChanged: (value) {},
@@ -240,14 +251,20 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                       ),
                       Expanded(child: Container()),
                       DropdownButton<String>(
-                        items: const [
+                        items: [
                           DropdownMenuItem<String>(
-                            child: Text('Open'),
                             value: 'Open',
+                            child: CustomText(
+                              'Open',
+                              type: FontStyle.title,
+                            ),
                           ),
                           DropdownMenuItem<String>(
-                            child: Text('Closed'),
                             value: 'Closed',
+                            child: CustomText(
+                              'Closed',
+                              type: FontStyle.title,
+                            ),
                           ),
                         ],
                         onChanged: (value) {},
@@ -316,14 +333,20 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                       ),
                       Expanded(child: Container()),
                       DropdownButton<String>(
-                        items: const [
+                        items: [
                           DropdownMenuItem<String>(
-                            child: Text('Open'),
                             value: 'Open',
+                            child: CustomText(
+                              'Open',
+                              type: FontStyle.title,
+                            ),
                           ),
                           DropdownMenuItem<String>(
-                            child: Text('Closed'),
                             value: 'Closed',
+                            child: CustomText(
+                              'Closed',
+                              type: FontStyle.title,
+                            ),
                           ),
                         ],
                         onChanged: (value) {},

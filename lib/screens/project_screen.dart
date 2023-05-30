@@ -32,19 +32,6 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
         elevation: 0,
         actions: [
           //switch theme
-          IconButton(
-            onPressed: () async {
-              await themeProvider.changeTheme();
-            },
-            icon: Icon(
-              !themeProvider.isDarkThemeEnabled
-                  ? Icons.brightness_2_outlined
-                  : Icons.wb_sunny_outlined,
-              color: !themeProvider.isDarkThemeEnabled
-                  ? Colors.black
-                  : Colors.white,
-            ),
-          ),
         ],
         leadingWidth: 0,
         leading: const Text(''),
@@ -131,8 +118,9 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                     indent: 20,
                                     endIndent: 20,
                                     color: themeProvider.isDarkThemeEnabled
-                                        ? darkStrokeColor
-                                        : Colors.grey.shade300,
+                                        ? darkStrokeColor.withOpacity(0.4)
+                                        : const Color.fromRGBO(
+                                            238, 238, 238, 1),
                                   ),
                                 );
                               },
@@ -294,11 +282,12 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                   child: Divider(
                                     height: 1,
                                     thickness: 1,
-                                    indent: 20,
-                                    endIndent: 20,
+                                    indent: 0,
+                                    endIndent: 0,
                                     color: themeProvider.isDarkThemeEnabled
-                                        ? darkStrokeColor
-                                        : Colors.grey.shade300,
+                                        ? darkStrokeColor.withOpacity(0.4)
+                                        : const Color.fromRGBO(
+                                            238, 238, 238, 1),
                                   ),
                                 );
                         },
@@ -336,9 +325,11 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                                 projectProvider.projects[index]
                                                         ['emoji'] !=
                                                     null
-                                            ? String.fromCharCode(int.parse(
-                                                projectProvider.projects[index]
-                                                    ['emoji']))
+                                            ? ''
+                                            // String.fromCharCode(int.parse(
+                                            //     projectProvider.projects[index]
+                                            //             ['emoji'] ??
+                                            //         ''))
                                             : '',
                                         style: const TextStyle(
                                           color: Colors.white,

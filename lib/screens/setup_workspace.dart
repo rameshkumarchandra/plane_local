@@ -104,13 +104,20 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8, horizontal: 8),
                                       child: Center(
-                                        child: Text(
+                                        // child: Text(
+                                        //   'New Workspace',
+                                        //   style: TextStylingWidget.buttonText
+                                        //       .copyWith(
+                                        //           color: newWorkSpace
+                                        //               ? Colors.white
+                                        //               : greyColor),
+                                        // ),
+                                        child: CustomText(
                                           'New Workspace',
-                                          style: TextStylingWidget.buttonText
-                                              .copyWith(
-                                                  color: newWorkSpace
-                                                      ? Colors.white
-                                                      : greyColor),
+                                          type: FontStyle.buttonText,
+                                          color: newWorkSpace
+                                              ? Colors.white
+                                              : greyColor,
                                         ),
                                       ),
                                     ),
@@ -136,13 +143,20 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8, horizontal: 8),
                                       child: Center(
-                                        child: Text(
+                                        // child: Text(
+                                        //   'Join Workspace',
+                                        //   style: TextStylingWidget.buttonText
+                                        //       .copyWith(
+                                        //           color: !newWorkSpace
+                                        //               ? Colors.white
+                                        //               : greyColor),
+                                        // ),
+                                        child: CustomText(
                                           'Join Workspace',
-                                          style: TextStylingWidget.buttonText
-                                              .copyWith(
-                                                  color: !newWorkSpace
-                                                      ? Colors.white
-                                                      : greyColor),
+                                          type: FontStyle.buttonText,
+                                          color: !newWorkSpace
+                                              ? Colors.white
+                                              : greyColor,
                                         ),
                                       ),
                                     ),
@@ -299,11 +313,15 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                     return DropdownMenuItem(
                                       value: items,
                                       child: SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width -
-                                              80,
-                                          child: Text(items)),
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                80,
+                                        // child: Text(items),
+                                        child: CustomText(
+                                          items,
+                                          type: FontStyle.text,
+                                        ),
+                                      ),
                                     );
                                   }).toList(),
                                   onChanged: (String? newValue) {
@@ -370,10 +388,15 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             8)),
-                                                content: const Text(
+                                                // content: const Text(
+                                                //   'Workspace URL already  taken!',
+                                                //   style: TextStyle(
+                                                //       color: Colors.white),
+                                                content: CustomText(
                                                   'Workspace URL already  taken!',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
+                                                  color: Colors.white,
+                                                  type: FontStyle.subtitle,
+                                                  fontWeight: FontWeight.bold,
                                                 )));
                                       }
                                     }
@@ -386,11 +409,17 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                   child: SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width * 0.6,
-                                    child: Text(
+                                    // child: Text(
+                                    //   'Currently you have no invited workspaces to join.',
+                                    //   textAlign: TextAlign.center,
+                                    //   style: TextStylingWidget.description
+                                    //       .copyWith(color: greyColor),
+                                    // ),
+                                    child: CustomText(
                                       'Currently you have no invited workspaces to join.',
+                                      type: FontStyle.description,
+                                      color: greyColor,
                                       textAlign: TextAlign.center,
-                                      style: TextStylingWidget.description
-                                          .copyWith(color: greyColor),
                                     ),
                                   ),
                                 ),

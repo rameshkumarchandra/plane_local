@@ -52,17 +52,30 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              // Text(
+              //   'FC-7',
+              //   style: TextStylingWidget.description.copyWith(color: greyColor),
+              // ),
+              CustomText(
                 'FC-7',
-                style: TextStylingWidget.description.copyWith(color: greyColor),
+                type: FontStyle.description,
+                color: greyColor,
+                fontSize: 16,
               ),
               const SizedBox(
                 height: 10,
               ),
-              Text(
+              // Text(
+              //   'Issue details activities and comments API endpoints and documnetaion',
+              //   style: TextStylingWidget.description
+              //       .copyWith(fontSize: 15, fontWeight: FontWeight.w500),
+              // ),
+              CustomText(
                 'Issue details activities and comments API endpoints and documnetaion',
-                style: TextStylingWidget.description
-                    .copyWith(fontSize: 15, fontWeight: FontWeight.w500),
+                type: FontStyle.description,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: Colors.black,
               ),
               const SizedBox(
                 height: 10,
@@ -110,12 +123,19 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
+                children: [
+                  // Text(
+                  //   'Plane Launch Cycle',
+                  //   style: TextStylingWidget.subHeading,
+                  // ),
+                  CustomText(
                     'Plane Launch Cycle',
-                    style: TextStylingWidget.subHeading,
+                    type: FontStyle.subheading,
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.star_outline,
                     color: greyColor,
                     size: 20,
@@ -189,18 +209,30 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                       CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.orange,
-                        child: Text(
+                        // child: Text(
+                        //   'V',
+                        //   style: TextStylingWidget.smallText
+                        //       .copyWith(color: Colors.white),
+                        // ),
+                        child: CustomText(
                           'V',
-                          style: TextStylingWidget.smallText
-                              .copyWith(color: Colors.white),
+                          type: FontStyle.smallText,
+                          color: Colors.white,
+                          fontSize: 14,
                         ),
                       ),
                       const SizedBox(
                         width: 15,
                       ),
-                      const Text(
+                      // const Text(
+                      //   'Vamsi kurama',
+                      //   style: TextStylingWidget.smallText,
+                      // ),
+                      CustomText(
                         'Vamsi kurama',
-                        style: TextStylingWidget.smallText,
+                        type: FontStyle.smallText,
+                        color: Colors.black,
+                        fontSize: 14,
                       ),
                     ],
                   ),
@@ -228,9 +260,15 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  // Text(
+                  //   'Progress',
+                  //   style: TextStylingWidget.smallText.copyWith(fontSize: 12),
+                  // ),
+                  CustomText(
                     'Progress',
-                    style: TextStylingWidget.smallText.copyWith(fontSize: 12),
+                    type: FontStyle.smallText,
+                    color: Colors.black,
+                    fontSize: 12,
                   ),
                   const SizedBox(
                     width: 5,
@@ -298,12 +336,19 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
+                children: [
+                  // Text(
+                  //   'Github Integrations',
+                  //   style: TextStylingWidget.subHeading,
+                  // ),
+
+                  CustomText(
                     'Github Integrations',
-                    style: TextStylingWidget.subHeading,
+                    type: FontStyle.subheading,
+                    color: Colors.black,
+                    fontSize: 20,
                   ),
-                  Icon(
+                  const Icon(
                     Icons.star_outline,
                     color: greyColor,
                     size: 20,
@@ -380,10 +425,16 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                       const SizedBox(
                         width: 5,
                       ),
-                      Text(
+                      // Text(
+                      //   'Lead:',
+                      //   style: TextStylingWidget.smallText
+                      //       .copyWith(color: greyColor),
+                      // ),
+                      CustomText(
                         'Lead:',
-                        style: TextStylingWidget.smallText
-                            .copyWith(color: greyColor),
+                        type: FontStyle.smallText,
+                        color: greyColor,
+                        fontSize: 14,
                       ),
                       const SizedBox(
                         width: 5,
@@ -391,18 +442,30 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                       CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.orange,
-                        child: Text(
+                        // child: Text(
+                        //   'V',
+                        //   style: TextStylingWidget.smallText
+                        //       .copyWith(color: Colors.white),
+                        // ),
+                        child: CustomText(
                           'V',
-                          style: TextStylingWidget.smallText
-                              .copyWith(color: Colors.white),
+                          type: FontStyle.smallText,
+                          color: Colors.white,
+                          fontSize: 14,
                         ),
                       ),
                       const SizedBox(
                         width: 5,
                       ),
-                      const Text(
+                      // const Text(
+                      //   'Vamsi kurama',
+                      //   style: TextStylingWidget.smallText,
+                      // ),
+                      CustomText(
                         'Vamsi kurama',
-                        style: TextStylingWidget.smallText,
+                        type: FontStyle.smallText,
+                        color: Colors.black,
+                        fontSize: 14,
                       ),
                     ],
                   ),
@@ -418,10 +481,16 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                       const SizedBox(
                         width: 5,
                       ),
-                      Text(
+                      // Text(
+                      //   'Members:',
+                      //   style: TextStylingWidget.smallText
+                      //       .copyWith(color: greyColor),
+                      // ),
+                      CustomText(
                         'Members:',
-                        style: TextStylingWidget.smallText
-                            .copyWith(color: greyColor),
+                        type: FontStyle.smallText,
+                        color: greyColor,
+                        fontSize: 14,
                       ),
                       const SizedBox(
                         width: 5,
@@ -436,9 +505,15 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
               ),
               Row(
                 children: [
-                  Text(
+                  // Text(
+                  //   'Progress',
+                  //   style: TextStylingWidget.smallText.copyWith(fontSize: 12),
+                  // ),
+                  CustomText(
                     'Progress',
-                    style: TextStylingWidget.smallText.copyWith(fontSize: 12),
+                    type: FontStyle.smallText,
+                    color: Colors.black,
+                    fontSize: 12,
                   ),
                   const SizedBox(
                     width: 10,

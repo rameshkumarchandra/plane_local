@@ -131,6 +131,7 @@ class CustomText extends ConsumerWidget {
         //     color: color ?? Colors.blacklack,
         //     fontWeight: fontWeight ?? FontWeight.bold);
         return TextStyle(
+          overflow: overflow ?? TextOverflow.visible,
           fontSize: fontSize ?? 26,
           fontWeight: fontWeight ?? FontWeight.w600,
           fontFamily: 'SF Pro Display',
@@ -147,14 +148,14 @@ class CustomText extends ConsumerWidget {
         //     letterSpacing: 0.8,
         //     fontWeight: fontWeight ?? FontWeight.bold);
         return TextStyle(
-          fontSize: fontSize ?? 18,
-          fontWeight: fontWeight ?? FontWeight.w500,
-          fontFamily: 'SF Pro Display',
-          // color: color ?? themeProvider.primaryTextColor,
-          color: themeProvider.isDarkThemeEnabled
-              ? darkPrimaryTextColor
-              : Colors.black,
-        );
+            fontSize: fontSize ?? 18,
+            fontWeight: fontWeight ?? FontWeight.w500,
+            fontFamily: 'SF Pro Display',
+            // color: color ?? themeProvider.primaryTextColor,
+            color: color ??
+                (themeProvider.isDarkThemeEnabled
+                    ? darkPrimaryTextColor
+                    : Colors.black));
       case FontStyle.title:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 16,
@@ -168,7 +169,7 @@ class CustomText extends ConsumerWidget {
             color: color ??
                 (themeProvider.isDarkThemeEnabled
                     ? darkSecondaryTextColor
-                    : Colors.black));
+                    : lightSecondaryTextColor));
       case FontStyle.subheading:
         // return GoogleFonts.getFont(APP_FONT).copyWith(
         //     fontSize: fontSize ?? 18,
@@ -182,11 +183,10 @@ class CustomText extends ConsumerWidget {
           fontWeight: fontWeight ?? FontWeight.w400,
           fontFamily: 'SF Pro Display',
           // color: color ?? themeProvider.secondaryTextColor,
-          color: 
-          color??
-          (themeProvider.isDarkThemeEnabled
-              ? darkSecondaryTextColor
-              : Colors.black),
+          color: color ??
+              (themeProvider.isDarkThemeEnabled
+                  ? darkSecondaryTextColor
+                  : lightSecondaryTextColor),
         );
       case FontStyle.boldTitle:
         // return GoogleFonts.getFont(APP_FONT).copyWith(

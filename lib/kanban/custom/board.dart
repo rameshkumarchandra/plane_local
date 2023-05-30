@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:plane_startup/utils/custom_text.dart';
+
 import '../custom/board_list.dart';
 import '../models/inputs.dart';
 import '../models/board_list.dart' as board_list;
@@ -362,7 +364,7 @@ class _BoardState extends ConsumerState<Board> {
                               transform: Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0,
                                   1, 0, 0, 0, 0, 1),
                               child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: boardProv.board.lists
                                       .map(
                                           (e) =>
@@ -485,7 +487,12 @@ class _BoardState extends ConsumerState<Board> {
                                                                           252,
                                                                         ),
                                                                         borderRadius: BorderRadius.circular(6)),
-                                                                    child: Center(child: Text("Add List", style: widget.textStyle))),
+                                                                    child: Center(
+                                                                        child: CustomText(
+                                                                      'Add List',
+                                                                      type: FontStyle
+                                                                          .heading2,
+                                                                    ))),
                                                               )
                                                       ],
                                                     ))

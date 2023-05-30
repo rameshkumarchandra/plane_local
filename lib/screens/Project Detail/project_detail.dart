@@ -56,19 +56,20 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
 
     // if (prov.issues.isEmpty) {
-      prov.getStates(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
-          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+    prov.getStates(
+        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        projID: ref.read(ProviderList.projectProvider).currentProject['id']);
 
-      prov.getIssues(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
-          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
-      projectProv.getProjectDetails(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
-          projId: ref.read(ProviderList.projectProvider).currentProject['id']);
+    prov.getLabels(
+        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+
+    prov.getIssues(
+        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+    projectProv.getProjectDetails(
+        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        projId: ref.read(ProviderList.projectProvider).currentProject['id']);
     // }
 
     pages = [
@@ -215,8 +216,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                   });
                 },
                 itemBuilder: (ctx, index) {
-                  return Container(
-                      child: index == 0 ? issues() : pages[index]);
+                  return Container(child: index == 0 ? issues() : pages[index]);
                 },
                 itemCount: 5,
               )),
@@ -489,46 +489,44 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
       loading: issueProvider.issueState == AuthStateEnum.loading ||
           issueProvider.statesState == AuthStateEnum.loading,
       widgetClass: Container(
-        color: themeProvider.isDarkThemeEnabled
-            ? darkSecondaryBackgroundColor
-            : lightSecondaryBackgroundColor,
-        padding: const EdgeInsets.only(top: 15, left: 15),
-        child: issueProvider.issueState == AuthStateEnum.loading ||
-                issueProvider.statesState == AuthStateEnum.loading
-            ? Container()
-            : issueProvider.issueState == AuthStateEnum.success &&
-              issueProvider.statesState == AuthStateEnum.success
-            ? KanbanBoard(
-                issueProvider.initializeBoard(),
-                groupEmptyStates: !issueProvider.showEmptyStates,
-                backgroundColor: themeProvider.isDarkThemeEnabled
-                    ? darkSecondaryBackgroundColor
-                    : lightSecondaryBackgroundColor,
-                listScrollConfig: ScrollConfig(
-                    offset: 65,
-                    duration: const Duration(milliseconds: 100),
-                    curve: Curves.linear),
-                listTransitionDuration: const Duration(milliseconds: 200),
-                cardTransitionDuration: const Duration(milliseconds: 400),
-                textStyle: TextStyle(
-                    fontSize: 19,
-                    height: 1.3,
-                    color: Colors.grey.shade800,
-                    fontWeight: FontWeight.w500),
-              )
-            : issueProvider.issueState == AuthStateEnum.restricted ||
-              issueProvider.statesState == AuthStateEnum.restricted
-            ? Center(
-              child: CustomText(
-                'You are not a member of this project'
-              ),
-            )
-            : Center(
-              child: CustomText(
-                'Something went wrong'
-              ),
-            )
-      ),
+          color: themeProvider.isDarkThemeEnabled
+              ? darkSecondaryBackgroundColor
+              : lightSecondaryBackgroundColor,
+          padding: const EdgeInsets.only(top: 15, left: 15),
+          child: issueProvider.issueState == AuthStateEnum.loading ||
+                  issueProvider.statesState == AuthStateEnum.loading
+              ? Container()
+              : issueProvider.issueState == AuthStateEnum.success &&
+                      issueProvider.statesState == AuthStateEnum.success
+                  ? KanbanBoard(
+                      issueProvider.isGroupBy
+                          ? issueProvider.priorityBoard()
+                          : issueProvider.initializeBoard(),
+                      groupEmptyStates: !issueProvider.showEmptyStates,
+                      backgroundColor: themeProvider.isDarkThemeEnabled
+                          ? darkSecondaryBackgroundColor
+                          : lightSecondaryBackgroundColor,
+                      listScrollConfig: ScrollConfig(
+                          offset: 65,
+                          duration: const Duration(milliseconds: 100),
+                          curve: Curves.linear),
+                      listTransitionDuration: const Duration(milliseconds: 200),
+                      cardTransitionDuration: const Duration(milliseconds: 400),
+                      textStyle: TextStyle(
+                          fontSize: 19,
+                          height: 1.3,
+                          color: Colors.grey.shade800,
+                          fontWeight: FontWeight.w500),
+                    )
+                  : issueProvider.issueState == AuthStateEnum.restricted ||
+                          issueProvider.statesState == AuthStateEnum.restricted
+                      ? Center(
+                          child: CustomText(
+                              'You are not a member of this project'),
+                        )
+                      : Center(
+                          child: CustomText('Something went wrong'),
+                        )),
     );
   }
 

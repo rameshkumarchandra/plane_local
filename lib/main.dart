@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/screens/invite_co-workers.dart';
@@ -22,6 +23,9 @@ SharedPreferences? prefs;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // transparent status bar
+  ));
   await SharedPrefrenceServices.init();
   Const.appBearerToken =
       SharedPrefrenceServices.sharedPreferences!.getString("token");
@@ -118,13 +122,19 @@ class _MyAppState extends ConsumerState<MyApp> {
 
         // cursor color
 
-        textSelectionTheme: TextSelectionThemeData(cursorColor: primaryColor),
+        textSelectionTheme: TextSelectionThemeData(
+            cursorColor: primaryColor,
+            selectionColor: primaryColor.withOpacity(0.2),
+            selectionHandleColor: primaryColor),
 
         primaryColor:
             themeProvider.isDarkThemeEnabled ? Colors.black : Colors.white,
 
         backgroundColor:
             themeProvider.isDarkThemeEnabled ? Colors.black : Colors.white,
+
+        //radio button theme
+        toggleableActiveColor: primaryColor,
 
         scaffoldBackgroundColor:
             themeProvider.isDarkThemeEnabled ? Colors.black : Colors.white,
@@ -134,6 +144,8 @@ class _MyAppState extends ConsumerState<MyApp> {
               ? darkSecondaryBackgroundColor
               : Colors.white,
         ),
+
+        //text selection handle theme
       ),
       themeMode:
           themeProvider.isDarkThemeEnabled ? ThemeMode.dark : ThemeMode.light,

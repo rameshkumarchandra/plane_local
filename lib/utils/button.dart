@@ -35,17 +35,18 @@ class _ButtonState extends State<Button> {
           padding: const EdgeInsets.symmetric(vertical: 16),
           width: widget.width ?? MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
-              border: widget.filledButton
-                  ? const Border()
-                  : widget.removeStroke
-                      ? const Border()
-                      : Border.all(color: Colors.grey.shade500),
-              borderRadius: BorderRadius.circular(8),
-              color: (widget.filledButton && !widget.disable)
-                  ? primaryColor
-                  : widget.disable
-                      ? lightGreeyColor
-                      : Colors.transparent),
+            border: widget.filledButton
+                ? const Border()
+                : widget.removeStroke
+                    ? const Border()
+                    : Border.all(color: Colors.grey.shade500),
+            borderRadius: BorderRadius.circular(8),
+            color: (widget.filledButton && !widget.disable)
+                ? primaryColor
+                : widget.disable
+                    ? lightGreeyColor
+                    : Colors.transparent,
+          ),
           child: Center(
             // child: Text(
             //   widget.text,

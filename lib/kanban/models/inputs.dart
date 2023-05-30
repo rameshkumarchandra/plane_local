@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plane_startup/utils/custom_text.dart';
 
 class BoardListsData {
   final String? title;
@@ -37,22 +38,28 @@ class BoardListsData {
           width: 300,
           color: footerBackgroundColor,
           child: Row(
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.add,
                 color: Colors.black,
                 size: 22,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
-              Text(
+              // Text(
+              //   'NEW',
+              //   style: TextStyle(
+              //       color: Colors.black,
+              //       fontSize: 19,
+              //       fontWeight: FontWeight.bold),
+              // ),
+              CustomText(
                 'NEW',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold),
-              ),
+                type: FontStyle.heading2,
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+              )
             ],
           ),
         );
@@ -65,12 +72,18 @@ class BoardListsData {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              // Text(
+              //   title ?? '',
+              //   style: const TextStyle(
+              //       fontSize: 20,
+              //       color: Colors.black,
+              //       fontWeight: FontWeight.bold),
+              // ),
+              CustomText(
                 title ?? '',
-                style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
+                type: FontStyle.heading2,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
               GestureDetector(
                 child: const SizedBox(
