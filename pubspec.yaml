@@ -112,6 +112,7 @@ flutter:
     - assets/svg_images/cancelled.svg
     - assets/svg_images/in_progress.svg
     - assets/svg_images/sub_issue.svg
+    - assets/svg_images/sub_issues.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

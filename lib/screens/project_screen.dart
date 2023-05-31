@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -269,7 +271,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                           : Container(),
                       const SizedBox(height: 7),
                       ListView.separated(
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         shrinkWrap: true,
                         separatorBuilder: (context, index) {
                           return projectProvider.projects[index]
@@ -299,13 +301,15 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                               ? Container()
                               : ListTile(
                                   onTap: () {
+                                    //   log(projectProvider.projects[index].toString());
                                     projectProvider.currentProject =
                                         projectProvider.projects[index];
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            const ProjectDetail(),
+                                        builder: (context) => ProjectDetail(
+                                          index: index,
+                                        ),
                                       ),
                                     );
                                   },
@@ -314,23 +318,19 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                     height: 54,
                                     width: 54,
                                     decoration: BoxDecoration(
-                                      color: Colors.grey.shade200,
+                                     
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Center(
                                       child: Text(
-                                        projectProvider.projects[index]
-                                                        ['emoji'] !=
-                                                    '' &&
+                                        int.tryParse(projectProvider
+                                                    .projects[index]['emoji']
+                                                    .toString()) !=
+                                                null
+                                            ? String.fromCharCode(int.parse(
                                                 projectProvider.projects[index]
-                                                        ['emoji'] !=
-                                                    null
-                                            ? ''
-                                            // String.fromCharCode(int.parse(
-                                            //     projectProvider.projects[index]
-                                            //             ['emoji'] ??
-                                            //         ''))
-                                            : '',
+                                                    ['emoji']))
+                                            : '🚀',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 22,
@@ -366,7 +366,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                       //   ),
                                       // ),
                                       CustomText(
-                                        'Member',
+                                       projectProvider.projects[index]['is_member']? 'Member':'Not Member',
                                         // color: themeProvider.strokeColor,
                                         type: FontStyle.title,
                                       ),
@@ -389,7 +389,9 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                       //   ),
                                       // ),
                                       CustomText(
-                                        'DATE',
+                                        DateFormat('d MMMM').format(DateTime.parse(
+                                            projectProvider.projects[index]
+                                                ['created_at'])),
                                         // color: themeProvider.strokeColor,
                                         type: FontStyle.title,
                                         // fontSize: 16,

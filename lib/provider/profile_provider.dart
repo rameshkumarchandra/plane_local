@@ -44,7 +44,8 @@ class ProfileProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-      userProfile = UserProfile.fromMap(response.data["user"]);
+     // log(response.data.toString());
+      userProfile = UserProfile.fromMap(response.data);
 
       firstName.text = userProfile.first_name!;
       lastName.text = userProfile.last_name!;

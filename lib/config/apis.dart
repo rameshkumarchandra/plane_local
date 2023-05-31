@@ -15,7 +15,6 @@ class APIs {
   static String workspaceSlugCheck =
       '$baseApi/api/workspace-slug-check/?slug=\$SLUG';
   static String fileUpload = '$baseApi/api/users/file-assets/';
-  static String project = '$baseApi/api/workspaces/\$SLUG/projects/';
   static String listProjects = '$baseApi/api/workspaces/\$SLUG/projects/';
 
   static String createProjects = '$baseApi/api/workspaces/\$SLUG/projects/';
@@ -35,8 +34,14 @@ class APIs {
   //     '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issues/?group_by=\$GROUPBY';
   static String projectMembers =
       '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/members/';
+  static String userIssueView =
+      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/project-members/me';
   static String projectIssues =
       '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issues/';
   static String issueLabels =
-      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issue-labels/';
+      '$baseApi/api/workspaces/\$SLUG/pr/api/workspaces/\$SLUG/projects/\$PROJECTIDojects/\$PROJECTID/issue-labels/';
+  static String projectViews =
+      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/project-views/';
+  static String issueProperties =
+      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issue-properties/';
 }
