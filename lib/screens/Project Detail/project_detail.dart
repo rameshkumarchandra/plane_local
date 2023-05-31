@@ -87,7 +87,6 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     var featuresProvider = ref.watch(ProviderList.featuresProvider);
     var projectProvider = ref.watch(ProviderList.projectProvider);
     issueProvider.issueState = AuthStateEnum.success;
-
     //  print(issueProvider.statesState);
     return Scaffold(
       appBar: CustomAppBar(
@@ -216,7 +215,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
               Container(
                 height: 2,
                 width: MediaQuery.of(context).size.width,
-                color: Colors.grey.shade300,
+                color: themeProvider.isDarkThemeEnabled
+                    ? darkThemeBorder
+                    : Colors.grey.shade300,
               ),
               Expanded(
                   child: PageView.builder(
@@ -235,7 +236,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                   ? Container(
                       height: 50,
                       width: MediaQuery.of(context).size.width,
-                      color: Colors.black,
+                      color: darkBackgroundColor,
                       child: Row(
                         children: [
                           Expanded(
@@ -333,6 +334,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                               child: GestureDetector(
                             onTap: () {
                               showModalBottomSheet(
+                                  
                                   isScrollControlled: true,
                                   enableDrag: true,
                                   constraints: BoxConstraints(
@@ -509,7 +511,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
           issueProvider.orderByState == AuthStateEnum.loading,
       widgetClass: Container(
         color: themeProvider.isDarkThemeEnabled
-            ? darkSecondaryBackgroundColor
+            ? const Color.fromRGBO(29, 30, 32, 1)
             : lightSecondaryBackgroundColor,
         padding: issueProvider.issues.projectView == ProjectView.kanban
             ? const EdgeInsets.only(top: 15, left: 15)
@@ -546,7 +548,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                                 child: CustomText(
                                                   state.title!,
                                                   type: FontStyle.subheading,
-                                                  color: Colors.black,
+                                                  // color: Colors.black,
                                                   fontWeight: FontWeight.w500,
                                                 ),
                                               ),
@@ -559,13 +561,18 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             15),
-                                                    color: const Color.fromRGBO(
-                                                        222, 226, 230, 1)),
+                                                    color: themeProvider
+                                                            .isDarkThemeEnabled
+                                                        ? const Color.fromRGBO(
+                                                            39, 42, 45, 1)
+                                                        : const Color.fromRGBO(
+                                                            222, 226, 230, 1)),
                                                 height: 25,
                                                 width: 30,
                                                 child: CustomText(
                                                   state.items.length.toString(),
                                                   type: FontStyle.subtitle,
+                                                  color:themeProvider.isDarkThemeEnabled?Colors.white:null,
                                                 ),
                                               ),
                                               const Spacer(),
@@ -599,7 +606,10 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
-                                                color: Colors.white,
+                                                color: themeProvider
+                                                        .isDarkThemeEnabled
+                                                    ? darkBackgroundColor
+                                                    : Colors.white,
                                                 padding: const EdgeInsets.only(
                                                     top: 15,
                                                     bottom: 15,
@@ -625,9 +635,10 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                     issueProvider.isGroupBy
                         ? issueProvider.priorityBoard()
                         : issueProvider.initializeBoard(),
+                    
                     groupEmptyStates: !issueProvider.showEmptyStates,
                     backgroundColor: themeProvider.isDarkThemeEnabled
-                        ? darkSecondaryBackgroundColor
+                        ? const Color.fromRGBO(29, 30, 32, 1)
                         : lightSecondaryBackgroundColor,
                     listScrollConfig: ScrollConfig(
                         offset: 65,

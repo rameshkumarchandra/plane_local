@@ -220,7 +220,9 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                 ),
 
                 Container(
-                  color: Colors.grey[300],
+                  color: themeProvider.isDarkThemeEnabled
+                      ? darkThemeBorder
+                      : Colors.grey[300],
                   height: 1,
                 ),
 
@@ -290,7 +292,9 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                 ),
 
                 Container(
-                  color: Colors.grey[300],
+                   color: themeProvider.isDarkThemeEnabled
+                      ? darkThemeBorder
+                      : Colors.grey[300],
                   height: 1,
                 ),
                 //expansion tile for issue type having three checkboxes all issues, active issues and backlog issues
@@ -358,7 +362,9 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                   ],
                 ),
                 Container(
-                  color: Colors.grey[300],
+                  color: themeProvider.isDarkThemeEnabled
+                      ? darkThemeBorder
+                      : Colors.grey[300],
                   height: 1,
                   margin: const EdgeInsets.only(bottom: 10),
                 ),
@@ -401,7 +407,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                     )
                   ],
                 ),
-                Container(height: 10),
+                Container(height: 15),
                 CustomText('Display Properties',
                     type: FontStyle.subheading,
                     fontWeight: FontWeight.w600,
@@ -505,7 +511,6 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                         issueProvider.issues.displayProperties = properties;
                         issueProvider.updateIssueProperties(
                             properties: properties);
-
                       } else {
                         print('=====  IT IS ELSE ======');
                         DisplayProperties properties = DisplayProperties(

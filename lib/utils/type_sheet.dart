@@ -26,6 +26,7 @@ class _TypeSheetState extends ConsumerState<TypeSheet> {
   @override
   Widget build(BuildContext context) {
     var prov = ref.watch(ProviderList.issuesProvider);
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Padding(
       padding: const EdgeInsets.only(top: 23, left: 23, right: 23),
       child: Wrap(
@@ -63,6 +64,8 @@ class _TypeSheetState extends ConsumerState<TypeSheet> {
             child: Row(
               children: [
                 Radio(
+                  fillColor:  selected==0?null:MaterialStateProperty.all<Color>( Colors.grey.shade300
+                     ),
                     groupValue: selected,
                     activeColor: primaryColor,
                     value: 0,
@@ -90,7 +93,9 @@ class _TypeSheetState extends ConsumerState<TypeSheet> {
             height: 1,
             width: double.infinity,
             child: Container(
-              color: Colors.grey[300],
+              color:   themeProvider.isDarkThemeEnabled
+                      ? darkThemeBorder
+                      : Colors.grey[300],
             ),
           ),
           SizedBox(
@@ -99,6 +104,8 @@ class _TypeSheetState extends ConsumerState<TypeSheet> {
             child: Row(
               children: [
                 Radio(
+                        fillColor: selected==1?null: MaterialStateProperty.all<Color>( Colors.grey.shade300
+                     ),
                   groupValue: selected,
                     activeColor: primaryColor,
                     value:  1,
@@ -126,7 +133,9 @@ class _TypeSheetState extends ConsumerState<TypeSheet> {
             height: 1,
             width: double.infinity,
             child: Container(
-              color: Colors.grey[300],
+              color: themeProvider.isDarkThemeEnabled
+                      ? darkThemeBorder
+                      : Colors.grey[300],
             ),
           ),
           SizedBox(
@@ -135,6 +144,8 @@ class _TypeSheetState extends ConsumerState<TypeSheet> {
             child: Row(
               children: [
                 Radio(
+                  fillColor: selected==2?null: MaterialStateProperty.all<Color>( Colors.grey.shade300
+                     ),
                     groupValue: selected,
                     activeColor: primaryColor,
                     value: 2,
@@ -162,7 +173,9 @@ class _TypeSheetState extends ConsumerState<TypeSheet> {
             height: 1,
             width: double.infinity,
             child: Container(
-              color: Colors.grey[300],
+      color: themeProvider.isDarkThemeEnabled
+                      ? darkThemeBorder
+                      : Colors.grey[300],
             ),
           ),
 
