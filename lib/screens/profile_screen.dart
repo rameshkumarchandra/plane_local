@@ -15,6 +15,10 @@ import 'package:plane_startup/utils/custom_text.dart';
 import '../provider/theme_provider.dart';
 import '../utils/text_styles.dart';
 
+import 'package:plane_startup/utils/button.dart';
+import 'package:plane_startup/config/const.dart';
+import 'package:plane_startup/screens/on_boarding_screen.dart';
+
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
@@ -161,9 +165,34 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             //   'Profile',
             //   style: TextStylingWidget.mainHeading,
             // ),
-            CustomText(
-              'Profile',
-              type: FontStyle.mainHeading,
+            Row(
+              children: [
+                CustomText(
+                  'Profile',
+                  type: FontStyle.mainHeading,
+                ),
+                const Spacer(),
+                MaterialButton(
+                  onPressed: _showLogoutModelBottomBar,
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.logout,
+                        color: Colors.red,
+                        size: 16,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      CustomText(
+                        'Logout',
+                        color: Colors.red,
+                        type: FontStyle.description,
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
             const SizedBox(
               height: 15,
@@ -177,6 +206,64 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  void _showLogoutModelBottomBar() {
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(30),
+        ),
+      ),
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: 300,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CustomText(
+                    'Logout',
+                    type: FontStyle.mainHeading,
+                  ),
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              CustomText(
+                'Are you sure you want to logout from your account?',
+                type: FontStyle.subheading,
+                textAlign: TextAlign.left,
+              ),
+              const Spacer(),
+              Button(
+                ontap: _onLogout,
+                text: 'Logout',
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _onLogout() {
+    Const.appBearerToken = null;
+    Const.isLoggedIn = false;
+    Const.signUp = false;
+    final route =
+        MaterialPageRoute(builder: (context) => const OnBoardingScreen());
+    Navigator.pushAndRemoveUntil(context, route, (route) => false);
   }
 
   Widget profileCard(
