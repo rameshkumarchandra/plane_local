@@ -148,10 +148,13 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        String.fromCharCode(int.parse(
-                                            projectProvider
-                                                    .starredProjects[index]
-                                                ['project_detail']['emoji'])),
+                                        int.tryParse(
+                                            projectProvider.projects[index]['emoji']
+                                                )!=null
+                                        ? String.fromCharCode(int.parse(
+                                            projectProvider.projects[index]['emoji']
+                                                ))
+                                        : '🚀',
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 22,

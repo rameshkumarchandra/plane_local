@@ -10,7 +10,10 @@ import '../../provider/provider_list.dart';
 import '../custom_text.dart';
 
 class SelectIssueLabels extends ConsumerStatefulWidget {
-  const SelectIssueLabels({super.key});
+  bool createIssue;
+  String? issueId;
+  int? index;
+  SelectIssueLabels({this.index,  this.issueId ,required this.createIssue,  super.key});
 
   @override
   ConsumerState<SelectIssueLabels> createState() => _SelectIssueLabelsState();
@@ -38,6 +41,7 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
     // {'lable': 'Lable 4', 'color': Colors.pink}
   ];
   var selectedLabels = [];
+  List issueDetailsLabels = [];
   var createNew = false;
   var showColorPallette = false;
   @override
@@ -52,12 +56,21 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
             .createIssuedata['labels']??[] as List)
         .map((e) => e['index'])
         .toList());
+    if(!widget.createIssue) getIssueLabels();
     super.initState();
+  }
+
+  getIssueLabels() {
+    final issueProvider = ref.read(ProviderList.issueProvider);
+    for(int i = 0; i < issueProvider.issueDetails['label_details'].length; i++){
+      issueDetailsLabels.add(issueProvider.issueDetails['label_details'][i]['id']);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final issueProvider = ref.watch(ProviderList.issuesProvider);
+    final issuesProvider = ref.watch(ProviderList.issuesProvider);
+    final issueProvider = ref.read(ProviderList.issueProvider);
     final themeProvider = ref.watch(ProviderList.themeProvider);
     return WillPopScope(
       onWillPop: () async {
@@ -66,8 +79,8 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
             ? null
             : selectedLabels
                 .map((e) => {
-                      'id': issueProvider.labels[e]['id'],
-                      'color': issueProvider.labels[e]['color'],
+                      'id': issuesProvider.labels[e]['id'],
+                      'color': issuesProvider.labels[e]['color'],
                       'index': e
                     })
                 .toList();
@@ -103,16 +116,28 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                   height: 15,
                 ),
                 ListView.builder(
-                    itemCount: issueProvider.labels.length,
+                    itemCount: issuesProvider.labels.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            if (selectedLabels.contains(index)) {
-                              selectedLabels.remove(index);
-                            } else {
-                              selectedLabels.add(index);
+                            if(widget.createIssue){
+                              if (selectedLabels.contains(index)) {
+                                selectedLabels.remove(index);
+                              } else {
+                                selectedLabels.add(index);
+                              }
+                            }
+                            else {
+                              setState(() {
+                                if(issueDetailsLabels.contains(issuesProvider.labels[index]['id'])){
+                                  issueDetailsLabels.remove(issuesProvider.labels[index]['id']);
+                                }
+                                else {
+                                  issueDetailsLabels.add(issuesProvider.labels[index]['id']);
+                                }
+                              });
                             }
                           });
                         },
@@ -132,7 +157,7 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                                 width: 30,
                                 decoration: BoxDecoration(
                                   color: Color(int.parse(
-                                      "FF${issueProvider.labels[index]['color'].toString().toUpperCase().replaceAll("#", "")}",
+                                      "FF${issuesProvider.labels[index]['color'].toString().toUpperCase().replaceAll("#", "")}",
                                       radix: 16)),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
@@ -149,16 +174,13 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                                 width: 10,
                               ),
                               CustomText(
-                                issueProvider.labels[index]['name'].toString(),
+                                issuesProvider.labels[index]['name'].toString(),
                                 type: FontStyle.subheading,
                               ),
                               const Spacer(),
-                              selectedLabels.contains(index)
-                                  ? const Icon(
-                                      Icons.done,
-                                      color: Color.fromRGBO(8, 171, 34, 1),
-                                    )
-                                  : const SizedBox(),
+                              widget.createIssue ?
+                              createIssueSelectedIconsWidget(index)
+                              : issueDetailSelectedIconsWidget(index),
                               const SizedBox(
                                 width: 10,
                               )
@@ -234,7 +256,7 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                             GestureDetector(
                               onTap: () async {
                                 if (labelContrtoller.text.isNotEmpty) {
-                                  await issueProvider.createLabels(
+                                  await issuesProvider.createLabels(
                                       slug: ref
                                           .read(ProviderList.workspaceProvider)
                                           .currentWorkspace['slug'],
@@ -357,6 +379,8 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                         ),
                       )
                     : Container(),
+
+                widget.createIssue ?
                 GestureDetector(
                   onTap: () {
                     setState(() {
@@ -386,9 +410,63 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                     ),
                   ),
                 )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor),
+                        onPressed: () {
+                          issueProvider.upDateIssue(
+                                slug: ref
+                                    .read(ProviderList.workspaceProvider)
+                                    .currentWorkspace['slug'],
+                                    index: widget.index!,
+                                    ref: ref,
+                                projID: ref
+                                    .read(ProviderList.projectProvider)
+                                    .currentProject['id'],
+                                issueID: widget.issueId!,
+                                data: {
+                                  "labels_list": issueDetailsLabels
+                                }).then((value) {
+                              ref
+                                  .read(ProviderList.issueProvider)
+                                  .getIssueDetails(
+                                      slug: ref
+                                          .read(ProviderList.workspaceProvider)
+                                          .currentWorkspace['slug'],
+                                      projID: ref
+                                          .read(ProviderList.projectProvider)
+                                          .currentProject['id'],
+                                      issueID: widget.issueId!)
+                                  .then(
+                                    (value) => ref
+                                        .read(ProviderList.issueProvider)
+                                        .getIssueActivity(
+                                          slug: ref
+                                              .read(ProviderList
+                                                  .workspaceProvider)
+                                              .currentWorkspace['slug'],
+                                          projID: ref
+                                              .read(
+                                                  ProviderList.projectProvider)
+                                              .currentProject['id'],
+                                          issueID: widget.issueId!,
+                                        ),
+                                  );
+                            });
+                        },
+                        child: CustomText(
+                          'Add',
+                          type: FontStyle.buttonText,
+                        ),
+                      ),
+                    ],
+                  )
               ],
             ),
-            issueProvider.labelState == AuthStateEnum.loading
+            issuesProvider.labelState == AuthStateEnum.loading
                 ? Center(
                     child: Container(
                       alignment: Alignment.center,
@@ -418,4 +496,24 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
       ),
     );
   }
+
+  Widget createIssueSelectedIconsWidget(int idx) {
+    return selectedLabels.contains(idx)
+    ? const Icon(
+        Icons.done,
+        color: Color.fromRGBO(8, 171, 34, 1),
+      )
+    : const SizedBox();
+  }
+
+  Widget issueDetailSelectedIconsWidget(int idx) {
+    final issuesProvider = ref.watch(ProviderList.issuesProvider);
+    return issueDetailsLabels.contains(issuesProvider.labels[idx]['id'])
+    ? const Icon(
+        Icons.done,
+        color: Color.fromRGBO(8, 171, 34, 1),
+      )
+    : const SizedBox();
+  }
+
 }

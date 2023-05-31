@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/screens/issue_detail_screen.dart';
 import 'package:plane_startup/widgets/profile_circle_avatar_widget.dart';
 
+import '../config/const.dart';
 import '../utils/constants.dart';
 import '../utils/custom_rich_text.dart';
 import '../utils/custom_text.dart';
@@ -24,27 +26,43 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.watch(ProviderList.issuesProvider);
-    return Container(
-      margin: issueProvider.issues.projectView == ProjectView.list
-          ? null
-          : const EdgeInsets.only(bottom: 15),
-      decoration: BoxDecoration(
-          color: themeProvider.isDarkThemeEnabled
-              ? lightPrimaryTextColor
-              : darkPrimaryTextColor,
-          border: Border.all(color: Colors.grey.shade200, width: 1),
-          borderRadius: BorderRadius.circular(6)),
-      child: Container(
-          width: issueProvider.issues.issues[widget.listIndex].width,
-          padding: const EdgeInsets.only(
-            left: 15.0,
-            right: 10,
-            // top: issueProvider.isTagsEnabled() ? 0 : 0,
-            // bottom: issueProvider.isTagsEnabled() ? 0 : 0
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          Const.globalKey.currentContext!,
+          MaterialPageRoute(
+            builder: (context) => IssueDetail(isseId: issueProvider.issuesResponse[widget.cardIndex]['id'], 
+            appBarTitle: 
+            issueProvider.issuesResponse [widget.cardIndex]['project_detail']['identifier'] != null ?
+            issueProvider.issuesResponse [widget.cardIndex]['project_detail']['identifier'] + '-${issueProvider.issuesResponse[widget.cardIndex]['sequence_id']}'
+            : '',
+            index: widget.cardIndex
+            ),
           ),
-          child: issueProvider.issues.projectView == ProjectView.list
-              ? listCard()
-              : kanbanCard()),
+        );
+      },
+      child: Container(
+        margin: issueProvider.issues.projectView == ProjectView.list
+            ? null
+            : const EdgeInsets.only(bottom: 15),
+        decoration: BoxDecoration(
+            color: themeProvider.isDarkThemeEnabled
+                ? lightPrimaryTextColor
+                : darkPrimaryTextColor,
+            border: Border.all(color: Colors.grey.shade200, width: 1),
+            borderRadius: BorderRadius.circular(6)),
+        child: Container(
+            width: issueProvider.issues.issues[widget.listIndex].width,
+            padding: const EdgeInsets.only(
+              left: 15.0,
+              right: 10,
+              // top: issueProvider.isTagsEnabled() ? 0 : 0,
+              // bottom: issueProvider.isTagsEnabled() ? 0 : 0
+            ),
+            child: issueProvider.issues.projectView == ProjectView.list
+                ? listCard()
+                : kanbanCard()),
+      ),
     );
   }
 

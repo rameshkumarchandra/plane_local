@@ -628,11 +628,11 @@ class IssuesProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-  //    log(response.data.toString());
-      if (response.data == []) {
+     log(response.data.toString());
+      if (response.data.isEmpty) {
         response = await DioConfig().dioServe(
             hasAuth: true,
-            url: APIs.projectMembers
+            url: APIs.issueProperties
                 .replaceAll(
                     "\$SLUG",
                     ref!
@@ -662,17 +662,13 @@ class IssuesProvider extends ChangeNotifier {
         issueProperty = response.data;
       } else {
         issueProperty = response.data;
-     
+                 log('ISSUE PROPERTY =====  > ' +   issueProperty.toString());
         
           issues.displayProperties.assignee = issueProperty['properties']['assignee'];
-             log(issueProperty.toString());
               issues.displayProperties. dueDate= issueProperty['properties']['due_date'];
-                 log(issueProperty.toString());
               issues.displayProperties. id= issueProperty['properties']['key'];
-                 log(issueProperty.toString());
               //issues.displayProperties. label= issueProperty['properties']['labels'];
               issues.displayProperties. state= issueProperty['properties']['state'];
-                 log(issueProperty.toString());
              issues.displayProperties.subIsseCount= issueProperty['properties']['sub_issue_count'];
               issues.displayProperties.linkCount= issueProperty['properties']['link'];
               issues.displayProperties.attachmentCount= issueProperty['properties']['attachment_count'];
@@ -682,7 +678,7 @@ class IssuesProvider extends ChangeNotifier {
       issueState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
-      log(e.response.toString());
+      log(e.message.toString());
       issueState = AuthStateEnum.error;
       notifyListeners();
     }

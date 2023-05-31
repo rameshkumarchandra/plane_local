@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:plane_startup/config/enums.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:plane_startup/provider/provider_list.dart';
-import 'package:plane_startup/provider/theme_provider.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_cycle.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_issue.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_module.dart';
@@ -13,7 +10,6 @@ import 'package:plane_startup/screens/Project%20Detail/page_card.dart';
 import 'package:plane_startup/screens/Project%20Detail/view_card.dart';
 import 'package:plane_startup/screens/create_page_screen.dart';
 import 'package:plane_startup/screens/create_view_screen.dart';
-import 'package:plane_startup/screens/issue_detail_screen.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_appBar.dart';
 import 'package:plane_startup/utils/type_sheet.dart';
@@ -136,12 +132,11 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      projectProvider.projects[widget.index]['emoji'] != '' &&
-                              projectProvider.projects[widget.index]['emoji'] !=
-                                  null
+                      int.tryParse(projectProvider.projects[widget.index]
+                                  ['emoji']) !=
+                              null
                           ? String.fromCharCode(int.parse(
-                              projectProvider.projects[widget.index]['emoji'] ??
-                                  ''))
+                              projectProvider.projects[widget.index]['emoji']))
                           : '🚀',
                       style: const TextStyle(
                         color: Colors.white,
@@ -521,8 +516,8 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
             : null,
         child: issueProvider.issueState == AuthStateEnum.loading ||
                 issueProvider.statesState == AuthStateEnum.loading ||
-                issueProvider.projectViewState == AuthStateEnum.loading||
-          issueProvider.orderByState == AuthStateEnum.loading
+                issueProvider.projectViewState == AuthStateEnum.loading ||
+                issueProvider.orderByState == AuthStateEnum.loading
             ? Container()
             : issueProvider.issues.projectView == ProjectView.list
                 ? Container(
