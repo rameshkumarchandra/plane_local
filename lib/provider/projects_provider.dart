@@ -142,11 +142,11 @@ class ProjectsProvider extends ChangeNotifier {
   Future getProjectDetails({required String slug, required String projId}) async {
     // projectDetailState = AuthStateEnum.loading;
     // notifyListeners();
-    log("${APIs.project.replaceAll('\$SLUG', slug)}$projId");
+    log("${APIs.listProjects.replaceAll('\$SLUG', slug)}$projId");
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
-        url: "${APIs.project.replaceAll('\$SLUG', slug)}$projId/",
+        url: "${APIs.listProjects.replaceAll('\$SLUG', slug)}$projId/",
         hasBody: false,
         httpMethod: HttpMethod.get,
       );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:plane_startup/config/enums.dart';
+import 'package:plane_startup/models/issues.dart';
 import 'package:plane_startup/utils/button.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/widgets/loading_widget.dart';
@@ -20,416 +21,520 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
   String groupBy = '';
   String orderBy = '';
   String issueType = '';
+  List displayProperties = [
+    {
+      'name': 'Assignee',
+      'selected': false,
+    },
+    {
+      'name': 'ID',
+      'selected': false,
+    },
+    {
+      'name': 'Due Date',
+      'selected': false,
+    },
+    {
+      'name': 'Label',
+      'selected': false,
+    },
+    {
+      'name': 'Priority',
+      'selected': false,
+    },
+    {
+      'name': 'State',
+      'selected': false,
+    },
+    {
+      'name': 'Sub Issue Count',
+      'selected': false,
+    },
+    {
+      'name': 'Attachment Count',
+      'selected': false,
+    },
+    {
+      'name': 'Link',
+      'selected': false,
+    },
+  ];
+  bool isTagsEnabled() {
+    for (var i = 0; i < displayProperties.length; i++) {
+      if (displayProperties[i]['selected']) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  bool showEmptyStates = true;
+  @override
+  void initState() {
+    var issueProvider = ref.read(ProviderList.issuesProvider);
+    groupBy = Issues.fromGroupBY(issueProvider.issues.groupBY);
+    orderBy = Issues.fromOrderBY(issueProvider.issues.orderBY);
+    issueType = Issues.fromIssueType(issueProvider.issues.issueType);
+    displayProperties[0]['selected'] =
+        issueProvider.issues.displayProperties.assignee;
+    displayProperties[1]['selected'] =
+        issueProvider.issues.displayProperties.id;
+    displayProperties[2]['selected'] =
+        issueProvider.issues.displayProperties.dueDate;
+    displayProperties[3]['selected'] =
+        issueProvider.issues.displayProperties.label;
+    displayProperties[4]['selected'] =
+        issueProvider.issues.displayProperties.priority;
+    displayProperties[5]['selected'] =
+        issueProvider.issues.displayProperties.state;
+    displayProperties[6]['selected'] =
+        issueProvider.issues.displayProperties.subIsseCount;
+    displayProperties[7]['selected'] =
+        issueProvider.issues.displayProperties.attachmentCount;
+    displayProperties[8]['selected'] =
+        issueProvider.issues.displayProperties.linkCount;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.watch(ProviderList.issuesProvider);
 
-    return LoadingWidget(
-      loading: issueProvider.orderByState == AuthStateEnum.loading,
-      widgetClass: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: ListView(
-          children: [
-            //title
-            Row(
-              children: [
-                // const Text(
-                //   'Views',
-                //   style: TextStyle(
-                //     fontSize: 24,
-                //     fontWeight: FontWeight.w600,
-                //   ),
-                // ),
-                CustomText(
-                  'Views',
-                  type: FontStyle.heading,
-                ),
-                const Spacer(),
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(
-                    Icons.close,
-                    size: 27,
-                    color: Color.fromRGBO(143, 143, 147, 1),
-                  ),
-                ),
-              ],
-            ),
-
-            ExpansionTile(
-              title: CustomText(
-                'Group by',
-                type: FontStyle.subheading,
-                textAlign: TextAlign.start,
-              ),
-              // tilePadding: EdgeInsets.zero,
-              childrenPadding: EdgeInsets.zero,
-              leading: const Icon(
-                Icons.arrow_forward_ios,
-                color: Color.fromRGBO(65, 65, 65, 1),
-              ),
-              trailing: const SizedBox.shrink(),
-              children: <Widget>[
-                // four checkboxes
-                CheckboxListTile(
-                  title: CustomText(
-                    'State',
-                    type: FontStyle.subheading,
-                    textAlign: TextAlign.start,
-                  ),
-                  value: groupBy == 'state',
-                  onChanged: (newValue) {
-                    setState(() {
-                      groupBy = 'state';
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: themeProvider.isDarkThemeEnabled
-                      ? darkPrimaryTextColor
-                      : lightPrimaryTextColor,
-                ),
-                CheckboxListTile(
-                  title: CustomText(
-                    'Priority',
-                    type: FontStyle.subheading,
-                    textAlign: TextAlign.start,
-                  ),
-                  value: groupBy == 'priority',
-                  onChanged: (newValue) {
-                    setState(() {
-                      groupBy = 'priority';
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: themeProvider.isDarkThemeEnabled
-                      ? darkPrimaryTextColor
-                      : lightPrimaryTextColor,
-                ),
-                CheckboxListTile(
-                  title: CustomText(
-                    'labels',
-                    type: FontStyle.subheading,
-                    textAlign: TextAlign.start,
-                  ),
-                  value: groupBy == 'labels',
-                  onChanged: (newValue) {
-                    setState(() {
-                      groupBy = 'labels';
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: themeProvider.isDarkThemeEnabled
-                      ? darkPrimaryTextColor
-                      : lightPrimaryTextColor,
-                ),
-                CheckboxListTile(
-                  title: CustomText(
-                    'created_by',
-                    type: FontStyle.subheading,
-                    textAlign: TextAlign.start,
-                  ),
-                  value: groupBy == 'created_by',
-                  onChanged: (newValue) {
-                    setState(() {
-                      groupBy = 'created_by';
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: themeProvider.isDarkThemeEnabled
-                      ? darkPrimaryTextColor
-                      : lightPrimaryTextColor,
-                ),
-              ],
-            ),
-
-            Container(
-              color: Colors.grey[300],
-              height: 1,
-            ),
-
-            //expansion tile for order by having two checkboxes last created and last updated
-            ExpansionTile(
-              title: CustomText(
-                'Order by',
-                type: FontStyle.subheading,
-                textAlign: TextAlign.start,
-              ),
-              leading: const Icon(
-                Icons.arrow_forward_ios,
-                color: Color.fromRGBO(65, 65, 65, 1),
-              ),
-              trailing: const SizedBox.shrink(),
-              children: <Widget>[
-                // three checkboxes
-                CheckboxListTile(
-                  title: CustomText(
-                    'Manual',
-                    type: FontStyle.subheading,
-                    textAlign: TextAlign.start,
-                  ),
-                  value: orderBy == 'sort_order',
-                  onChanged: (newValue) {
-                    setState(() {
-                      orderBy = 'sort_order';
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: themeProvider.isDarkThemeEnabled
-                      ? darkPrimaryTextColor
-                      : lightPrimaryTextColor,
-                ),
-
-                CheckboxListTile(
-                  title: CustomText(
-                    'Last created',
-                    type: FontStyle.subheading,
-                    textAlign: TextAlign.start,
-                  ),
-                  value: orderBy == '-created_at',
-                  onChanged: (newValue) {
-                    setState(() {
-                      orderBy = '-created_at';
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: themeProvider.isDarkThemeEnabled
-                      ? darkPrimaryTextColor
-                      : lightPrimaryTextColor,
-                ),
-                CheckboxListTile(
-                  title: CustomText(
-                    'Last updated',
-                    type: FontStyle.subheading,
-                    textAlign: TextAlign.start,
-                  ),
-                  value: orderBy == 'updated_at',
-                  onChanged: (newValue) {
-                    setState(() {
-                      orderBy = 'updated_at';
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: themeProvider.isDarkThemeEnabled
-                      ? darkPrimaryTextColor
-                      : lightPrimaryTextColor,
-                ),
-              ],
-            ),
-
-            Container(
-              color: Colors.grey[300],
-              height: 1,
-            ),
-            //expansion tile for issue type having three checkboxes all issues, active issues and backlog issues
-            ExpansionTile(
-              title: CustomText(
-                'Issue type',
-                type: FontStyle.subheading,
-                textAlign: TextAlign.start,
-              ),
-              leading: const Icon(
-                Icons.arrow_forward_ios,
-                color: Color.fromRGBO(65, 65, 65, 1),
-              ),
-              trailing: const SizedBox.shrink(),
-              children: <Widget>[
-                // three checkboxes
-                CheckboxListTile(
-                  title: CustomText(
-                    'All issues',
-                    type: FontStyle.subheading,
-                    textAlign: TextAlign.start,
-                  ),
-                  value: issueType == 'all',
-                  onChanged: (newValue) {
-                    setState(() {
-                      issueType = 'all';
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: themeProvider.isDarkThemeEnabled
-                      ? darkPrimaryTextColor
-                      : lightPrimaryTextColor,
-                ),
-
-                CheckboxListTile(
-                  title: CustomText(
-                    'Active issues',
-                    type: FontStyle.subheading,
-                    textAlign: TextAlign.start,
-                  ),
-                  value: issueType == 'active',
-                  onChanged: (newValue) {
-                    setState(() {
-                      issueType = 'active';
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: themeProvider.isDarkThemeEnabled
-                      ? darkPrimaryTextColor
-                      : lightPrimaryTextColor,
-                ),
-                CheckboxListTile(
-                  title: CustomText(
-                    'Backlog issues',
-                    type: FontStyle.subheading,
-                    textAlign: TextAlign.start,
-                  ),
-                  value: issueType == 'backlog',
-                  onChanged: (newValue) {
-                    setState(() {
-                      issueType = 'backlog';
-                    });
-                  },
-                  controlAffinity: ListTileControlAffinity.leading,
-                  activeColor: themeProvider.isDarkThemeEnabled
-                      ? darkPrimaryTextColor
-                      : lightPrimaryTextColor,
-                ),
-              ],
-            ),
-            Container(
-              color: Colors.grey[300],
-              height: 1,
-            ),
-            Row(
-              children: [
-                CustomText('Show empty states'),
-                Checkbox(
-                    activeColor: primaryColor,
-                    value: issueProvider.showEmptyStates,
-                    onChanged: (val) {
-                      issueProvider.showEmptyStates = val!;
-                      issueProvider.setsState();
-                    })
-              ],
-            ),
-            const SizedBox(height: 20),
-            CustomText('Display Properties',
-                type: FontStyle.title,
-                fontWeight: FontWeight.w600,
-                textAlign: TextAlign.start),
-            const SizedBox(height: 20),
-            //rectangular grid of multiple tags to filter
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: issueProvider.tags.map((tag) {
-                return GestureDetector(
-                  onTap: () {
-                    issueProvider.tags[issueProvider.tags.indexOf(tag)]
-                            ['selected'] =
-                        !issueProvider.tags[issueProvider.tags.indexOf(tag)]
-                            ['selected'];
-                    issueProvider.tags.indexOf(tag) == 0
-                        ? issueProvider.assignee = !issueProvider.assignee
-                        : issueProvider.tags.indexOf(tag) == 1
-                            ? issueProvider.id = !(issueProvider.id)
-                            : issueProvider.tags.indexOf(tag) == 2
-                                ? issueProvider.dueDate = !issueProvider.dueDate
-                                : issueProvider.tags.indexOf(tag) == 3
-                                    ? issueProvider.label = !issueProvider.label
-                                    : issueProvider.tags.indexOf(tag) == 4
-                                        ? issueProvider.priority =
-                                            !issueProvider.priority
-                                        : issueProvider.tags.indexOf(tag) == 5
-                                            ? issueProvider.state =
-                                                !issueProvider.state
-                                            : issueProvider.tags.indexOf(tag) ==
-                                                    6
-                                                ? issueProvider.subIsseCount =
-                                                    !issueProvider.subIsseCount
-                                                : null;
-                    issueProvider.setsState();
-                  },
-                  child: Container(
-                    height: 35,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: issueProvider.tags[issueProvider.tags.indexOf(tag)]
-                              ['selected']
-                          ? primaryColor
-                          : Colors.transparent,
-                      border: Border.all(
-                        color:
-                            issueProvider.tags[issueProvider.tags.indexOf(tag)]
-                                    ['selected']
-                                ? Colors.transparent
-                                : const Color.fromARGB(255, 193, 192, 192),
+    return Container(
+        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+        child: SingleChildScrollView(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Wrap(children: [
+                //title
+                Row(
+                  children: [
+                    // const Text(
+                    //   'Views',
+                    //   style: TextStyle(
+                    //     fontSize: 24,
+                    //     fontWeight: FontWeight.w600,
+                    //   ),
+                    // ),
+                    CustomText(
+                      'Views',
+                      type: FontStyle.heading,
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(
+                        Icons.close,
+                        size: 27,
+                        color: Color.fromRGBO(143, 143, 147, 1),
                       ),
                     ),
-                    child: CustomText(tag['tag'],
-                        type: FontStyle.subtitle,
-                        color: themeProvider.isDarkThemeEnabled &&
-                                issueProvider
-                                        .tags[issueProvider.tags.indexOf(tag)]
-                                    ['selected']
-                            ? Colors.white
-                            : themeProvider.isDarkThemeEnabled &&
-                                    !issueProvider
-                                            .tags[issueProvider.tags.indexOf(tag)]
-                                        ['selected']
-                                ? Colors.white
-                                : !themeProvider.isDarkThemeEnabled &&
-                                        issueProvider.tags[issueProvider.tags
-                                            .indexOf(tag)]['selected']
-                                    ? Colors.white
-                                    : !themeProvider.isDarkThemeEnabled &&
-                                            !issueProvider.tags[issueProvider.tags
-                                                .indexOf(tag)]['selected']
-                                        ? Colors.black
-                                        : Colors.black),
+                  ],
+                ),
+                Container(
+                  height: 10,
+                ),
+                ExpansionTile(
+                  title: CustomText(
+                    'Group by',
+                    type: FontStyle.subheading,
+                    textAlign: TextAlign.start,
                   ),
-                );
-              }).toList(),
-            ),
+                  // tilePadding: EdgeInsets.zero,
+                  childrenPadding: const EdgeInsets.only(left: 50),
+                  leading: const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 19,
+                    color: Color.fromRGBO(65, 65, 65, 1),
+                  ),
+                  trailing: const SizedBox.shrink(),
+                  children: <Widget>[
+                    // four checkboxes
+                    RadioListTile(
+                        groupValue: groupBy,
+                        title: CustomText(
+                          'State',
+                          type: FontStyle.subheading,
+                          textAlign: TextAlign.start,
+                        ),
+                        value: 'state',
+                        onChanged: (newValue) {
+                          setState(() {
+                            groupBy = 'state';
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: primaryColor),
+                    RadioListTile(
+                        groupValue: groupBy,
+                        title: CustomText(
+                          'Priority',
+                          type: FontStyle.subheading,
+                          textAlign: TextAlign.start,
+                        ),
+                        value: 'priority',
+                        onChanged: (newValue) {
+                          setState(() {
+                            groupBy = 'priority';
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: primaryColor),
+                    RadioListTile(
+                        groupValue: groupBy,
+                        title: CustomText(
+                          'Labels',
+                          type: FontStyle.subheading,
+                          textAlign: TextAlign.start,
+                        ),
+                        value: 'labels',
+                        onChanged: (newValue) {
+                          setState(() {
+                            groupBy = 'labels';
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: primaryColor),
 
-            const SizedBox(height: 160),
+                    RadioListTile(
+                        groupValue: groupBy,
+                        title: CustomText(
+                          'Created by',
+                          type: FontStyle.subheading,
+                          textAlign: TextAlign.start,
+                        ),
+                        value: 'created_by',
+                        onChanged: (newValue) {
+                          setState(() {
+                            groupBy = 'created_by';
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: primaryColor),
+                  ],
+                ),
 
-            //long blue button to apply filter
-            Container(
-              margin: EdgeInsets.only(bottom: 18),
-              child: Button(
-                text: 'Apply Filter',
-                ontap: () {
-                  if (orderBy == '' && groupBy == '' && issueType == '') {
-                    Navigator.of(context).pop();
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //   SnackBar(
-                    //     backgroundColor: Colors.red[400],
-                    //     content: const Text(
-                    //       'Please select atleast one filter',
-                    //       style: TextStyle(color: Colors.white),
-                    //     ),
-                    //   ),
-                    // );
-                    return;
-                  }
+                Container(
+                  color: Colors.grey[300],
+                  height: 1,
+                ),
 
-                  issueProvider.orderByIssues(
-                    slug: ref
-                        .read(ProviderList.workspaceProvider)
-                        .currentWorkspace["slug"],
-                    projID: ref
-                        .read(ProviderList.projectProvider)
-                        .currentProject["id"],
-                    orderBy: orderBy,
-                    groupBy: groupBy,
-                    type: issueType,
-                  );
-                },
-                textColor: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+                //expansion tile for order by having two checkboxes last created and last updated
+                ExpansionTile(
+                  childrenPadding: const EdgeInsets.only(left: 50),
+                  title: CustomText(
+                    'Order by',
+                    type: FontStyle.subheading,
+                    textAlign: TextAlign.start,
+                  ),
+                  leading: const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 19,
+                    color: Color.fromRGBO(65, 65, 65, 1),
+                  ),
+                  trailing: const SizedBox.shrink(),
+                  children: <Widget>[
+                    // three checkboxes
+                    RadioListTile(
+                        groupValue: orderBy,
+                        title: CustomText(
+                          'Manual',
+                          type: FontStyle.subheading,
+                          textAlign: TextAlign.start,
+                        ),
+                        value: 'sort_order',
+                        onChanged: (newValue) {
+                          setState(() {
+                            orderBy = 'sort_order';
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: primaryColor),
+
+                    RadioListTile(
+                        groupValue: orderBy,
+                        title: CustomText(
+                          'Last created',
+                          type: FontStyle.subheading,
+                          textAlign: TextAlign.start,
+                        ),
+                        value: '-created_at',
+                        onChanged: (newValue) {
+                          setState(() {
+                            orderBy = '-created_at';
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: primaryColor),
+                    RadioListTile(
+                        groupValue: orderBy,
+                        title: CustomText(
+                          'Last updated',
+                          type: FontStyle.subheading,
+                          textAlign: TextAlign.start,
+                        ),
+                        value: 'updated_at',
+                        onChanged: (newValue) {
+                          setState(() {
+                            orderBy = 'updated_at';
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: primaryColor),
+                  ],
+                ),
+
+                Container(
+                  color: Colors.grey[300],
+                  height: 1,
+                ),
+                //expansion tile for issue type having three checkboxes all issues, active issues and backlog issues
+                ExpansionTile(
+                  childrenPadding: const EdgeInsets.only(left: 50),
+                  title: CustomText(
+                    'Issue type',
+                    type: FontStyle.subheading,
+                    textAlign: TextAlign.start,
+                  ),
+                  leading: const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 19,
+                    color: Color.fromRGBO(65, 65, 65, 1),
+                  ),
+                  trailing: const SizedBox.shrink(),
+                  children: <Widget>[
+                    // three checkboxes
+                    RadioListTile(
+                        groupValue: issueType,
+                        title: CustomText(
+                          'All issues',
+                          type: FontStyle.subheading,
+                          textAlign: TextAlign.start,
+                        ),
+                        value: 'all',
+                        onChanged: (newValue) {
+                          setState(() {
+                            issueType = 'all';
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: primaryColor),
+
+                    RadioListTile(
+                        groupValue: issueType,
+                        title: CustomText(
+                          'Active issues',
+                          type: FontStyle.subheading,
+                          textAlign: TextAlign.start,
+                        ),
+                        value: 'active',
+                        onChanged: (newValue) {
+                          setState(() {
+                            issueType = 'active';
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: primaryColor),
+                    RadioListTile(
+                        groupValue: issueType,
+                        title: CustomText(
+                          'Backlog issues',
+                          type: FontStyle.subheading,
+                          textAlign: TextAlign.start,
+                        ),
+                        value: 'backlog',
+                        onChanged: (newValue) {
+                          setState(() {
+                            issueType = 'backlog';
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                        activeColor: primaryColor),
+                  ],
+                ),
+                Container(
+                  color: Colors.grey[300],
+                  height: 1,
+                  margin: const EdgeInsets.only(bottom: 10),
+                ),
+                Row(
+                  children: [
+                    CustomText(
+                      'Show empty states',
+                      type: FontStyle.subheading,
+                    ),
+                    Container(
+                      width: 10,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          showEmptyStates = !showEmptyStates;
+                        });
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.all(2),
+                          height: 20,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                  color: showEmptyStates
+                                      ? primaryColor
+                                      : greyColor,
+                                  width: 2)),
+                          width: 20,
+                          child: showEmptyStates
+                              ? Container(
+                                  height: 10,
+                                  width: 10,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(24),
+                                      color: primaryColor),
+                                )
+                              : null),
+                    )
+                  ],
+                ),
+                Container(height: 10),
+                CustomText('Display Properties',
+                    type: FontStyle.subheading,
+                    fontWeight: FontWeight.w600,
+                    textAlign: TextAlign.start),
+                Container(height: 20),
+                //rectangular grid of multiple tags to filter
+                Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: displayProperties
+                        .map((tag) => GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  tag['selected'] = !tag['selected'];
+                                });
+                              },
+                              child: Container(
+                                height: 40,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 7),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: tag['selected']
+                                      ? primaryColor
+                                      : Colors.transparent,
+                                  border: Border.all(
+                                    color: tag['selected']
+                                        ? Colors.transparent
+                                        : const Color.fromARGB(
+                                            255, 193, 192, 192),
+                                  ),
+                                ),
+                                child: CustomText(tag['name'],
+                                    type: FontStyle.title,
+                                    color: themeProvider.isDarkThemeEnabled &&
+                                            tag['selected']
+                                        ? Colors.white
+                                        : themeProvider.isDarkThemeEnabled &&
+                                                !tag['selected']
+                                            ? Colors.white
+                                            : !themeProvider
+                                                        .isDarkThemeEnabled &&
+                                                    tag['selected']
+                                                ? Colors.white
+                                                : !themeProvider
+                                                            .isDarkThemeEnabled &&
+                                                        !tag['selected']
+                                                    ? Colors.black
+                                                    : Colors.black),
+                              ),
+                            ))
+                        .toList()),
+
+                //long blue button to apply filter
+                Container(
+                  margin: const EdgeInsets.only(bottom: 18, top: 50),
+                  child: Button(
+                    text: 'Apply Filter',
+                    ontap: () async {
+                      if (orderBy == '' &&
+                          groupBy == '' &&
+                          issueType == '' &&
+                          !isTagsEnabled()) {
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red[400],
+                            content: const Text(
+                              'Please select atleast one filter',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      if (orderBy != '' || groupBy != '' || issueType != '') {
+                        issueProvider.orderByIssues(
+                          slug: ref
+                              .read(ProviderList.workspaceProvider)
+                              .currentWorkspace["slug"],
+                          projID: ref
+                              .read(ProviderList.projectProvider)
+                              .currentProject["id"],
+                          orderBY: orderBy,
+                          groupBY: groupBy,
+                          type: issueType,
+                        );
+                      } else {
+                        DisplayProperties properties = DisplayProperties(
+                            assignee: displayProperties[0]['selected'],
+                            dueDate: displayProperties[2]['selected'],
+                            id: displayProperties[1]['selected'],
+                            label: displayProperties[3]['selected'],
+                            state: displayProperties[5]['selected'],
+                            subIsseCount: displayProperties[6]['selected'],
+                            linkCount: displayProperties[8]['selected'],
+                            attachmentCount: displayProperties[7]['selected'],
+                            priority: displayProperties[4]['selected']);
+                        issueProvider.issues.displayProperties = properties;
+                        issueProvider.updateIssueProperties(
+                            properties: properties);
+                      }
+
+                      Navigator.of(context).pop();
+                    },
+                    textColor: Colors.white,
+                  ),
+                ),
+              ]),
+              // issueProvider.orderByState == AuthStateEnum.loading
+              //     ? Container(
+              //       alignment: Alignment.center,
+              //       color: Colors.white.withOpacity(0.7),
+              //       //height: (context.findRenderObject() as RenderBox).size.height+20,
+              //       // width: 25,
+              //       child: Wrap(
+              //         children: const [
+              //           SizedBox(
+              //             height: 25,
+              //             width: 25,
+              //             child: LoadingIndicator(
+              //               indicatorType: Indicator.lineSpinFadeLoader,
+              //               colors: [Colors.black],
+              //               strokeWidth: 1.0,
+              //               backgroundColor: Colors.transparent,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     )
+              //     : const SizedBox(),
+            ],
+          ),
+        ));
   }
 }

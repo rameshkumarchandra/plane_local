@@ -1,16 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/config/enums.dart';
+import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/utils/constants.dart';
 
 import 'button.dart';
 import 'custom_text.dart';
 
-class TypeSheet extends StatelessWidget {
+class TypeSheet extends ConsumerStatefulWidget {
   const TypeSheet({super.key});
 
   @override
+  ConsumerState<TypeSheet> createState() => _TypeSheetState();
+}
+
+class _TypeSheetState extends ConsumerState<TypeSheet> {
+  var selected = 0;
+  @override
+  void initState() {
+    var prov = ref.read(ProviderList.issuesProvider);
+    selected = prov.issues.projectView == ProjectView.kanban ? 0 : 1;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var prov = ref.watch(ProviderList.issuesProvider);
     return Padding(
       padding: const EdgeInsets.only(top: 23, left: 23, right: 23),
-      child: Column(
+      child: Wrap(
         children: [
           Row(
             children: [
@@ -44,11 +62,16 @@ class TypeSheet extends StatelessWidget {
             width: double.infinity,
             child: Row(
               children: [
-                Icon(
-                  Icons.radio_button_checked,
-                  color: Colors.blue,
-                ),
-                SizedBox(width: 10),
+                Radio(
+                    groupValue: selected,
+                    activeColor: primaryColor,
+                    value: 0,
+                    onChanged: (val) {
+                      setState(() {
+                        selected = 0;
+                      });
+                    }),
+                const SizedBox(width: 10),
                 // Text(
                 //   'Board View',
                 //   style: TextStyle(
@@ -75,11 +98,16 @@ class TypeSheet extends StatelessWidget {
             width: double.infinity,
             child: Row(
               children: [
-                Icon(
-                  Icons.radio_button_off,
-                  color: Color.fromRGBO(65, 65, 65, 1),
-                ),
-                SizedBox(width: 10),
+                Radio(
+                  groupValue: selected,
+                    activeColor: primaryColor,
+                    value:  1,
+                    onChanged: (val) {
+                      setState(() {
+                        selected = 1;
+                      });
+                    }),
+                const SizedBox(width: 10),
                 // Text(
                 //   'List View',
                 //   style: TextStyle(
@@ -106,11 +134,16 @@ class TypeSheet extends StatelessWidget {
             width: double.infinity,
             child: Row(
               children: [
-                Icon(
-                  Icons.radio_button_off,
-                  color: Color.fromRGBO(65, 65, 65, 1),
-                ),
-                SizedBox(width: 10),
+                Radio(
+                    groupValue: selected,
+                    activeColor: primaryColor,
+                    value: 2,
+                    onChanged: (val) {
+                      setState(() {
+                        selected = 2;
+                      });
+                    }),
+                const SizedBox(width: 10),
                 // Text(
                 //   'Calendar View',
                 //   style: TextStyle(
@@ -133,14 +166,23 @@ class TypeSheet extends StatelessWidget {
             ),
           ),
 
-          Expanded(child: Container()),
+          //  Expanded(child: Container()),
 
           //long blue button to apply filter
           Container(
-            margin: EdgeInsets.only(bottom: 18),
+            margin: const EdgeInsets.only(bottom: 18, top: 50),
             child: Button(
               text: 'Apply Filter',
-              ontap: () {},
+              ontap: () {
+                if (selected == 0) {
+                  prov.issues.projectView = ProjectView.kanban;
+                } else if (selected == 1) {
+                  prov.issues.projectView = ProjectView.list;
+                }
+                prov.setsState();
+                prov.updateProjectView();
+                Navigator.pop(context);
+              },
               textColor: Colors.white,
             ),
           ),
