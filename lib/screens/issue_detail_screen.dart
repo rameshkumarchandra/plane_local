@@ -207,533 +207,20 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                           ),
                           const SizedBox(height: 10),
                           //three dropdown each occupying full width of the screen , each consits of a row with hint text and dropdown button at end
-                          Container(
-                            height: 45,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: themeProvider.isDarkThemeEnabled
-                                  ? darkBackgroundColor
-                                  : lightBackgroundColor,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Colors.grey.shade200,
-                              ),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              child: Row(
-                                children: [
-                                  //icon
-                                  const Icon(
-                                    //four squares icon
-                                    Icons.view_cozy_rounded,
-                                    color: Color.fromRGBO(143, 143, 147, 1),
-                                  ),
-                                  const SizedBox(width: 15),
-                                  CustomText(
-                                    'State',
-                                    type: FontStyle.subheading,
-                                    color:
-                                        const Color.fromRGBO(143, 143, 147, 1),
-                                  ),
-                                  Expanded(child: Container()),
-                                  GestureDetector(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          enableDrag: true,
-                                          backgroundColor: Colors.transparent,
-                                          context: context,
-                                          builder: (ctx) => SelectStates(
-                                                createIssue: false,
-                                                issueId: widget.isseId,
-                                                index: widget.index,
-                                              ));
-                                    },
-                                    child: Row(
-                                      children: [
-                                        CustomText(
-                                          issueProvider
-                                                  .issueDetails['state_detail']
-                                              ['name'],
-                                          type: FontStyle.title,
-                                        ),
-                                        issuesProvider
-                                                    .createIssuedata['state'] ==
-                                                null
-                                            ? const SizedBox(
-                                                width: 5,
-                                              )
-                                            : Container(),
-                                        issuesProvider
-                                                    .createIssuedata['state'] ==
-                                                null
-                                            ? Icon(
-                                                Icons.keyboard_arrow_down,
-                                                color: themeProvider
-                                                        .isDarkThemeEnabled
-                                                    ? darkSecondaryTextColor
-                                                    : lightSecondaryTextColor,
-                                              )
-                                            : Container(),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                          stateWidget(),
                           const SizedBox(height: 8),
-                          Container(
-                            height: 45,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: themeProvider.isDarkThemeEnabled
-                                  ? darkBackgroundColor
-                                  : lightBackgroundColor,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Colors.grey.shade200,
-                              ),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              child: Row(
-                                children: [
-                                  //icon
-                                  const Icon(
-                                    //two people icon
-                                    Icons.people_alt_rounded,
-                                    color: Color.fromRGBO(143, 143, 147, 1),
-                                  ),
-                                  const SizedBox(width: 15),
-                                  // const Text(
-                                  //   'Assignees',
-                                  //   style: TextStyle(
-                                  //     fontSize: 16,
-                                  //     fontWeight: FontWeight.w400,
-                                  //     color: Color.fromRGBO(143, 143, 147, 1),
-                                  //   ),
-                                  // ),
-                                  CustomText(
-                                    'Assignees',
-                                    type: FontStyle.subheading,
-                                    color:
-                                        const Color.fromRGBO(143, 143, 147, 1),
-                                  ),
-                                  Expanded(child: Container()),
-                                  GestureDetector(
-                                      onTap: () {
-                                        showModalBottomSheet(
-                                            backgroundColor: Colors.transparent,
-                                            context: context,
-                                            builder: (ctx) =>
-                                                SelectProjectMembers(
-                                                  createIssue: false,
-                                                  issueId: widget.isseId,
-                                                  index: widget.index,
-                                                ));
-                                      },
-                                      child:
-                                          // issuesProvider
-                                          //             .createIssuedata['members'] ==
-                                          //         null
-
-                                          issueProvider
-                                                  .issueDetails[
-                                                      'assignee_details']
-                                                  .isEmpty
-                                              ? Row(
-                                                  children: [
-                                                    CustomText(
-                                                      'Select',
-                                                      type: FontStyle.title,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Icon(
-                                                      Icons.keyboard_arrow_down,
-                                                      color: themeProvider
-                                                              .isDarkThemeEnabled
-                                                          ? darkSecondaryTextColor
-                                                          : lightSecondaryTextColor,
-                                                    ),
-                                                  ],
-                                                )
-                                              : ProfileCircleAvatarsWidget(
-                                                  details: issueProvider
-                                                          .issueDetails[
-                                                      'assignee_details'],
-                                                ))
-                                ],
-                              ),
-                            ),
-                          ),
+                          assigneesWidget(),
                           const SizedBox(height: 8),
-                          Container(
-                            height: 45,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: themeProvider.isDarkThemeEnabled
-                                  ? darkBackgroundColor
-                                  : lightBackgroundColor,
-                              borderRadius: BorderRadius.circular(5),
-                              border: Border.all(
-                                color: Colors.grey.shade200,
-                              ),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              child: Row(
-                                children: [
-                                  //icon
-                                  const Icon(
-                                    //antenna signal icon
-                                    Icons.signal_cellular_alt_sharp,
-                                    color: Color.fromRGBO(143, 143, 147, 1),
-                                  ),
-                                  const SizedBox(width: 15),
-                                  // const Text(
-                                  //   'Priority',
-                                  //   style: TextStyle(
-                                  //     fontSize: 16,
-                                  //     fontWeight: FontWeight.w400,
-                                  //     color: Color.fromRGBO(143, 143, 147, 1),
-                                  //   ),
-                                  // ),
-                                  CustomText(
-                                    'Priority',
-                                    type: FontStyle.subheading,
-                                    color:
-                                        const Color.fromRGBO(143, 143, 147, 1),
-                                  ),
-                                  Expanded(child: Container()),
-                                  GestureDetector(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                          backgroundColor: Colors.transparent,
-                                          context: context,
-                                          builder: (ctx) => SelectIssuePriority(
-                                                createIssue: false,
-                                                issueId: widget.isseId,
-                                                index: widget.index,
-                                              ));
-                                    },
-                                    child: issueProvider
-                                                .issueDetails['priority'] ==
-                                            null
-                                        ? Row(
-                                            children: [
-                                              CustomText(
-                                                'Select',
-                                                type: FontStyle.title,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Icon(
-                                                Icons.keyboard_arrow_down,
-                                                color: themeProvider
-                                                        .isDarkThemeEnabled
-                                                    ? darkSecondaryTextColor
-                                                    : lightSecondaryTextColor,
-                                              ),
-                                            ],
-                                          )
-                                        : Row(
-                                            children: [
-                                              // issuesProvider.createIssuedata[
-                                              //     'priority']['icon'],
-                                              // const SizedBox(
-                                              //   width: 5,
-                                              // ),
-                                              CustomText(
-                                                issueProvider
-                                                    .issueDetails['priority']
-                                                    .toString()
-                                                    .replaceFirst(
-                                                        issueProvider
-                                                            .issueDetails[
-                                                                'priority']
-                                                            .toString()[0],
-                                                        issueProvider
-                                                            .issueDetails[
-                                                                'priority'][0]
-                                                            .toString()
-                                                            .toUpperCase()),
-                                                type: FontStyle.title,
-                                              ),
-                                            ],
-                                          ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
+                          priorityWidget(),
                           const SizedBox(height: 8),
                           expanded
-                              ? Container(
-                                  height: 45,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: themeProvider.isDarkThemeEnabled
-                                        ? darkBackgroundColor
-                                        : lightBackgroundColor,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                      color: Colors.grey.shade200,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, right: 10),
-                                    child: Row(
-                                      children: [
-                                        //icon
-                                        const Icon(
-                                          //antenna signal icon
-                                          Icons.label,
-                                          color:
-                                              Color.fromRGBO(143, 143, 147, 1),
-                                        ),
-                                        const SizedBox(width: 15),
-                                        // const Text(
-                                        //   'Priority',
-                                        //   style: TextStyle(
-                                        //     fontSize: 16,
-                                        //     fontWeight: FontWeight.w400,
-                                        //     color: Color.fromRGBO(143, 143, 147, 1),
-                                        //   ),
-                                        // ),
-                                        CustomText(
-                                          'Label',
-                                          type: FontStyle.subheading,
-                                          color: const Color.fromRGBO(
-                                              143, 143, 147, 1),
-                                        ),
-                                        Expanded(child: Container()),
-                                        GestureDetector(
-                                          onTap: () {
-                                            showModalBottomSheet(
-                                                // constraints: BoxConstraints(
-                                                //   maxHeight:
-                                                //       MediaQuery.of(context)
-                                                //               .size
-                                                //               .height *
-                                                //           0.85,
-                                                // ),
-                                                isScrollControlled: false,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                context: context,
-                                                builder: (ctx) =>
-                                                    SelectIssueLabels(
-                                                      createIssue: false,
-                                                      issueId: widget.isseId,
-                                                      index: widget.index,
-                                                    ));
-                                          },
-                                          child: issueProvider
-                                                  .issueDetails['label_details']
-                                                  .isEmpty
-                                              ? Row(
-                                                  children: [
-                                                    CustomText(
-                                                      'Select',
-                                                      type: FontStyle.title,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Icon(
-                                                      Icons.keyboard_arrow_down,
-                                                      color: themeProvider
-                                                              .isDarkThemeEnabled
-                                                          ? darkSecondaryTextColor
-                                                          : lightSecondaryTextColor,
-                                                    ),
-                                                  ],
-                                                )
-                                              : Wrap(
-                                                  children: [
-                                                    Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      // color: Colors.amber,
-                                                      height: 30,
-                                                      constraints:
-                                                          const BoxConstraints(
-                                                              maxWidth: 80,
-                                                              minWidth: 30),
-                                                      child: Stack(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        fit: StackFit
-                                                            .passthrough,
-                                                        children: (issueProvider
-                                                                        .issueDetails[
-                                                                    'label_details']
-                                                                as List)
-                                                            .map(
-                                                              (e) => Positioned(
-                                                                right: (issueProvider.issueDetails['label_details']
-                                                                            as List)
-                                                                        .indexOf(
-                                                                            e) *
-                                                                    15.0,
-                                                                child:
-                                                                    Container(
-                                                                  height: 25,
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  width: 25,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    shape: BoxShape
-                                                                        .circle,
-                                                                    color:
-                                                                        Color(
-                                                                      int.parse(
-                                                                          "FF${e['color'].toString().toUpperCase().replaceAll("#", "")}",
-                                                                          radix:
-                                                                              16),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            )
-                                                            .toList(),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : Container(),
+                          ? labelWidget()
+                          : Container(),
                           const SizedBox(height: 8),
                           //a container containing text view all in center
                           expanded
-                              ? Container(
-                                  height: 45,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: themeProvider.isDarkThemeEnabled
-                                        ? darkBackgroundColor
-                                        : lightBackgroundColor,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                      color: Colors.grey.shade200,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, right: 10),
-                                    child: Row(
-                                      children: [
-                                        //icon
-                                        const Icon(
-                                          //antenna signal icon
-                                          Icons.calendar_month,
-                                          color:
-                                              Color.fromRGBO(143, 143, 147, 1),
-                                        ),
-                                        const SizedBox(width: 15),
-                                        CustomText(
-                                          'Due Date',
-                                          type: FontStyle.subheading,
-                                          color: const Color.fromRGBO(
-                                              143, 143, 147, 1),
-                                        ),
-                                        Expanded(child: Container()),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            var date = await showDatePicker(
-                                              builder: (context, child) =>
-                                                  Theme(
-                                                data:
-                                                    ThemeData.light().copyWith(
-                                                  colorScheme:
-                                                      const ColorScheme.light(
-                                                    primary: primaryColor,
-                                                  ),
-                                                ),
-                                                child: child!,
-                                              ),
-                                              context: context,
-                                              initialDate: DateTime.now(),
-                                              firstDate: DateTime(2000),
-                                              lastDate: DateTime(2025),
-                                            );
-
-                                            if (date != null) {
-                                              print(date);
-                                              setState(() {
-                                                // issuesProvider.createIssuedata[
-                                                //     'due_date'] = date;
-                                              });
-                                              issueProvider.upDateIssue(
-                                                  slug: ref
-                                                      .read(ProviderList
-                                                          .workspaceProvider)
-                                                      .currentWorkspace['slug'],
-                                                  projID: ref
-                                                      .read(ProviderList
-                                                          .projectProvider)
-                                                      .currentProject['id'],
-                                                  issueID: widget.isseId,
-                                                  index: widget.index,
-                                                  data: {
-                                                    "target_date":
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(date),
-                                                  },
-                                                  ref: ref);
-                                            }
-                                          },
-                                          child: issueProvider.issueDetails[
-                                                      'target_date'] ==
-                                                  null
-                                              ? Row(
-                                                  children: [
-                                                    CustomText(
-                                                      'Select',
-                                                      type: FontStyle.title,
-                                                      color: Colors.black,
-                                                    ),
-                                                    const SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    const Icon(
-                                                      //antenna signal icon
-                                                      Icons
-                                                          .keyboard_arrow_down_outlined,
-                                                      color: Color.fromRGBO(
-                                                          143, 143, 147, 1),
-                                                    ),
-                                                  ],
-                                                )
-                                              : CustomText(
-                                                  DateFormat('yyyy-MM-dd')
-                                                      .format(DateTime.parse(
-                                                          issueProvider
-                                                                  .issueDetails[
-                                                              'target_date'])),
-                                                  type: FontStyle.title,
-                                                  color: Colors.black,
-                                                ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              : Container(),
+                          ? dueDateWidget()
+                          : Container(),
                           const SizedBox(
                             height: 8,
                           ),
@@ -809,265 +296,46 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                             child: Column(
                               children: [
                                 ListView.builder(
-                                    primary: false,
-                                    shrinkWrap: true,
-                                    itemCount:
-                                        issueProvider.issueActivity.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 15),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            issueProvider.issueActivity[index][
-                                                            'comment_stripped'] !=
-                                                        null &&
-                                                    issueProvider.issueActivity[
-                                                            index]['field'] ==
-                                                        null
-                                                ? SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Stack(
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      right:
-                                                                          10),
-                                                              child:
-                                                                  CircleAvatar(
-                                                                backgroundColor:
-                                                                    themeProvider
-                                                                            .isDarkThemeEnabled
-                                                                        ? lightBackgroundColor
-                                                                        : Colors
-                                                                            .black54,
-                                                                radius: 15,
-                                                                child: Center(
-                                                                  child:
-                                                                      CustomText(
-                                                                    issueProvider
-                                                                        .issueActivity[
-                                                                            index]
-                                                                            [
-                                                                            'actor_detail']
-                                                                            [
-                                                                            'email']
-                                                                            [0]
-                                                                        .toString()
-                                                                        .toUpperCase(),
-                                                                    // color: Colors.black,
-                                                                    type: FontStyle
-                                                                        .buttonText,
-                                                                    color: themeProvider.isDarkThemeEnabled
-                                                                        ? Colors
-                                                                            .black
-                                                                        : Colors
-                                                                            .white,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Positioned(
-                                                              right: 0,
-                                                              bottom: -2,
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .circular(
-                                                                                3),
-                                                                    color: Colors
-                                                                            .grey[
-                                                                        200]),
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(2),
-                                                                child:
-                                                                    const Icon(
-                                                                  Icons
-                                                                      .comment_outlined,
-                                                                  size: 12,
-                                                                ),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        // const SizedBox(
-                                                        //   width: 10,
-                                                        // ),
-                                                        Expanded(
-                                                          child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              CustomText(
-                                                                issueProvider.issueActivity[index]['actor_detail']
-                                                                            [
-                                                                            'first_name'] +
-                                                                        ' ${issueProvider.issueActivity[index]['actor_detail']['last_name']}' ??
-                                                                    '',
-                                                                type: FontStyle
-                                                                    .description,
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              CustomText(
-                                                                'Commented ${checkTimeDifferenc(issueProvider.issueActivity[index]['created_at'])} ago',
-                                                                type: FontStyle
-                                                                    .description,
-                                                              ),
-                                                              const SizedBox(
-                                                                height: 10,
-                                                              ),
-                                                              Container(
-                                                                padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                    vertical:
-                                                                        15,
-                                                                    horizontal:
-                                                                        10),
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            6),
-                                                                    border: Border.all(
-                                                                        color:
-                                                                            greyColor),
-                                                                    color: themeProvider
-                                                                            .isDarkThemeEnabled
-                                                                        ? darkBackgroundColor
-                                                                        : lightBackgroundColor),
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    CustomText(
-                                                                      issueProvider
-                                                                              .issueActivity[index]
-                                                                          [
-                                                                          'comment_stripped'],
-                                                                      type: FontStyle
-                                                                          .description,
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                : issueProvider.issueActivity[
-                                                                    index][
-                                                                'comment_stripped'] ==
-                                                            null &&
-                                                        issueProvider.issueActivity[
-                                                                    index]
-                                                                ['field'] !=
-                                                            null
-                                                    ? Row(
+                                  primary: false,
+                                  shrinkWrap: true,
+                                  itemCount: issueProvider.issueActivity.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 15),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          issueProvider.issueActivity[index][
+                                                          'comment_stripped'] !=
+                                                      null &&
+                                                  issueProvider.issueActivity[
+                                                          index]['field'] ==
+                                                      null
+                                              ? SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  child: Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Stack(
                                                         children: [
-                                                          CircleAvatar(
-                                                            backgroundColor:
-                                                                Colors
-                                                                    .grey[200],
-                                                            radius: 15,
-                                                            child: Center(
-                                                              child: issueProvider
-                                                                              .issueActivity[index]
-                                                                          [
-                                                                          'field'] ==
-                                                                      'state'
-                                                                  ? const Icon(
-                                                                      Icons
-                                                                          .grid_view_outlined,
-                                                                      size: 15,
-                                                                      color:
-                                                                          greyColor,
-                                                                    )
-                                                                  : issueProvider.issueActivity[index]
-                                                                              [
-                                                                              'field'] ==
-                                                                          'priority'
-                                                                      ? const Icon(
-                                                                          Icons
-                                                                              .signal_cellular_alt_outlined,
-                                                                          size:
-                                                                              15,
-                                                                          color:
-                                                                              greyColor,
-                                                                        )
-                                                                      : issueProvider.issueActivity[index]['field'] == 'assignees' ||
-                                                                              issueProvider.issueActivity[index]['field'] == 'assignee'
-                                                                          ? const Icon(
-                                                                              Icons.people_outline,
-                                                                              size: 15,
-                                                                              color: greyColor,
-                                                                            )
-                                                                          : issueProvider.issueActivity[index]['field'] == 'labels'
-                                                                              ? const Icon(
-                                                                                  Icons.local_offer_outlined,
-                                                                                  size: 15,
-                                                                                  color: greyColor,
-                                                                                )
-                                                                              : const Icon(
-                                                                                  Icons.calendar_month,
-                                                                                  size: 15,
-                                                                                  color: greyColor,
-                                                                                ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          SizedBox(
-                                                            width: width * 0.7,
-                                                            child: CustomText(
-                                                              '${activityFormat(issueProvider.issueActivity[index])} ${checkTimeDifferenc(issueProvider.issueActivity[index]['created_at'])}',
-                                                              // issueProvider
-                                                              //         .issueActivity[
-                                                              //     index]['comment'],
-                                                              type: FontStyle
-                                                                  .description,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              maxLines: 4,
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : SizedBox(
-                                                        width: MediaQuery.of(
-                                                                context)
-                                                            .size
-                                                            .width,
-                                                        child: Row(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            CircleAvatar(
-                                                              backgroundColor: themeProvider
-                                                                      .isDarkThemeEnabled
-                                                                  ? lightBackgroundColor
-                                                                  : darkBackgroundColor,
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    right: 10),
+                                                            child: CircleAvatar(
+                                                              backgroundColor:
+                                                                  themeProvider
+                                                                          .isDarkThemeEnabled
+                                                                      ? lightBackgroundColor
+                                                                      : Colors
+                                                                          .black54,
                                                               radius: 15,
                                                               child: Center(
                                                                 child:
@@ -1094,37 +362,257 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                                                                 ),
                                                               ),
                                                             ),
-                                                            const SizedBox(
-                                                              width: 10,
+                                                          ),
+                                                          Positioned(
+                                                            right: 0,
+                                                            bottom: -2,
+                                                            child: Container(
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              3),
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      200]),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(2),
+                                                              child: const Icon(
+                                                                Icons
+                                                                    .comment_outlined,
+                                                                size: 12,
+                                                              ),
                                                             ),
-                                                            SizedBox(
-                                                              width:
-                                                                  width * 0.7,
-                                                              child: CustomText(
-                                                                issueProvider.issueActivity[
-                                                                            index]
+                                                          )
+                                                        ],
+                                                      ),
+                                                      // const SizedBox(
+                                                      //   width: 10,
+                                                      // ),
+                                                      Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            CustomText(
+                                                              issueProvider.issueActivity[index]
+                                                                              [
+                                                                              'actor_detail']
+                                                                          [
+                                                                          'first_name'] +
+                                                                      ' ${issueProvider.issueActivity[index]['actor_detail']['last_name']}' ??
+                                                                  '',
+                                                              type: FontStyle
+                                                                  .description,
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            CustomText(
+                                                              'Commented ${checkTimeDifferenc(issueProvider.issueActivity[index]['created_at'])} ago',
+                                                              type: FontStyle
+                                                                  .description,
+                                                            ),
+                                                            const SizedBox(
+                                                              height: 10,
+                                                            ),
+                                                            Container(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  vertical: 15,
+                                                                  horizontal:
+                                                                      10),
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              6),
+                                                                  border: Border
+                                                                      .all(
+                                                                          color:
+                                                                              greyColor),
+                                                                  color: themeProvider
+                                                                          .isDarkThemeEnabled
+                                                                      ? darkBackgroundColor
+                                                                      : lightBackgroundColor),
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  CustomText(
+                                                                    issueProvider
+                                                                            .issueActivity[index]
                                                                         [
-                                                                        'comment'] +
-                                                                    ' ' +
-                                                                    checkTimeDifferenc(
-                                                                        issueProvider.issueActivity[index]
-                                                                            [
-                                                                            'created_at']),
-                                                                type: FontStyle
-                                                                    .description,
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .left,
-                                                                maxLines: 4,
+                                                                        'comment_stripped'],
+                                                                    type: FontStyle
+                                                                        .description,
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ),
                                                           ],
                                                         ),
                                                       ),
-                                          ],
-                                        ),
-                                      );
-                                    }),
+                                                    ],
+                                                  ),
+                                                )
+                                              : issueProvider.issueActivity[
+                                                                  index][
+                                                              'comment_stripped'] ==
+                                                          null &&
+                                                      issueProvider
+                                                                  .issueActivity[
+                                                              index]['field'] !=
+                                                          null
+                                                  ? Row(
+                                                      children: [
+                                                        CircleAvatar(
+                                                          backgroundColor:
+                                                              Colors.grey[200],
+                                                          radius: 15,
+                                                          child: Center(
+                                                            child: issueProvider
+                                                                            .issueActivity[index]
+                                                                        [
+                                                                        'field'] ==
+                                                                    'state'
+                                                                ? const Icon(
+                                                                    Icons
+                                                                        .grid_view_outlined,
+                                                                    size: 15,
+                                                                    color:
+                                                                        greyColor,
+                                                                  )
+                                                                : issueProvider.issueActivity[index]
+                                                                            [
+                                                                            'field'] ==
+                                                                        'priority'
+                                                                    ? const Icon(
+                                                                        Icons
+                                                                            .signal_cellular_alt_outlined,
+                                                                        size:
+                                                                            15,
+                                                                        color:
+                                                                            greyColor,
+                                                                      )
+                                                                    : issueProvider.issueActivity[index]['field'] ==
+                                                                                'assignees' ||
+                                                                            issueProvider.issueActivity[index]['field'] ==
+                                                                                'assignee'
+                                                                        ? const Icon(
+                                                                            Icons.people_outline,
+                                                                            size:
+                                                                                15,
+                                                                            color:
+                                                                                greyColor,
+                                                                          )
+                                                                        : issueProvider.issueActivity[index]['field'] ==
+                                                                                'labels'
+                                                                            ? const Icon(
+                                                                                Icons.local_offer_outlined,
+                                                                                size: 15,
+                                                                                color: greyColor,
+                                                                              )
+                                                                            : const Icon(
+                                                                                Icons.calendar_month,
+                                                                                size: 15,
+                                                                                color: greyColor,
+                                                                              ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        SizedBox(
+                                                          width: width * 0.7,
+                                                          child: CustomText(
+                                                            '${activityFormat(issueProvider.issueActivity[index])} ${checkTimeDifferenc(issueProvider.issueActivity[index]['created_at'])}',
+                                                            // issueProvider
+                                                            //         .issueActivity[
+                                                            //     index]['comment'],
+                                                            type: FontStyle
+                                                                .description,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                            maxLines: 4,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: Row(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          CircleAvatar(
+                                                            backgroundColor: themeProvider
+                                                                    .isDarkThemeEnabled
+                                                                ? lightBackgroundColor
+                                                                : darkBackgroundColor,
+                                                            radius: 15,
+                                                            child: Center(
+                                                              child: CustomText(
+                                                                issueProvider
+                                                                    .issueActivity[
+                                                                        index][
+                                                                        'actor_detail']
+                                                                        [
+                                                                        'email']
+                                                                        [0]
+                                                                    .toString()
+                                                                    .toUpperCase(),
+                                                                // color: Colors.black,
+                                                                type: FontStyle
+                                                                    .buttonText,
+                                                                color: themeProvider
+                                                                        .isDarkThemeEnabled
+                                                                    ? Colors
+                                                                        .black
+                                                                    : Colors
+                                                                        .white,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          SizedBox(
+                                                            width: width * 0.7,
+                                                            child: CustomText(
+                                                              issueProvider.issueActivity[
+                                                                          index]
+                                                                      [
+                                                                      'comment'] +
+                                                                  ' ' +
+                                                                  checkTimeDifferenc(
+                                                                      issueProvider
+                                                                              .issueActivity[index]
+                                                                          [
+                                                                          'created_at']),
+                                                              type: FontStyle
+                                                                  .description,
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .left,
+                                                              maxLines: 4,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
                                 Row(
                                   children: [
                                     Expanded(
@@ -1220,4 +708,544 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
       return activity['actor_detail']['email'];
     }
   }
+
+  Widget stateWidget() {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    var issueProvider = ref.watch(ProviderList.issueProvider);
+    var issuesProvider = ref.watch(ProviderList.issuesProvider);
+    return Container(
+      height: 45,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: themeProvider.isDarkThemeEnabled
+            ? darkBackgroundColor
+            : lightBackgroundColor,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: Colors.grey.shade200,
+        ),
+      ),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 10, right: 10),
+        child: Row(
+          children: [
+            //icon
+            const Icon(
+              //four squares icon
+              Icons.view_cozy_rounded,
+              color: Color.fromRGBO(143, 143, 147, 1),
+            ),
+            const SizedBox(width: 15),
+            CustomText(
+              'State',
+              type: FontStyle.subheading,
+              color:
+                  const Color.fromRGBO(143, 143, 147, 1),
+            ),
+            Expanded(child: Container()),
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                    enableDrag: true,
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (ctx) => SelectStates(
+                          createIssue: false,
+                          issueId: widget.isseId,
+                          index: widget.index,
+                        ));
+              },
+              child: Row(
+                children: [
+                  CustomText(
+                    issueProvider
+                            .issueDetails['state_detail']
+                        ['name'],
+                    type: FontStyle.title,
+                  ),
+                  issuesProvider
+                              .createIssuedata['state'] ==
+                          null
+                      ? const SizedBox(
+                          width: 5,
+                        )
+                      : Container(),
+                  issuesProvider
+                              .createIssuedata['state'] ==
+                          null
+                      ? Icon(
+                          Icons.keyboard_arrow_down,
+                          color: themeProvider
+                                  .isDarkThemeEnabled
+                              ? darkSecondaryTextColor
+                              : lightSecondaryTextColor,
+                        )
+                      : Container(),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget assigneesWidget() {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    var issueProvider = ref.watch(ProviderList.issueProvider);
+    return Container(
+      height: 45,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: themeProvider.isDarkThemeEnabled
+            ? darkBackgroundColor
+            : lightBackgroundColor,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: Colors.grey.shade200,
+        ),
+      ),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 10, right: 10),
+        child: Row(
+          children: [
+            //icon
+            const Icon(
+              //two people icon
+              Icons.people_alt_rounded,
+              color: Color.fromRGBO(143, 143, 147, 1),
+            ),
+            const SizedBox(width: 15),
+            // const Text(
+            //   'Assignees',
+            //   style: TextStyle(
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.w400,
+            //     color: Color.fromRGBO(143, 143, 147, 1),
+            //   ),
+            // ),
+            CustomText(
+              'Assignees',
+              type: FontStyle.subheading,
+              color:
+                  const Color.fromRGBO(143, 143, 147, 1),
+            ),
+            Expanded(child: Container()),
+            GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      builder: (ctx) =>
+                          SelectProjectMembers(
+                            createIssue: false,
+                            issueId: widget.isseId,
+                            index: widget.index,
+                          ));
+                },
+                child:
+                    // issuesProvider
+                    //             .createIssuedata['members'] ==
+                    //         null
+
+                    issueProvider
+                            .issueDetails[
+                                'assignee_details']
+                            .isEmpty
+                        ? Row(
+                            children: [
+                              CustomText(
+                                'Select',
+                                type: FontStyle.title,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down,
+                                color: themeProvider
+                                        .isDarkThemeEnabled
+                                    ? darkSecondaryTextColor
+                                    : lightSecondaryTextColor,
+                              ),
+                            ],
+                          )
+                        : ProfileCircleAvatarsWidget(
+                            details: issueProvider
+                                    .issueDetails[
+                                'assignee_details'],
+                          ))
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget priorityWidget() {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    var issueProvider = ref.watch(ProviderList.issueProvider);
+    return Container(
+        height: 45,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: themeProvider.isDarkThemeEnabled
+              ? darkBackgroundColor
+              : lightBackgroundColor,
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+            color: Colors.grey.shade200,
+          ),
+        ),
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 10, right: 10),
+          child: Row(
+            children: [
+              //icon
+              const Icon(
+                //antenna signal icon
+                Icons.signal_cellular_alt_sharp,
+                color: Color.fromRGBO(143, 143, 147, 1),
+              ),
+              const SizedBox(width: 15),
+              // const Text(
+              //   'Priority',
+              //   style: TextStyle(
+              //     fontSize: 16,
+              //     fontWeight: FontWeight.w400,
+              //     color: Color.fromRGBO(143, 143, 147, 1),
+              //   ),
+              // ),
+              CustomText(
+                'Priority',
+                type: FontStyle.subheading,
+                color:
+                    const Color.fromRGBO(143, 143, 147, 1),
+              ),
+              Expanded(child: Container()),
+              GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      builder: (ctx) => SelectIssuePriority(
+                            createIssue: false,
+                            issueId: widget.isseId,
+                            index: widget.index,
+                          ));
+                },
+                child: issueProvider
+                            .issueDetails['priority'] ==
+                        null
+                    ? Row(
+                        children: [
+                          CustomText(
+                            'Select',
+                            type: FontStyle.title,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.keyboard_arrow_down,
+                            color: themeProvider
+                                    .isDarkThemeEnabled
+                                ? darkSecondaryTextColor
+                                : lightSecondaryTextColor,
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          CustomText(
+                            issueProvider
+                                .issueDetails['priority']
+                                .toString()
+                                .replaceFirst(
+                                    issueProvider
+                                        .issueDetails[
+                                            'priority']
+                                        .toString()[0],
+                                    issueProvider
+                                        .issueDetails[
+                                            'priority'][0]
+                                        .toString()
+                                        .toUpperCase()),
+                            type: FontStyle.title,
+                          ),
+                        ],
+                      ),
+              )
+            ],
+          ),
+        ),
+      );
+  }
+  
+  Widget labelWidget() {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    var issueProvider = ref.watch(ProviderList.issueProvider);
+    return Container(
+      height: 45,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: themeProvider.isDarkThemeEnabled
+            ? darkBackgroundColor
+            : lightBackgroundColor,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: Colors.grey.shade200,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(
+            left: 10, right: 10),
+        child: Row(
+          children: [
+            //icon
+            const Icon(
+              //antenna signal icon
+              Icons.label,
+              color:
+                  Color.fromRGBO(143, 143, 147, 1),
+            ),
+            const SizedBox(width: 15),
+            // const Text(
+            //   'Priority',
+            //   style: TextStyle(
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.w400,
+            //     color: Color.fromRGBO(143, 143, 147, 1),
+            //   ),
+            // ),
+            CustomText(
+              'Label',
+              type: FontStyle.subheading,
+              color: const Color.fromRGBO(
+                  143, 143, 147, 1),
+            ),
+            Expanded(child: Container()),
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                    // constraints: BoxConstraints(
+                    //   maxHeight:
+                    //       MediaQuery.of(context)
+                    //               .size
+                    //               .height *
+                    //           0.85,
+                    // ),
+                    isScrollControlled: false,
+                    backgroundColor:
+                        Colors.transparent,
+                    context: context,
+                    builder: (ctx) =>
+                        SelectIssueLabels(
+                          createIssue: false,
+                          issueId: widget.isseId,
+                          index: widget.index,
+                        ));
+              },
+              child: issueProvider
+                      .issueDetails['label_details']
+                      .isEmpty
+                  ? Row(
+                      children: [
+                        CustomText(
+                          'Select',
+                          type: FontStyle.title,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: themeProvider
+                                  .isDarkThemeEnabled
+                              ? darkSecondaryTextColor
+                              : lightSecondaryTextColor,
+                        ),
+                      ],
+                    )
+                  : Wrap(
+                      children: [
+                        Container(
+                          alignment:
+                              Alignment.center,
+                          // color: Colors.amber,
+                          height: 30,
+                          constraints:
+                              const BoxConstraints(
+                                  maxWidth: 80,
+                                  minWidth: 30),
+                          child: Stack(
+                            alignment:
+                                Alignment.center,
+                            fit: StackFit
+                                .passthrough,
+                            children: (issueProvider
+                                            .issueDetails[
+                                        'label_details']
+                                    as List)
+                                .map(
+                                  (e) => Positioned(
+                                    right: (issueProvider.issueDetails['label_details']
+                                                as List)
+                                            .indexOf(
+                                                e) *
+                                        15.0,
+                                    child:
+                                        Container(
+                                      height: 25,
+                                      alignment:
+                                          Alignment
+                                              .center,
+                                      width: 25,
+                                      decoration:
+                                          BoxDecoration(
+                                        shape: BoxShape
+                                            .circle,
+                                        color:
+                                            Color(
+                                          int.parse(
+                                              "FF${e['color'].toString().toUpperCase().replaceAll("#", "")}",
+                                              radix:
+                                                  16),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget dueDateWidget() {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    var issueProvider = ref.watch(ProviderList.issueProvider);
+    return Container(
+      height: 45,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: themeProvider.isDarkThemeEnabled
+            ? darkBackgroundColor
+            : lightBackgroundColor,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: Colors.grey.shade200,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(
+            left: 10, right: 10),
+        child: Row(
+          children: [
+            //icon
+            const Icon(
+              //antenna signal icon
+              Icons.calendar_month,
+              color:
+                  Color.fromRGBO(143, 143, 147, 1),
+            ),
+            const SizedBox(width: 15),
+            CustomText(
+              'Due Date',
+              type: FontStyle.subheading,
+              color: const Color.fromRGBO(
+                  143, 143, 147, 1),
+            ),
+            Expanded(child: Container()),
+            GestureDetector(
+              onTap: () async {
+                var date = await showDatePicker(
+                  builder: (context, child) =>
+                      Theme(
+                    data:
+                        ThemeData.light().copyWith(
+                      colorScheme:
+                          const ColorScheme.light(
+                        primary: primaryColor,
+                      ),
+                    ),
+                    child: child!,
+                  ),
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2000),
+                  lastDate: DateTime(2025),
+                );
+
+                if (date != null) {
+                  print(date);
+                  setState(() {
+                    // issuesProvider.createIssuedata[
+                    //     'due_date'] = date;
+                  });
+                  issueProvider.upDateIssue(
+                      slug: ref
+                          .read(ProviderList
+                              .workspaceProvider)
+                          .currentWorkspace['slug'],
+                      projID: ref
+                          .read(ProviderList
+                              .projectProvider)
+                          .currentProject['id'],
+                      issueID: widget.isseId,
+                      index: widget.index,
+                      data: {
+                        "target_date":
+                            DateFormat('yyyy-MM-dd')
+                                .format(date),
+                      },
+                      ref: ref);
+                }
+              },
+              child: issueProvider.issueDetails[
+                          'target_date'] ==
+                      null
+                  ? Row(
+                      children: [
+                        CustomText(
+                          'Select',
+                          type: FontStyle.title,
+                          color: Colors.black,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        const Icon(
+                          //antenna signal icon
+                          Icons
+                              .keyboard_arrow_down_outlined,
+                          color: Color.fromRGBO(
+                              143, 143, 147, 1),
+                        ),
+                      ],
+                    )
+                  : CustomText(
+                      DateFormat('yyyy-MM-dd')
+                          .format(DateTime.parse(
+                              issueProvider
+                                      .issueDetails[
+                                  'target_date'])),
+                      type: FontStyle.title,
+                      color: Colors.black,
+                    ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
 }

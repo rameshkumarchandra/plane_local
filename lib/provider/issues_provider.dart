@@ -29,6 +29,7 @@ class IssuesProvider extends ChangeNotifier {
   AuthStateEnum orderByState = AuthStateEnum.empty;
   AuthStateEnum projectViewState = AuthStateEnum.empty;
   AuthStateEnum issuePropertyState = AuthStateEnum.empty;
+  AuthStateEnum joinprojectState = AuthStateEnum.empty;
   var createIssueState = AuthStateEnum.empty;
   var issueView = {};
   bool showEmptyStates = true;
@@ -207,7 +208,7 @@ class IssuesProvider extends ChangeNotifier {
                           ),
                     )
                   : Container();
-      element.header = Container(
+      element.header = SizedBox(
         // margin: const EdgeInsets.only(bottom: 10),
         height: 50,
         child: Row(
@@ -217,7 +218,7 @@ class IssuesProvider extends ChangeNotifier {
             const SizedBox(
               width: 10,
             ),
-            Container(
+            SizedBox(
               width: element.width - 150,
               child: CustomText(
                 element.title.toString(),
@@ -613,14 +614,11 @@ class IssuesProvider extends ChangeNotifier {
 
   Future getIssueProperties() async {
     issueState = AuthStateEnum.loading;
-      log( APIs.issueProperties
-            .replaceAll(
-                "\$SLUG",
-                ref!
-                    .read(ProviderList.workspaceProvider)
-                    .currentWorkspace['slug'])
-            .replaceAll('\$PROJECTID',
-                ref!.read(ProviderList.projectProvider).currentProject['id']));
+    log(APIs.issueProperties
+        .replaceAll("\$SLUG",
+            ref!.read(ProviderList.workspaceProvider).currentWorkspace['slug'])
+        .replaceAll('\$PROJECTID',
+            ref!.read(ProviderList.projectProvider).currentProject['id']));
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
@@ -635,7 +633,7 @@ class IssuesProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-     log(response.data.toString());
+      log(response.data.toString());
       if (response.data.isEmpty) {
         response = await DioConfig().dioServe(
             hasAuth: true,
@@ -669,17 +667,23 @@ class IssuesProvider extends ChangeNotifier {
         issueProperty = response.data;
       } else {
         issueProperty = response.data;
-                 log('ISSUE PROPERTY =====  > ' +   issueProperty.toString());
-        
-          issues.displayProperties.assignee = issueProperty['properties']['assignee'];
-              issues.displayProperties. dueDate= issueProperty['properties']['due_date'];
-              issues.displayProperties. id= issueProperty['properties']['key'];
-              //issues.displayProperties. label= issueProperty['properties']['labels'];
-              issues.displayProperties. state= issueProperty['properties']['state'];
-             issues.displayProperties.subIsseCount= issueProperty['properties']['sub_issue_count'];
-              issues.displayProperties.linkCount= issueProperty['properties']['link'];
-              issues.displayProperties.attachmentCount= issueProperty['properties']['attachment_count'];
-              issues.displayProperties.priority= issueProperty['properties']['priority'];
+        log('ISSUE PROPERTY =====  > $issueProperty');
+
+        issues.displayProperties.assignee =
+            issueProperty['properties']['assignee'];
+        issues.displayProperties.dueDate =
+            issueProperty['properties']['due_date'];
+        issues.displayProperties.id = issueProperty['properties']['key'];
+        //issues.displayProperties. label= issueProperty['properties']['labels'];
+        issues.displayProperties.state = issueProperty['properties']['state'];
+        issues.displayProperties.subIsseCount =
+            issueProperty['properties']['sub_issue_count'];
+        issues.displayProperties.linkCount =
+            issueProperty['properties']['link'];
+        issues.displayProperties.attachmentCount =
+            issueProperty['properties']['attachment_count'];
+        issues.displayProperties.priority =
+            issueProperty['properties']['priority'];
       }
 
       issueState = AuthStateEnum.success;
@@ -806,6 +810,8 @@ class IssuesProvider extends ChangeNotifier {
     }
   }
 
+  //08d59d96-9dfb-40e5-aa30-ecc66319450f
+
   Future orderByIssues({
     required String slug,
     required String projID,
@@ -861,9 +867,9 @@ class IssuesProvider extends ChangeNotifier {
         isGroupBy = false;
         groupBy_response = {};
         (response.data as Map).forEach((key, value) {
-          (value as List).forEach((element) {
+          for (var element in (value as List)) {
             issuesResponse.add(element);
-          });
+          }
         });
       } else {
         groupBy_response = response.data;
@@ -878,6 +884,42 @@ class IssuesProvider extends ChangeNotifier {
       log('error');
       log(e.response.toString());
       orderByState = AuthStateEnum.error;
+      notifyListeners();
+    }
+  }
+
+  Future joinProject({String? projectId, String? slug}) async {
+    print(projectId);
+    try {
+      joinprojectState = AuthStateEnum.loading;
+      notifyListeners();
+      var response = await DioConfig().dioServe(
+          hasAuth: true,
+          url: APIs.joinProject.replaceAll(
+              "\$SLUG",
+              slug!),
+          hasBody: true,
+          httpMethod: HttpMethod.post,
+          data: {
+            "project_ids": [projectId]
+          });
+      joinprojectState = AuthStateEnum.success;
+      notifyListeners();
+      getProjectMembers(slug: slug, projID: projectId!);
+      getIssueProperties();
+      getProjectView();
+      getStates(slug: slug, projID: projectId);
+
+      getLabels(slug: slug, projID: projectId);
+
+      getIssues(slug: slug, projID: projectId);
+      ref!
+          .read(ProviderList.projectProvider)
+          .getProjectDetails(slug: slug, projId: projectId);
+    } on DioError catch (e) {
+      print('==== HERE =====');
+      log(e.message.toString());
+      joinprojectState = AuthStateEnum.error;
       notifyListeners();
     }
   }

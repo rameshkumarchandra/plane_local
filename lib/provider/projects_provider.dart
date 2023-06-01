@@ -82,9 +82,7 @@ class ProjectsProvider extends ChangeNotifier {
       var response = await DioConfig().dioServe(
         hasAuth: true,
         url: method == HttpMethod.delete
-            ? APIs.favouriteProjects.replaceAll('\$SLUG', slug) +
-                projectID +
-                '/'
+            ? '${APIs.favouriteProjects.replaceAll('\$SLUG', slug)}$projectID/'
             : APIs.favouriteProjects.replaceAll('\$SLUG', slug),
         hasBody: method == HttpMethod.post ? true : false,
         data: method == HttpMethod.post
@@ -100,9 +98,9 @@ class ProjectsProvider extends ChangeNotifier {
       } else if (method == HttpMethod.get) {
         starredProjects = response.data;
       } else {
-        projects.add(starredProjects.removeAt(index)['project_detail']);
+        // projects.add(starredProjects.removeAt(index)['project_detail']);
       }
-
+      await getProjects(slug: slug);
       projectState = AuthStateEnum.success;
       notifyListeners();
       // log(response.data.toString());

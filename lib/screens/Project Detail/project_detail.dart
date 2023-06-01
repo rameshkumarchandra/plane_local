@@ -6,6 +6,7 @@ import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_cycle.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_issue.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_module.dart';
+import 'package:plane_startup/screens/Project%20Detail/empty.dart';
 import 'package:plane_startup/screens/Project%20Detail/page_card.dart';
 import 'package:plane_startup/screens/Project%20Detail/view_card.dart';
 import 'package:plane_startup/screens/create_page_screen.dart';
@@ -232,7 +233,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                 },
                 itemCount: 5,
               )),
-              selected == 0
+              selected == 0 && issueProvider.statesState == AuthStateEnum.restricted ?
+              Container() :
+              selected == 0 && issueProvider.statesState == AuthStateEnum.success
                   ? Container(
                       height: 50,
                       width: MediaQuery.of(context).size.width,
@@ -498,6 +501,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   Widget issues() {
     var themeProvider = ref.read(ProviderList.themeProvider);
     var issueProvider = ref.read(ProviderList.issuesProvider);
+    var projectProvider = ref.read(ProviderList.projectProvider);
     if (issueProvider.issues.projectView == ProjectView.list) {
       issueProvider.isGroupBy
           ? issueProvider.priorityBoard()
@@ -509,150 +513,158 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
           issueProvider.statesState == AuthStateEnum.loading ||
           issueProvider.projectViewState == AuthStateEnum.loading ||
           issueProvider.orderByState == AuthStateEnum.loading,
-      widgetClass: Container(
-        color: themeProvider.isDarkThemeEnabled
-            ? const Color.fromRGBO(29, 30, 32, 1)
-            : lightSecondaryBackgroundColor,
-        padding: issueProvider.issues.projectView == ProjectView.kanban
-            ? const EdgeInsets.only(top: 15, left: 15)
-            : null,
-        child: issueProvider.issueState == AuthStateEnum.loading ||
-                issueProvider.statesState == AuthStateEnum.loading ||
-                issueProvider.projectViewState == AuthStateEnum.loading ||
-                issueProvider.orderByState == AuthStateEnum.loading
-            ? Container()
-            : issueProvider.issues.projectView == ProjectView.list
-                ? Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: issueProvider.issues.issues
-                              .map((state) => SizedBox(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          padding:
-                                              const EdgeInsets.only(left: 15),
-                                          margin:
-                                              const EdgeInsets.only(bottom: 10),
-                                          child: Row(
-                                            children: [
-                                              state.leading!,
-                                              Container(
-                                                padding: const EdgeInsets.only(
-                                                  left: 10,
-                                                ),
-                                                child: CustomText(
-                                                  state.title!,
-                                                  type: FontStyle.subheading,
-                                                  // color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              Container(
-                                                alignment: Alignment.center,
-                                                margin: const EdgeInsets.only(
-                                                  left: 15,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                    color: themeProvider
-                                                            .isDarkThemeEnabled
-                                                        ? const Color.fromRGBO(
-                                                            39, 42, 45, 1)
-                                                        : const Color.fromRGBO(
-                                                            222, 226, 230, 1)),
-                                                height: 25,
-                                                width: 30,
-                                                child: CustomText(
-                                                  state.items.length.toString(),
-                                                  type: FontStyle.subtitle,
-                                                  color:themeProvider.isDarkThemeEnabled?Colors.white:null,
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                              IconButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).push(
-                                                        MaterialPageRoute(
-                                                            builder: (ctx) =>
-                                                                const CreateIssue()));
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.add,
-                                                    color: greyColor,
-                                                  )),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Column(
+      widgetClass: issueProvider.statesState == AuthStateEnum.restricted
+          ? EmptyPlaceholder.joinProject(context, ref, projectProvider.currentProject['id'], ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'])
+          : Container(
+              color: themeProvider.isDarkThemeEnabled
+                  ? darkSecondaryBackgroundColor
+                  : lightSecondaryBackgroundColor,
+              padding: issueProvider.issues.projectView == ProjectView.kanban
+                  ? const EdgeInsets.only(top: 15, left: 15)
+                  : null,
+              child: issueProvider.issueState == AuthStateEnum.loading ||
+                      issueProvider.statesState == AuthStateEnum.loading ||
+                      issueProvider.projectViewState == AuthStateEnum.loading ||
+                      issueProvider.orderByState == AuthStateEnum.loading
+                  ? Container()
+                  : issueProvider.issues.projectView == ProjectView.list
+                      ? Container(
+                          margin: const EdgeInsets.only(top: 5),
+                          child: SingleChildScrollView(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: issueProvider.issues.issues
+                                    .map((state) => SizedBox(
+                                          child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
-                                            children: state.items
-                                                .map((e) => e)
-                                                .toList()),
-                                        state.items.isEmpty
-                                            ? Container(
-                                                margin: const EdgeInsets.only(
-                                                    bottom: 10),
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                color: themeProvider
-                                                        .isDarkThemeEnabled
-                                                    ? darkBackgroundColor
-                                                    : Colors.white,
+                                            children: [
+                                              Container(
                                                 padding: const EdgeInsets.only(
-                                                    top: 15,
-                                                    bottom: 15,
                                                     left: 15),
-                                                child: CustomText(
-                                                  'No issues.',
-                                                  type: FontStyle.title,
-                                                  maxLines: 10,
-                                                  textAlign: TextAlign.start,
-                                                ),
-                                              )
-                                            : Container(
                                                 margin: const EdgeInsets.only(
                                                     bottom: 10),
-                                              )
-                                      ],
-                                    ),
-                                  ))
-                              .toList()),
-                    ),
-                  )
-                : KanbanBoard(
-                    issueProvider.isGroupBy
-                        ? issueProvider.priorityBoard()
-                        : issueProvider.initializeBoard(),
-                    
-                    groupEmptyStates: !issueProvider.showEmptyStates,
-                    backgroundColor: themeProvider.isDarkThemeEnabled
-                        ? const Color.fromRGBO(29, 30, 32, 1)
-                        : lightSecondaryBackgroundColor,
-                    listScrollConfig: ScrollConfig(
-                        offset: 65,
-                        duration: const Duration(milliseconds: 100),
-                        curve: Curves.linear),
-                    listTransitionDuration: const Duration(milliseconds: 200),
-                    cardTransitionDuration: const Duration(milliseconds: 400),
-                    textStyle: TextStyle(
-                        fontSize: 19,
-                        height: 1.3,
-                        color: Colors.grey.shade800,
-                        fontWeight: FontWeight.w500),
-                  ),
-      ),
+                                                child: Row(
+                                                  children: [
+                                                    state.leading!,
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                        left: 10,
+                                                      ),
+                                                      child: CustomText(
+                                                        state.title!,
+                                                        type: FontStyle
+                                                            .subheading,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                        left: 15,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          color: const Color
+                                                                  .fromRGBO(222,
+                                                              226, 230, 1)),
+                                                      height: 25,
+                                                      width: 30,
+                                                      child: CustomText(
+                                                        state.items.length
+                                                            .toString(),
+                                                        type:
+                                                            FontStyle.subtitle,
+                                                      ),
+                                                    ),
+                                                    const Spacer(),
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context).push(
+                                                              MaterialPageRoute(
+                                                                  builder: (ctx) =>
+                                                                      const CreateIssue()));
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.add,
+                                                          color: greyColor,
+                                                        )),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: state.items
+                                                      .map((e) => e)
+                                                      .toList()),
+                                              state.items.isEmpty
+                                                  ? Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      color: Colors.white,
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 15,
+                                                              bottom: 15,
+                                                              left: 15),
+                                                      child: CustomText(
+                                                        'No issues.',
+                                                        type: FontStyle.title,
+                                                        maxLines: 10,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10),
+                                                    )
+                                            ],
+                                          ),
+                                        ))
+                                    .toList()),
+                          ),
+                        )
+                      : KanbanBoard(
+                          issueProvider.isGroupBy
+                              ? issueProvider.priorityBoard()
+                              : issueProvider.initializeBoard(),
+                          groupEmptyStates: !issueProvider.showEmptyStates,
+                          backgroundColor: themeProvider.isDarkThemeEnabled
+                              ? darkSecondaryBackgroundColor
+                              : lightSecondaryBackgroundColor,
+                          listScrollConfig: ScrollConfig(
+                              offset: 65,
+                              duration: const Duration(milliseconds: 100),
+                              curve: Curves.linear),
+                          listTransitionDuration:
+                              const Duration(milliseconds: 200),
+                          cardTransitionDuration:
+                              const Duration(milliseconds: 400),
+                          textStyle: TextStyle(
+                              fontSize: 19,
+                              height: 1.3,
+                              color: Colors.grey.shade800,
+                              fontWeight: FontWeight.w500),
+                        ),
+            ),
     );
   }
 
