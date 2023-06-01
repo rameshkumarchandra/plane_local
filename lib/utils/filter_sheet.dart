@@ -100,7 +100,7 @@ class FilterSheet extends ConsumerWidget {
     // }
 
     return Container(
-      padding: const EdgeInsets.only(top: 23, left: 23, right: 23),
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
       // color: themeProvider.isDarkThemeEnabled
       //     ? darkSecondaryBackgroundColor
       //     : lightSecondaryBackgroundColor,
