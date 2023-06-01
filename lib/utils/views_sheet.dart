@@ -93,7 +93,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
         issueProvider.issues.displayProperties.attachmentCount;
     displayProperties[8]['selected'] =
         issueProvider.issues.displayProperties.linkCount;
-
+    showEmptyStates = issueProvider.showEmptyStates;
     super.initState();
   }
 
@@ -292,7 +292,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                 ),
 
                 Container(
-                   color: themeProvider.isDarkThemeEnabled
+                  color: themeProvider.isDarkThemeEnabled
                       ? darkThemeBorder
                       : Colors.grey[300],
                   height: 1,
@@ -470,7 +470,8 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                       if (orderBy == '' &&
                           groupBy == '' &&
                           issueType == '' &&
-                          !isTagsEnabled()) {
+                          !isTagsEnabled() &&
+                          issueProvider.showEmptyStates == showEmptyStates) {
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -483,9 +484,14 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                         );
                         return;
                       }
-                      if (orderBy != '' || groupBy != '' || issueType != '') {
-                        print(orderBy );
-                        print(' it is if');
+                      if (issueProvider.issues.groupBY !=
+                              Issues.toGroupBY(groupBy) ||
+                          issueProvider.issues.orderBY !=
+                              Issues.toOrderBY(orderBy) ||
+                         issueProvider.issues.issueType !=
+                              Issues.toIssueType(issueType)) {
+                        //   print(orderBy);
+                        //   print(' it is if');
                         issueProvider.orderByIssues(
                           slug: ref
                               .read(ProviderList.workspaceProvider)
@@ -497,36 +503,22 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                           groupBY: groupBy,
                           type: issueType,
                         );
-
-                          DisplayProperties properties = DisplayProperties(
-                            assignee: displayProperties[0]['selected'],
-                            dueDate: displayProperties[2]['selected'],
-                            id: displayProperties[1]['selected'],
-                            label: displayProperties[3]['selected'],
-                            state: displayProperties[5]['selected'],
-                            subIsseCount: displayProperties[6]['selected'],
-                            linkCount: displayProperties[8]['selected'],
-                            attachmentCount: displayProperties[7]['selected'],
-                            priority: displayProperties[4]['selected']);
-                        issueProvider.issues.displayProperties = properties;
-                        issueProvider.updateIssueProperties(
-                            properties: properties);
-                      } else {
-                        print('=====  IT IS ELSE ======');
-                        DisplayProperties properties = DisplayProperties(
-                            assignee: displayProperties[0]['selected'],
-                            dueDate: displayProperties[2]['selected'],
-                            id: displayProperties[1]['selected'],
-                            label: displayProperties[3]['selected'],
-                            state: displayProperties[5]['selected'],
-                            subIsseCount: displayProperties[6]['selected'],
-                            linkCount: displayProperties[8]['selected'],
-                            attachmentCount: displayProperties[7]['selected'],
-                            priority: displayProperties[4]['selected']);
-                        issueProvider.issues.displayProperties = properties;
-                        issueProvider.updateIssueProperties(
-                            properties: properties);
                       }
+
+                      DisplayProperties properties = DisplayProperties(
+                          assignee: displayProperties[0]['selected'],
+                          dueDate: displayProperties[2]['selected'],
+                          id: displayProperties[1]['selected'],
+                          label: displayProperties[3]['selected'],
+                          state: displayProperties[5]['selected'],
+                          subIsseCount: displayProperties[6]['selected'],
+                          linkCount: displayProperties[8]['selected'],
+                          attachmentCount: displayProperties[7]['selected'],
+                          priority: displayProperties[4]['selected']);
+                      issueProvider.issues.displayProperties = properties;
+                      issueProvider.showEmptyStates = showEmptyStates;
+                      issueProvider.updateIssueProperties(
+                          properties: properties);
 
                       Navigator.of(context).pop();
                     },

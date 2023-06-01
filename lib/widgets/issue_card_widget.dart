@@ -559,15 +559,36 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
                                   size: 18,
                                 ))
               : const SizedBox(),
-          Container(
-            margin: const EdgeInsets.only(right: 12),
-            //color: Colors.amber,
-            width: MediaQuery.of(context).size.width - 170,
-            child: CustomText(
-              issueProvider.issuesResponse[widget.cardIndex]['name'],
-              type: FontStyle.title,
-              maxLines: 1,
-              textAlign: TextAlign.start,
+          issueProvider.issues.displayProperties.id
+              ? Container(
+                  margin: const EdgeInsets.only(right: 8),
+                  child: CustomRichText(
+                      //ype: RichFontStyle.title,
+                      fontSize: 14,
+                      color: themeProvider.isDarkThemeEnabled
+                          ? Colors.grey.shade400
+                          : darkBackgroundColor,
+                      fontWeight: FontWeight.w500,
+                      widgets: [
+                        TextSpan(
+                            text: issueProvider.issuesResponse[widget.cardIndex]
+                                ['project_detail']['identifier']),
+                        TextSpan(
+                            text:
+                                '-${issueProvider.issuesResponse[widget.cardIndex]['sequence_id']}'),
+                      ]))
+              : Container(),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(right: 12),
+              //color: Colors.amber,
+           
+              child: CustomText(
+                issueProvider.issuesResponse[widget.cardIndex]['name'],
+                type: FontStyle.title,
+                maxLines: 1,
+                textAlign: TextAlign.start,
+              ),
             ),
           ),
           const Spacer(),
