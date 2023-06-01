@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:plane_startup/config/const.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/provider/theme_provider.dart';
 import 'package:plane_startup/widgets/issue_card_widget.dart';
 
 import '../config/apis.dart';
@@ -146,7 +147,7 @@ class IssuesProvider extends ChangeNotifier {
         // backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
         backgroundColor:
             ref!.read(ProviderList.themeProvider).isDarkThemeEnabled
-                ? darkSecondaryBackgroundColor
+                ? const Color.fromRGBO(29, 30, 32, 1)
                 : lightSecondaryBackgroundColor,
       ));
     }
@@ -155,9 +156,10 @@ class IssuesProvider extends ChangeNotifier {
       //  log(issues.groupBY.toString());
       element.leading = issues.groupBY == GroupBY.priority
           ? element.title == 'Urgent'
-              ? const Icon(
+              ?  Icon(
                   Icons.error_outline,
                   size: 18,
+                  
                 )
               : element.title == 'High'
                   ? const Icon(
@@ -274,8 +276,10 @@ class IssuesProvider extends ChangeNotifier {
         issues.displayProperties.linkCount ||
         issues.displayProperties.attachmentCount;
   }
+  
 
   List<BoardListsData> initializeBoard({bool list = false}) {
+    var themeProvider = ref!.read(ProviderList.themeProvider);
     List<BoardListsData> data = [];
     var stateIndexMapping = {};
     int count = 0;
@@ -311,7 +315,7 @@ class IssuesProvider extends ChangeNotifier {
           // backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
           backgroundColor:
               ref!.read(ProviderList.themeProvider).isDarkThemeEnabled
-                  ? darkSecondaryBackgroundColor
+                  ? const Color.fromRGBO(29, 30, 32, 1)
                   : lightSecondaryBackgroundColor,
         ));
       }
@@ -349,7 +353,10 @@ class IssuesProvider extends ChangeNotifier {
               ),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: const Color.fromRGBO(222, 226, 230, 1)),
+                  color:  themeProvider
+                                                            .isDarkThemeEnabled
+                                                        ? const Color.fromRGBO(
+                                                            39, 42, 45, 1):const Color.fromRGBO(222, 226, 230, 1)),
               height: 25,
               width: 35,
               child: CustomText(
