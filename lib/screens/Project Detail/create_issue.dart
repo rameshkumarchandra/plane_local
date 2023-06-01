@@ -230,7 +230,7 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                     enableDrag: true,
                                     backgroundColor: Colors.transparent,
                                     context: context,
-                                    builder: (ctx) => const SelectStates());
+                                    builder: (ctx) => SelectStates(createIssue: true));
                               },
                               child: Row(
                                 children: [
@@ -307,7 +307,7 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                     backgroundColor: Colors.transparent,
                                     context: context,
                                     builder: (ctx) =>
-                                        const SelectProjectMembers());
+                                        SelectProjectMembers(createIssue: true,));
                               },
                               child: issueProvider.createIssuedata['members'] ==
                                       null
@@ -432,7 +432,7 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                     backgroundColor: Colors.transparent,
                                     context: context,
                                     builder: (ctx) =>
-                                        const SelectIssuePriority());
+                                        SelectIssuePriority(createIssue: true,));
                               },
                               child: issueProvider
                                           .createIssuedata['priority'] ==
@@ -530,7 +530,7 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                           backgroundColor: Colors.transparent,
                                           context: context,
                                           builder: (ctx) =>
-                                              const SelectIssueLabels());
+                                              SelectIssueLabels(createIssue: true,));
                                     },
                                     child: issueProvider
                                                 .createIssuedata['labels'] ==
@@ -777,7 +777,7 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
             ),
           ),
         ),
-      ),
+      ),    
     );
   }
 }

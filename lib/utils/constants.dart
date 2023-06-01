@@ -18,8 +18,10 @@ const lightSecondaryBackgroundColor = Color.fromARGB(255, 248, 247, 247);
 const darkPrimaryTextColor = Colors.white;
 const darkSecondaryTextColor = Color.fromARGB(255, 224, 224, 224);
 const darkStrokeColor = Color.fromARGB(255, 189, 189, 189);
-const darkBackgroundColor = Color.fromARGB(255, 0, 0, 0);
+const darkBackgroundColor = Color.fromRGBO(19,20,22,1);
 const darkSecondaryBackgroundColor = Color.fromARGB(255, 33, 33, 33);
+const darkCircleAvatarColor = Color.fromRGBO(34, 34, 34, 1);
+const darkThemeBorder =  Color.fromRGBO(39, 42, 45, 1);
 
 InputDecoration kTextFieldDecoration = InputDecoration(
   errorStyle: const TextStyle(

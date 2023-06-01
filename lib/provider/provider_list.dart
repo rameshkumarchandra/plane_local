@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/provider/auth_provider.dart';
 import 'package:plane_startup/provider/features_provider.dart';
 import 'package:plane_startup/provider/file_upload_provider.dart';
+import 'package:plane_startup/provider/issue_provider.dart';
 import 'package:plane_startup/provider/profile_provider.dart';
 import 'package:plane_startup/provider/projects_provider.dart';
 import 'package:plane_startup/provider/workspace_provider.dart';
@@ -26,5 +27,7 @@ class ProviderList {
       ChangeNotifierProvider<IssuesProvider>((ref) => IssuesProvider(ref));
   static var featuresProvider =
       ChangeNotifierProvider<FeaturesProvider>((_) => FeaturesProvider());
+  static var issueProvider=
+      ChangeNotifierProvider<IssueProvider>((_) => IssueProvider());
 }
 

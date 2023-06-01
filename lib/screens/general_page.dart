@@ -102,9 +102,11 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                       child: Center(
                         child: selectedEmoji ??
                             CustomText(
+                              int.tryParse(projectProvider.projectDetailModel!.emoji!) != null ?
                               String.fromCharCode(int.parse(
-                                  projectProvider.projectDetailModel!.emoji ??
-                                      '')),
+                                  projectProvider.projectDetailModel!.emoji!)
+                              )
+                              : '🚀',
                             ),
                       ),
                     ),

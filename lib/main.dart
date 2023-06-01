@@ -34,6 +34,9 @@ void main() async {
   // SharedPrefrenceServices.sharedPreferences!.clear();
   WidgetsFlutterBinding.ensureInitialized();
   var pref = await SharedPreferences.getInstance();
+  //pref.setString('token',
+   //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjg2MDM4MjY4LCJpYXQiOjE2ODU0MzM0NjgsImp0aSI6ImRlMWYyOGFmNGM2MTQzYWE4NDhkYmEzYTJmZTE1MWU5IiwidXNlcl9pZCI6IjI1NzdjZjk5LTkwOGUtNDg3Yy05YTFiLTg4YzMzODNkZDA1MSJ9.djUStZ-FzT6hVnszZSjOTUcmae_M2_9PTmwIZj58r7A");
+ // pref.setBool('onboard', true);
   prefs = pref;
   if (!prefs!.containsKey('isDarkThemeEnabled')) {
     await prefs!.setBool('isDarkThemeEnabled', false);
@@ -128,20 +131,20 @@ class _MyAppState extends ConsumerState<MyApp> {
             selectionHandleColor: primaryColor),
 
         primaryColor:
-            themeProvider.isDarkThemeEnabled ? Colors.black : Colors.white,
+            themeProvider.isDarkThemeEnabled ? const Color.fromRGBO(19,20,22, 1) : Colors.white,
 
         backgroundColor:
-            themeProvider.isDarkThemeEnabled ? Colors.black : Colors.white,
+            themeProvider.isDarkThemeEnabled ? const Color.fromRGBO(19,20,22, 1) : Colors.white,
 
         //radio button theme
         toggleableActiveColor: primaryColor,
 
         scaffoldBackgroundColor:
-            themeProvider.isDarkThemeEnabled ? Colors.black : Colors.white,
+            themeProvider.isDarkThemeEnabled ? Color.fromRGBO(19,20,22, 1) : Colors.white,
         //bottom sheet theme
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: themeProvider.isDarkThemeEnabled
-              ? darkSecondaryBackgroundColor
+              ? const Color.fromRGBO(29, 30, 32, 1)
               : Colors.white,
         ),
 

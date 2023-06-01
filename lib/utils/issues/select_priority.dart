@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/config/enums.dart';
 import '../../provider/provider_list.dart';
+import '../constants.dart';
 import '../custom_text.dart';
 
 class SelectIssuePriority extends ConsumerStatefulWidget {
-  const SelectIssuePriority({super.key});
+  bool createIssue;
+  String? issueId;
+  int? index;
+  SelectIssuePriority({ this.index, this.issueId, required this.createIssue,  super.key});
 
   @override
   ConsumerState<SelectIssuePriority> createState() => _SelectIssuePriorityState();
@@ -13,8 +18,9 @@ class SelectIssuePriority extends ConsumerStatefulWidget {
 class _SelectIssuePriorityState extends ConsumerState<SelectIssuePriority> {
 
   var selectedPriority = 4;
-var priorities = [
-{
+  String? issueDetailSelectedPriorityItem;
+  List priorities = [
+    {
       'name': 'Urgent',
       'icon': const Icon(Icons.error_outline_rounded),
     },
@@ -38,6 +44,7 @@ var priorities = [
   ];
   @override
   Widget build(BuildContext context) {
+    var issueProvider = ref.read(ProviderList.issueProvider);
     return WillPopScope(
       onWillPop: () async {
         var prov = ref.read(ProviderList.issuesProvider);
@@ -78,9 +85,55 @@ var priorities = [
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          setState(() {
-                            selectedPriority = index;
-                          });
+                          if(widget.createIssue){
+                            setState(() {
+                              selectedPriority = index;
+                            });
+                          }
+                          else {
+                            setState(() {
+                              issueDetailSelectedPriorityItem = priorities[index]['name'];
+                            });
+                            issueProvider.upDateIssue(
+                                slug: ref
+                                    .read(ProviderList.workspaceProvider)
+                                    .currentWorkspace['slug'],
+                                    index: widget.index!,
+                                    ref: ref,
+                                projID: ref
+                                    .read(ProviderList.projectProvider)
+                                    .currentProject['id'],
+                                issueID: widget.issueId!,
+                                data: {
+                                  "priority": priorities[index]['name'].toString().replaceAll(priorities[index]['name'].toString()[0], priorities[index]['name'].toString()[0].toLowerCase())
+                                }).then((value) {
+                              ref
+                                  .read(ProviderList.issueProvider)
+                                  .getIssueDetails(
+                                      slug: ref
+                                          .read(ProviderList.workspaceProvider)
+                                          .currentWorkspace['slug'],
+                                      projID: ref
+                                          .read(ProviderList.projectProvider)
+                                          .currentProject['id'],
+                                      issueID: widget.issueId!)
+                                  .then(
+                                    (value) => ref
+                                        .read(ProviderList.issueProvider)
+                                        .getIssueActivity(
+                                          slug: ref
+                                              .read(ProviderList
+                                                  .workspaceProvider)
+                                              .currentWorkspace['slug'],
+                                          projID: ref
+                                              .read(
+                                                  ProviderList.projectProvider)
+                                              .currentProject['id'],
+                                          issueID: widget.issueId!,
+                                        ),
+                                  );
+                            });
+                          }
                           
                         },
                         child: Container(
@@ -119,12 +172,9 @@ var priorities = [
                                 type: FontStyle.subheading,
                               ),
                               const Spacer(),
-                              selectedPriority == index
-                                  ? const Icon(
-                                      Icons.done,
-                                      color: Color.fromRGBO(8, 171, 34, 1),
-                                    )
-                                  : const SizedBox(),
+                              widget.createIssue ?
+                              createIssueSelectedPriority(index)
+                              : issueDetailSelectedPriority(index),
                               const SizedBox(
                                 width: 10,
                               )
@@ -140,4 +190,33 @@ var priorities = [
       ),
     );
   }
+
+  Widget createIssueSelectedPriority(int idx) {
+    return selectedPriority == idx
+    ? const Icon(
+        Icons.done,
+        color: Color.fromRGBO(8, 171, 34, 1),
+      )
+    : const SizedBox();
+  }
+
+  Widget issueDetailSelectedPriority(int idx) {
+    var issueProvider = ref.watch(ProviderList.issueProvider);
+    return issueProvider.issueDetails['priority'] == priorities[idx]['name'].toString().replaceAll(priorities[idx]['name'].toString()[0], priorities[idx]['name'].toString()[0].toLowerCase())
+    ? const Icon(
+        Icons.done,
+        color: Color.fromRGBO(8, 171, 34, 1),
+      )
+    : issueProvider.updateIssueState == AuthStateEnum.loading && issueDetailSelectedPriorityItem == priorities[idx]['name']
+    ? const SizedBox(
+      height: 20,
+      width: 20,
+      child: CircularProgressIndicator(
+        strokeWidth: 2,
+        color: greyColor,
+      ),
+    )
+    : const SizedBox();
+  }
+
 }

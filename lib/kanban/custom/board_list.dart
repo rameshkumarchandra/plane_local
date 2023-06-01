@@ -406,6 +406,7 @@ class _BoardListState extends ConsumerState<BoardList> {
                                         ),
                                       ),
                                     ),
+                                    const SizedBox(height: 15,),
                                 prov.board.lists[widget.index].shrink
                                     ? Container()
                                     : Expanded(

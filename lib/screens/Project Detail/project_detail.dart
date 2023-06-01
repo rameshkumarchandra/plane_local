@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:plane_startup/config/enums.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:plane_startup/provider/provider_list.dart';
-import 'package:plane_startup/provider/theme_provider.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_cycle.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_issue.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_module.dart';
+import 'package:plane_startup/screens/Project%20Detail/empty.dart';
 import 'package:plane_startup/screens/Project%20Detail/page_card.dart';
 import 'package:plane_startup/screens/Project%20Detail/view_card.dart';
 import 'package:plane_startup/screens/create_page_screen.dart';
 import 'package:plane_startup/screens/create_view_screen.dart';
-import 'package:plane_startup/screens/issue_detail_screen.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_appBar.dart';
 import 'package:plane_startup/utils/type_sheet.dart';
@@ -29,7 +26,8 @@ import 'cycle_card.dart';
 import 'module_card.dart';
 
 class ProjectDetail extends ConsumerStatefulWidget {
-  const ProjectDetail({super.key});
+  const ProjectDetail({super.key, required this.index});
+  final int index;
 
   @override
   ConsumerState<ProjectDetail> createState() => _ProjectDetailState();
@@ -54,8 +52,8 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     prov.getProjectMembers(
         slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
-
-    // if (prov.issues.isEmpty) {
+    prov.getIssueProperties();
+    prov.getProjectView();
     prov.getStates(
         slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
@@ -88,8 +86,8 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.watch(ProviderList.issuesProvider);
     var featuresProvider = ref.watch(ProviderList.featuresProvider);
+    var projectProvider = ref.watch(ProviderList.projectProvider);
     issueProvider.issueState = AuthStateEnum.success;
-
     //  print(issueProvider.statesState);
     return Scaffold(
       appBar: CustomAppBar(
@@ -128,10 +126,23 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     height: 40,
+                    alignment: Alignment.center,
                     width: 40,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      int.tryParse(projectProvider.projects[widget.index]
+                                  ['emoji']) !=
+                              null
+                          ? String.fromCharCode(int.parse(
+                              projectProvider.projects[widget.index]['emoji']))
+                          : '🚀',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                      ),
+                    ),
                   ),
                   Container(
                     padding: const EdgeInsets.only(
@@ -147,9 +158,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                 ],
               ),
               Container(
-                  margin: const EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.only(top: 10),
                   width: MediaQuery.of(context).size.width,
-                  height: 46,
+                  height: 48,
                   child: ListView.builder(
                     itemCount: featuresProvider.features.length,
                     shrinkWrap: true,
@@ -205,7 +216,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
               Container(
                 height: 2,
                 width: MediaQuery.of(context).size.width,
-                color: Colors.grey.shade300,
+                color: themeProvider.isDarkThemeEnabled
+                    ? darkThemeBorder
+                    : Colors.grey.shade300,
               ),
               Expanded(
                   child: PageView.builder(
@@ -220,11 +233,13 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                 },
                 itemCount: 5,
               )),
-              selected == 0
+              selected == 0 && issueProvider.statesState == AuthStateEnum.restricted ?
+              Container() :
+              selected == 0 && issueProvider.statesState == AuthStateEnum.success
                   ? Container(
                       height: 50,
                       width: MediaQuery.of(context).size.width,
-                      color: Colors.black,
+                      color: darkBackgroundColor,
                       child: Row(
                         children: [
                           Expanded(
@@ -322,12 +337,13 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                               child: GestureDetector(
                             onTap: () {
                               showModalBottomSheet(
+                                  
                                   isScrollControlled: true,
                                   enableDrag: true,
                                   constraints: BoxConstraints(
                                       maxHeight:
                                           MediaQuery.of(context).size.height *
-                                              0.85),
+                                              0.9),
                                   shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(30),
@@ -485,48 +501,170 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   Widget issues() {
     var themeProvider = ref.read(ProviderList.themeProvider);
     var issueProvider = ref.read(ProviderList.issuesProvider);
+    var projectProvider = ref.read(ProviderList.projectProvider);
+    if (issueProvider.issues.projectView == ProjectView.list) {
+      issueProvider.isGroupBy
+          ? issueProvider.priorityBoard()
+          : issueProvider.initializeBoard();
+    }
+
     return LoadingWidget(
       loading: issueProvider.issueState == AuthStateEnum.loading ||
-          issueProvider.statesState == AuthStateEnum.loading,
-      widgetClass: Container(
-          color: themeProvider.isDarkThemeEnabled
-              ? darkSecondaryBackgroundColor
-              : lightSecondaryBackgroundColor,
-          padding: const EdgeInsets.only(top: 15, left: 15),
-          child: issueProvider.issueState == AuthStateEnum.loading ||
-                  issueProvider.statesState == AuthStateEnum.loading
-              ? Container()
-              : issueProvider.issueState == AuthStateEnum.success &&
-                      issueProvider.statesState == AuthStateEnum.success
-                  ? KanbanBoard(
-                      issueProvider.isGroupBy
-                          ? issueProvider.priorityBoard()
-                          : issueProvider.initializeBoard(),
-                      groupEmptyStates: !issueProvider.showEmptyStates,
-                      backgroundColor: themeProvider.isDarkThemeEnabled
-                          ? darkSecondaryBackgroundColor
-                          : lightSecondaryBackgroundColor,
-                      listScrollConfig: ScrollConfig(
-                          offset: 65,
-                          duration: const Duration(milliseconds: 100),
-                          curve: Curves.linear),
-                      listTransitionDuration: const Duration(milliseconds: 200),
-                      cardTransitionDuration: const Duration(milliseconds: 400),
-                      textStyle: TextStyle(
-                          fontSize: 19,
-                          height: 1.3,
-                          color: Colors.grey.shade800,
-                          fontWeight: FontWeight.w500),
-                    )
-                  : issueProvider.issueState == AuthStateEnum.restricted ||
-                          issueProvider.statesState == AuthStateEnum.restricted
-                      ? Center(
-                          child: CustomText(
-                              'You are not a member of this project'),
+          issueProvider.statesState == AuthStateEnum.loading ||
+          issueProvider.projectViewState == AuthStateEnum.loading ||
+          issueProvider.orderByState == AuthStateEnum.loading,
+      widgetClass: issueProvider.statesState == AuthStateEnum.restricted
+          ? EmptyPlaceholder.joinProject(context, ref, projectProvider.currentProject['id'], ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'])
+          : Container(
+              color: themeProvider.isDarkThemeEnabled
+                  ? darkSecondaryBackgroundColor
+                  : lightSecondaryBackgroundColor,
+              padding: issueProvider.issues.projectView == ProjectView.kanban
+                  ? const EdgeInsets.only(top: 15, left: 15)
+                  : null,
+              child: issueProvider.issueState == AuthStateEnum.loading ||
+                      issueProvider.statesState == AuthStateEnum.loading ||
+                      issueProvider.projectViewState == AuthStateEnum.loading ||
+                      issueProvider.orderByState == AuthStateEnum.loading
+                  ? Container()
+                  : issueProvider.issues.projectView == ProjectView.list
+                      ? Container(
+                          margin: const EdgeInsets.only(top: 5),
+                          child: SingleChildScrollView(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: issueProvider.issues.issues
+                                    .map((state) => SizedBox(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                padding: const EdgeInsets.only(
+                                                    left: 15),
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 10),
+                                                child: Row(
+                                                  children: [
+                                                    state.leading!,
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                        left: 10,
+                                                      ),
+                                                      child: CustomText(
+                                                        state.title!,
+                                                        type: FontStyle
+                                                            .subheading,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                        left: 15,
+                                                      ),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(15),
+                                                          color: const Color
+                                                                  .fromRGBO(222,
+                                                              226, 230, 1)),
+                                                      height: 25,
+                                                      width: 30,
+                                                      child: CustomText(
+                                                        state.items.length
+                                                            .toString(),
+                                                        type:
+                                                            FontStyle.subtitle,
+                                                      ),
+                                                    ),
+                                                    const Spacer(),
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context).push(
+                                                              MaterialPageRoute(
+                                                                  builder: (ctx) =>
+                                                                      const CreateIssue()));
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.add,
+                                                          color: greyColor,
+                                                        )),
+                                                    const SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: state.items
+                                                      .map((e) => e)
+                                                      .toList()),
+                                              state.items.isEmpty
+                                                  ? Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      color: Colors.white,
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 15,
+                                                              bottom: 15,
+                                                              left: 15),
+                                                      child: CustomText(
+                                                        'No issues.',
+                                                        type: FontStyle.title,
+                                                        maxLines: 10,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10),
+                                                    )
+                                            ],
+                                          ),
+                                        ))
+                                    .toList()),
+                          ),
                         )
-                      : Center(
-                          child: CustomText('Something went wrong'),
-                        )),
+                      : KanbanBoard(
+                          issueProvider.isGroupBy
+                              ? issueProvider.priorityBoard()
+                              : issueProvider.initializeBoard(),
+                          groupEmptyStates: !issueProvider.showEmptyStates,
+                          backgroundColor: themeProvider.isDarkThemeEnabled
+                              ? darkSecondaryBackgroundColor
+                              : lightSecondaryBackgroundColor,
+                          listScrollConfig: ScrollConfig(
+                              offset: 65,
+                              duration: const Duration(milliseconds: 100),
+                              curve: Curves.linear),
+                          listTransitionDuration:
+                              const Duration(milliseconds: 200),
+                          cardTransitionDuration:
+                              const Duration(milliseconds: 400),
+                          textStyle: TextStyle(
+                              fontSize: 19,
+                              height: 1.3,
+                              color: Colors.grey.shade800,
+                              fontWeight: FontWeight.w500),
+                        ),
+            ),
     );
   }
 

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/screens/create_page_screen.dart';
 import 'package:plane_startup/screens/create_view_screen.dart';
+import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 
+import '../../config/enums.dart';
 import 'create_cycle.dart';
 
 class EmptyPlaceholder {
@@ -745,6 +749,153 @@ class EmptyPlaceholder {
                 ],
               ),
             ),
+          )
+        ],
+      ),
+    );
+  }
+
+  static Widget joinProject(
+      BuildContext context, WidgetRef ref, String projectId, String slug) {
+    return Container(
+      alignment: Alignment.center,
+      //  margin: const EdgeInsets.only(top: 150),
+      child: Wrap(
+        direction: Axis.vertical,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(left: 30),
+                height: 130,
+                width: 300,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.grey.shade300),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 30),
+                height: 130,
+                width: 300,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.grey.shade300)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: width,
+                      child: const Icon(Icons.lock_outline_rounded),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(left: 10, top: 10),
+                      child: CustomText(
+                        'Project Settings',
+                        type: FontStyle.subtitle,
+                        color: const Color.fromRGBO(133, 142, 150, 1),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 15, right: 15),
+                      width: width,
+                      height: 10,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 15, right: 15),
+                      width: width * 0.5,
+                      height: 10,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(20)),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 35),
+            width: width * 0.7,
+            child: CustomText(
+              'You are not a member of this project',
+              type: FontStyle.heading,
+              maxLines: 5,
+            ),
+          ),
+          Container(
+            width: 300,
+            padding: const EdgeInsets.only(top: 10),
+            child: CustomText(
+              'You are not a member of this project, but you can join this project by clicking the button below.',
+              textAlign: TextAlign.center,
+              type: FontStyle.title,
+              color: const Color.fromRGBO(133, 142, 150, 1),
+              maxLines: 3,
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              ref
+                  .read(ProviderList.issuesProvider)
+                  .joinProject(projectId: projectId, slug: slug);
+            },
+            child: Container(
+                height: 40,
+                width: 150,
+                margin: const EdgeInsets.only(top: 30),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  color: const Color.fromRGBO(63, 118, 255, 1),
+                ),
+                child:
+                    ref.watch(ProviderList.issuesProvider).joinprojectState ==
+                            AuthStateEnum.loading
+                    ?
+                    const Center(
+                  child: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 1.5,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.assignment_outlined,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      CustomText(
+                        'Click to join',
+                        type: FontStyle.buttonText,
+                      ),
+                    ],
+                  ),
+                ),
           )
         ],
       ),

@@ -62,7 +62,7 @@ class CustomText extends ConsumerWidget {
       text.toString(),
       maxLines: maxLines,
       textAlign: textAlign ?? TextAlign.start,
-      overflow: overflow ?? TextOverflow.visible,
+      overflow: overflow ?? TextOverflow.ellipsis,
       style: style.merge(style),
     );
   }
@@ -83,6 +83,7 @@ class CustomText extends ConsumerWidget {
       case FontStyle.description:
         return TextStyle(
             fontSize: fontSize ?? 16,
+            
             fontWeight: fontWeight ?? FontWeight.w400,
             fontFamily: 'SF Pro Display',
             // color: color ?? themeProvider.primaryTextColor,
