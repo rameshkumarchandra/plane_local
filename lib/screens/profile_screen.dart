@@ -259,12 +259,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   void _onLogout() {
-    Const.appBearerToken = null;
-    Const.isLoggedIn = false;
-    Const.signUp = false;
-    final route =
-        MaterialPageRoute(builder: (context) => const OnBoardingScreen());
-    Navigator.pushAndRemoveUntil(context, route, (route) => false);
+    ProviderList.clear(ref: ref);
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const OnBoardingScreen()),
+        (route) => false);
   }
 
   Widget profileCard(

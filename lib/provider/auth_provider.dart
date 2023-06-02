@@ -19,7 +19,6 @@ class AuthProvider extends ChangeNotifier {
 
   Future sendMagicCode(String email) async {
     sendCodeState = AuthStateEnum.loading;
-    String? magicToken;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(

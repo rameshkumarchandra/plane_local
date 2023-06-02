@@ -60,6 +60,39 @@ class IssuesProvider extends ChangeNotifier {
   var groupBy_response = {};
   bool isGroupBy = false;
   var shrinkStates = [];
+
+  void clear() {
+    issueView = {};
+    showEmptyStates = true;
+    issues = Issues(
+        issues: [],
+        projectView: ProjectView.kanban,
+        groupBY: GroupBY.state,
+        orderBY: OrderBY.manual,
+        issueType: IssueType.all,
+        displayProperties: DisplayProperties(
+            assignee: false,
+            dueDate: false,
+            id: false,
+            label: false,
+            state: false,
+            subIsseCount: false,
+            priority: false,
+            attachmentCount: false,
+            linkCount: false));
+    stateIcons = {};
+    issueProperty = {};
+    createIssuedata = {};
+    issuesResponse = [];
+    labels = [];
+    states = {};
+    members = [];
+    projectView = {};
+    groupBy_response = {};
+    isGroupBy = false;
+    shrinkStates = [];
+  }
+
   void setsState() {
     notifyListeners();
   }
@@ -74,6 +107,7 @@ class IssuesProvider extends ChangeNotifier {
   }
 
   List<BoardListsData> priorityBoard() {
+    var themeProvider = ref!.read(ProviderList.themeProvider);
     int count = 0;
     issues.issues = [];
     for (int j = 0; j < groupBy_response.length; j++) {
@@ -160,25 +194,32 @@ class IssuesProvider extends ChangeNotifier {
       //  log(issues.groupBY.toString());
       element.leading = issues.groupBY == GroupBY.priority
           ? element.title == 'Urgent'
-              ? Icon(
-                  Icons.error_outline,
+              ? Icon(Icons.error_outline,
                   size: 18,
-                )
+                  color: themeProvider.isDarkThemeEnabled
+                      ? Colors.white
+                      : Colors.black)
               : element.title == 'High'
-                  ? const Icon(
+                  ? Icon(
                       Icons.signal_cellular_alt,
-                      color: Colors.black,
+                      color: themeProvider.isDarkThemeEnabled
+                          ? Colors.white
+                          : Colors.black,
                       size: 18,
                     )
                   : element.title == 'Medium'
-                      ? const Icon(
+                      ? Icon(
                           Icons.signal_cellular_alt_2_bar,
-                          color: Colors.black,
+                          color: themeProvider.isDarkThemeEnabled
+                              ? Colors.white
+                              : Colors.black,
                           size: 18,
                         )
-                      : const Icon(
+                      : Icon(
                           Icons.signal_cellular_alt_1_bar,
-                          color: Colors.black,
+                          color: themeProvider.isDarkThemeEnabled
+                              ? Colors.white
+                              : Colors.black,
                           size: 18,
                         )
           : issues.groupBY == GroupBY.createdBY
@@ -237,7 +278,9 @@ class IssuesProvider extends ChangeNotifier {
               ),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: const Color.fromRGBO(222, 226, 230, 0.4)),
+                  color: themeProvider.isDarkThemeEnabled
+                      ? const Color.fromRGBO(39, 42, 45, 1)
+                      : const Color.fromRGBO(222, 226, 230, 1)),
               height: 25,
               width: 35,
               child: CustomText(
@@ -325,6 +368,10 @@ class IssuesProvider extends ChangeNotifier {
 
     issues.issues = data;
     for (int i = 0; i < issuesResponse.length; i++) {
+      if (stateIndexMapping[issuesResponse[i]["state_detail"]["id"]] == null) {
+        continue;
+      }
+
       data[stateIndexMapping[issuesResponse[i]["state_detail"]["id"]]]
           .items
           .add(IssueCardWidget(

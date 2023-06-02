@@ -28,6 +28,15 @@ class WorkspaceProvider extends ChangeNotifier {
   AuthStateEnum uploadImageState = AuthStateEnum.empty;
   AuthStateEnum getMembersState = AuthStateEnum.empty;
 
+  void clear() {
+    workspaceInvitations = [];
+    workspaces = [];
+    selectedWorkspace = null;
+    urlNotAvailable = false;
+    currentWorkspace = {};
+    workspaceMembers = [];
+  }
+
   void changeLogo({required String logo}) {
     selectedWorkspace!.workspaceLogo = logo;
     notifyListeners();

@@ -34,6 +34,14 @@ class ProfileProvider extends ChangeNotifier {
   AuthStateEnum updateProfileState = AuthStateEnum.empty;
   UserProfile userProfile = UserProfile.initialize();
 
+  void clear() {
+    firstName.clear();
+    lastName.clear();
+    dropDownValue = null;
+    slug = null;
+    userProfile = UserProfile.initialize();
+  }
+
   Future getProfile() async {
     getProfileState = AuthStateEnum.loading;
 
