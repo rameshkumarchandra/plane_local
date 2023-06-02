@@ -67,7 +67,9 @@ class BoardProvider extends ChangeNotifier {
       Color? cardPlaceHolderColor,
       Color? listPlaceHolderColor,
       ScrollConfig? boardScrollConfig,
-      ScrollConfig? listScrollConfig, required bool groupEmptyStates}) {
+      ScrollConfig? listScrollConfig,
+      required bool groupEmptyStates}) {
+    var themeProvider = ref.read(ProviderList.themeProvider);
     board = BoardState(
         textStyle: textStyle,
         lists: [],
@@ -106,17 +108,20 @@ class BoardProvider extends ChangeNotifier {
         scrollController: ScrollController(),
         title: 'Hidden groups');
     for (int i = 0; i < data.length; i++) {
-      var themeProvider = ref.read(ProviderList.themeProvider);
       if (data[i].items.isEmpty && groupEmptyStates) {
         var widget = Container(
           height: 50,
           margin: const EdgeInsets.only(bottom: 15),
           decoration: BoxDecoration(
             color: themeProvider.isDarkThemeEnabled
-                ? lightPrimaryTextColor
+                ? darkBackgroundColor
                 : darkPrimaryTextColor,
-            border: Border.all(color: Colors.grey.shade200, width: 2),
-            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+                color: themeProvider.isDarkThemeEnabled
+                    ? darkBackgroundColor
+                    : Colors.grey.shade200,
+                width: 2),
+            borderRadius: BorderRadius.circular(6),
           ),
           child: Row(
             children: [
@@ -140,7 +145,7 @@ class BoardProvider extends ChangeNotifier {
             listIndex: data.length,
             index: emptyStates.items.length,
             prevChild: widget));
-      //  continue;
+        //  continue;
       }
       List<ListItem> listItems = [];
       for (int j = 0; j < data[i].items.length; j++) {
@@ -166,36 +171,37 @@ class BoardProvider extends ChangeNotifier {
     }
     if (emptyStates.items.isNotEmpty && groupEmptyStates) {
       emptyStates.header = Container(
-          width: data.first.width,
-          height: 50,
-          alignment: Alignment.centerLeft,
-       
-          child: Row(
-            children: [
-              CustomText(
-                'Hidden groups',
-                type: FontStyle.heading,
-                fontSize: 20,
+        width: data.first.width,
+        height: 50,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            CustomText(
+              'Hidden groups',
+              type: FontStyle.heading,
+              fontSize: 20,
+            ),
+            Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(
+                left: 15,
               ),
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(
-                    left: 15,
-                  ),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: const Color.fromRGBO(222, 226, 230, 1)),
-                  height: 25,
-                  width: 35,
-                  child: CustomText(
-                  emptyStates.items.length.toString(),
-                    type: FontStyle.subtitle,
-                  ),
-                ),
-            ],
-          ),
-        );
-      emptyStates.index =board.lists.length;
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: themeProvider.isDarkThemeEnabled
+                      ? const Color.fromRGBO(39, 42, 45, 1)
+                      : const Color.fromRGBO(222, 226, 230, 1)),
+              height: 25,
+              width: 35,
+              child: CustomText(
+                emptyStates.items.length.toString(),
+                type: FontStyle.subtitle,
+              ),
+            ),
+          ],
+        ),
+      );
+      emptyStates.index = board.lists.length;
       board.lists.add(emptyStates);
     }
   }

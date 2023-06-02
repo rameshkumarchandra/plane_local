@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/config/enums.dart';
@@ -219,12 +221,20 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                       context: context,
                       builder: (ctx) {
                         return MemberStatus(
-                          firstName: workspaceProvider.workspaceMembers[index]
-                              ['member']['first_name'],
-                          lastName: workspaceProvider.workspaceMembers[index]
-                              ['member']['last_name'],
-                          role: workspaceProvider.workspaceMembers[index]
-                              ['role'],
+                          firstName: widget.fromWorkspace
+                              ? workspaceProvider.workspaceMembers[index]
+                                  ['member']['first_name']
+                              : issueProvider.members[index]['member']
+                                  ['first_name'],
+                          lastName: widget.fromWorkspace
+                              ? workspaceProvider.workspaceMembers[index]
+                                  ['member']['last_name']
+                              : issueProvider.members[index]['member']
+                                  ['last_name'],
+                          role: widget.fromWorkspace
+                              ? workspaceProvider.workspaceMembers[index]
+                                  ['role']
+                              : issueProvider.members[index]['role'],
                         );
                       });
                 },

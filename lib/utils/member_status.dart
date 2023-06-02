@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:plane_startup/utils/constants.dart';
 
@@ -25,6 +27,7 @@ class _MemberStatusState extends State<MemberStatus> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    log(widget.role.toString());
     selectedRole = widget.role;
     if (widget.lastName == null || widget.lastName == '') {
       name = "${widget.firstName}'s Role";

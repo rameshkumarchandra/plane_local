@@ -39,11 +39,12 @@ class APIs {
   static String projectIssues =
       '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issues/';
   static String issueLabels =
-      '$baseApi/api/workspaces/\$SLUG/pr/api/workspaces/\$SLUG/projects/\$PROJECTIDojects/\$PROJECTID/issue-labels/';
+      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issue-labels/';
   static String projectViews =
       '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/project-views/';
   static String issueProperties =
       '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issue-properties/';
-  static String issueDetails = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issues/\$ISSUEID/';
+  static String issueDetails =
+      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issues/\$ISSUEID/';
   static String joinProject = '$baseApi/api/workspaces/\$SLUG/projects/join/';
 }
