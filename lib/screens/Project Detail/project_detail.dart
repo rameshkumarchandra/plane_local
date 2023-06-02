@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/config/enums.dart';
@@ -87,8 +89,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     var issueProvider = ref.watch(ProviderList.issuesProvider);
     var featuresProvider = ref.watch(ProviderList.featuresProvider);
     var projectProvider = ref.watch(ProviderList.projectProvider);
-    issueProvider.issueState = AuthStateEnum.success;
-    //  print(issueProvider.statesState);
+
     return Scaffold(
       appBar: CustomAppBar(
         onPressed: () {
@@ -233,264 +234,270 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                 },
                 itemCount: 5,
               )),
-              selected == 0 && issueProvider.statesState == AuthStateEnum.restricted ?
-              Container() :
-              selected == 0 && issueProvider.statesState == AuthStateEnum.success
-                  ? Container(
-                      height: 50,
-                      width: MediaQuery.of(context).size.width,
-                      color: darkBackgroundColor,
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: GestureDetector(
-                            onTap: () {
-                              // showModalBottomSheet(
-                              //     isScrollControlled: true,
-                              //     enableDrag: true,
-                              //     constraints: BoxConstraints(
-                              //         maxHeight:
-                              //             MediaQuery.of(context).size.height *
-                              //                 0.85),
-                              //     shape: const RoundedRectangleBorder(
-                              //         borderRadius: BorderRadius.only(
-                              //       topLeft: Radius.circular(30),
-                              //       topRight: Radius.circular(30),
-                              //     )),
-                              //     context: context,
-                              //     builder: (ctx) {
-                              //       return const FilterSheet();
-                              //     });
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const CreateIssue(),
+              selected == 0 &&
+                      issueProvider.statesState == AuthStateEnum.restricted
+                  ? Container()
+                  : selected == 0 &&
+                          issueProvider.statesState == AuthStateEnum.success
+                      ? Container(
+                          height: 50,
+                          width: MediaQuery.of(context).size.width,
+                          color: darkBackgroundColor,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  // showModalBottomSheet(
+                                  //     isScrollControlled: true,
+                                  //     enableDrag: true,
+                                  //     constraints: BoxConstraints(
+                                  //         maxHeight:
+                                  //             MediaQuery.of(context).size.height *
+                                  //                 0.85),
+                                  //     shape: const RoundedRectangleBorder(
+                                  //         borderRadius: BorderRadius.only(
+                                  //       topLeft: Radius.circular(30),
+                                  //       topRight: Radius.circular(30),
+                                  //     )),
+                                  //     context: context,
+                                  //     builder: (ctx) {
+                                  //       return const FilterSheet();
+                                  //     });
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => const CreateIssue(),
+                                    ),
+                                  );
+                                },
+                                child: SizedBox(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      CustomText(
+                                        ' Issue',
+                                        type: FontStyle.subtitle,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              );
-                            },
-                            child: SizedBox(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                  CustomText(
-                                    ' Issue',
-                                    type: FontStyle.subtitle,
-                                    color: Colors.white,
-                                  )
-                                ],
+                              )),
+                              Container(
+                                height: 50,
+                                width: 1,
+                                color: Colors.white,
                               ),
-                            ),
-                          )),
-                          Container(
-                            height: 50,
-                            width: 1,
-                            color: Colors.white,
-                          ),
-                          Expanded(
-                              child: GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  enableDrag: true,
-                                  constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.height *
+                              Expanded(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      enableDrag: true,
+                                      constraints: BoxConstraints(
+                                          maxHeight: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.85),
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(30),
-                                    topRight: Radius.circular(30),
-                                  )),
-                                  context: context,
-                                  builder: (ctx) {
-                                    return const TypeSheet();
-                                  });
-                            },
-                            child: SizedBox(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.menu,
-                                    color: Colors.white,
-                                    size: 19,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(30),
+                                        topRight: Radius.circular(30),
+                                      )),
+                                      context: context,
+                                      builder: (ctx) {
+                                        return const TypeSheet();
+                                      });
+                                },
+                                child: SizedBox(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.menu,
+                                        color: Colors.white,
+                                        size: 19,
+                                      ),
+                                      CustomText(
+                                        ' Type',
+                                        type: FontStyle.subtitle,
+                                        color: Colors.white,
+                                      )
+                                    ],
                                   ),
-                                  CustomText(
-                                    ' Type',
-                                    type: FontStyle.subtitle,
-                                    color: Colors.white,
-                                  )
-                                ],
+                                ),
+                              )),
+                              Container(
+                                height: 50,
+                                width: 1,
+                                color: Colors.white,
                               ),
-                            ),
-                          )),
-                          Container(
-                            height: 50,
-                            width: 1,
-                            color: Colors.white,
-                          ),
-                          Expanded(
-                              child: GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                  
-                                  isScrollControlled: true,
-                                  enableDrag: true,
-                                  constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.height *
+                              Expanded(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      enableDrag: true,
+                                      constraints: BoxConstraints(
+                                          maxHeight: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.9),
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(30),
-                                    topRight: Radius.circular(30),
-                                  )),
-                                  context: context,
-                                  builder: (ctx) {
-                                    return ViewsSheet();
-                                  });
-                            },
-                            child: SizedBox(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.view_sidebar,
-                                    color: Colors.white,
-                                    size: 19,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(30),
+                                        topRight: Radius.circular(30),
+                                      )),
+                                      context: context,
+                                      builder: (ctx) {
+                                        return ViewsSheet();
+                                      });
+                                },
+                                child: SizedBox(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.view_sidebar,
+                                        color: Colors.white,
+                                        size: 19,
+                                      ),
+                                      CustomText(
+                                        ' Views',
+                                        type: FontStyle.subtitle,
+                                        color: Colors.white,
+                                      )
+                                    ],
                                   ),
-                                  CustomText(
-                                    ' Views',
-                                    type: FontStyle.subtitle,
-                                    color: Colors.white,
-                                  )
-                                ],
+                                ),
+                              )),
+                              Container(
+                                height: 50,
+                                width: 1,
+                                color: Colors.white,
                               ),
-                            ),
-                          )),
-                          Container(
-                            height: 50,
-                            width: 1,
-                            color: Colors.white,
-                          ),
-                          Expanded(
-                              child: GestureDetector(
-                            onTap: () {
-                              showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  enableDrag: true,
-                                  constraints: BoxConstraints(
-                                      maxHeight:
-                                          MediaQuery.of(context).size.height *
+                              Expanded(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      enableDrag: true,
+                                      constraints: BoxConstraints(
+                                          maxHeight: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
                                               0.85),
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(30),
-                                    topRight: Radius.circular(30),
-                                  )),
-                                  context: context,
-                                  builder: (ctx) {
-                                    return const FilterSheet();
-                                  });
-                            },
-                            child: SizedBox(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.filter_alt,
-                                    color: Colors.white,
-                                    size: 19,
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(30),
+                                        topRight: Radius.circular(30),
+                                      )),
+                                      context: context,
+                                      builder: (ctx) {
+                                        return const FilterSheet();
+                                      });
+                                },
+                                child: SizedBox(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.filter_alt,
+                                        color: Colors.white,
+                                        size: 19,
+                                      ),
+                                      CustomText(
+                                        ' Filters',
+                                        type: FontStyle.subtitle,
+                                        color: Colors.white,
+                                      )
+                                    ],
                                   ),
-                                  CustomText(
-                                    ' Filters',
-                                    type: FontStyle.subtitle,
-                                    color: Colors.white,
-                                  )
-                                ],
-                              ),
-                            ),
-                          )),
-                        ],
-                      ),
-                    )
-                  : GestureDetector(
-                      onTap: () {
-                        selected == 1
-                            ? Navigator.of(context).push(MaterialPageRoute(
-                                builder: (ctx) => const CreateCycle()))
-                            : selected == 2
+                                ),
+                              )),
+                            ],
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            selected == 1
                                 ? Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (ctx) => const CreateModule()))
-                                : selected == 3
+                                    builder: (ctx) => const CreateCycle()))
+                                : selected == 2
                                     ? Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (ctx) =>
-                                                const CreateView()))
-                                    : Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (ctx) =>
-                                                const CreatePage()));
-                      },
-                      child: Container(
-                        height: 50,
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.black,
-                        child: Row(
-                          children: [
-                            Expanded(
-                                child: SizedBox(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.add,
-                                    color: Colors.white,
+                                                const CreateModule()))
+                                    : selected == 3
+                                        ? Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (ctx) =>
+                                                    const CreateView()))
+                                        : Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (ctx) =>
+                                                    const CreatePage()));
+                          },
+                          child: Container(
+                            height: 50,
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.black,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                    child: SizedBox(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                      ),
+                                      CustomText(
+                                        selected == 1
+                                            ? ' Add Cycle'
+                                            : selected == 2
+                                                ? 'Add Module'
+                                                : selected == 3
+                                                    ? 'Add View'
+                                                    : 'Add Page',
+                                        type: FontStyle.subtitle,
+                                        color: Colors.white,
+                                      )
+                                    ],
                                   ),
-                                  CustomText(
-                                    selected == 1
-                                        ? ' Add Cycle'
-                                        : selected == 2
-                                            ? 'Add Module'
-                                            : selected == 3
-                                                ? 'Add View'
-                                                : 'Add Page',
-                                    type: FontStyle.subtitle,
-                                    color: Colors.white,
-                                  )
-                                ],
-                              ),
-                            )),
-                            Container(
-                              height: 50,
-                              width: 1,
-                              color: Colors.white,
+                                )),
+                                Container(
+                                  height: 50,
+                                  width: 1,
+                                  color: Colors.white,
+                                ),
+                                Expanded(
+                                    child: SizedBox(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.filter_alt,
+                                        color: Colors.white,
+                                      ),
+                                      CustomText(
+                                        ' Filters',
+                                        type: FontStyle.subtitle,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  ),
+                                )),
+                              ],
                             ),
-                            Expanded(
-                                child: SizedBox(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.filter_alt,
-                                    color: Colors.white,
-                                  ),
-                                  CustomText(
-                                    ' Filters',
-                                    type: FontStyle.subtitle,
-                                    color: Colors.white,
-                                  )
-                                ],
-                              ),
-                            )),
-                          ],
-                        ),
-                      ),
-                    )
+                          ),
+                        )
             ],
           ),
         ),
@@ -502,6 +509,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     var themeProvider = ref.read(ProviderList.themeProvider);
     var issueProvider = ref.read(ProviderList.issuesProvider);
     var projectProvider = ref.read(ProviderList.projectProvider);
+    log(issueProvider.issueState.name);
     if (issueProvider.issues.projectView == ProjectView.list) {
       issueProvider.isGroupBy
           ? issueProvider.priorityBoard()
@@ -514,10 +522,14 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
           issueProvider.projectViewState == AuthStateEnum.loading ||
           issueProvider.orderByState == AuthStateEnum.loading,
       widgetClass: issueProvider.statesState == AuthStateEnum.restricted
-          ? EmptyPlaceholder.joinProject(context, ref, projectProvider.currentProject['id'], ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'])
+          ? EmptyPlaceholder.joinProject(
+              context,
+              ref,
+              projectProvider.currentProject['id'],
+              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'])
           : Container(
               color: themeProvider.isDarkThemeEnabled
-                  ? darkSecondaryBackgroundColor
+                  ? const Color.fromRGBO(29, 30, 32, 1)
                   : lightSecondaryBackgroundColor,
               padding: issueProvider.issues.projectView == ProjectView.kanban
                   ? const EdgeInsets.only(top: 15, left: 15)
@@ -556,7 +568,10 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                                         state.title!,
                                                         type: FontStyle
                                                             .subheading,
-                                                        color: Colors.black,
+                                                        color: themeProvider
+                                                                .isDarkThemeEnabled
+                                                            ? Colors.white
+                                                            : Colors.black,
                                                         fontWeight:
                                                             FontWeight.w500,
                                                       ),
@@ -570,11 +585,19 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                                       ),
                                                       decoration: BoxDecoration(
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15),
-                                                          color: const Color
-                                                                  .fromRGBO(222,
-                                                              226, 230, 1)),
+                                                              BorderRadius.circular(
+                                                                  15),
+                                                          color: themeProvider
+                                                                  .isDarkThemeEnabled
+                                                              ? const Color
+                                                                      .fromRGBO(
+                                                                  39, 42, 45, 1)
+                                                              : const Color
+                                                                      .fromRGBO(
+                                                                  222,
+                                                                  226,
+                                                                  230,
+                                                                  1)),
                                                       height: 25,
                                                       width: 30,
                                                       child: CustomText(
@@ -617,7 +640,10 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                                           MediaQuery.of(context)
                                                               .size
                                                               .width,
-                                                      color: Colors.white,
+                                                      color: themeProvider
+                                                              .isDarkThemeEnabled
+                                                          ? darkBackgroundColor
+                                                          : Colors.white,
                                                       padding:
                                                           const EdgeInsets.only(
                                                               top: 15,
@@ -648,7 +674,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                               : issueProvider.initializeBoard(),
                           groupEmptyStates: !issueProvider.showEmptyStates,
                           backgroundColor: themeProvider.isDarkThemeEnabled
-                              ? darkSecondaryBackgroundColor
+                              ? const Color.fromRGBO(29, 30, 32, 1)
                               : lightSecondaryBackgroundColor,
                           listScrollConfig: ScrollConfig(
                               offset: 65,

@@ -12,6 +12,10 @@ class SearchIssueProvider with ChangeNotifier {
   List<dynamic> issues = [];
   AuthStateEnum searchIssuesState = AuthStateEnum.loading;
 
+ void clear(){
+  issues = [];
+ }
+
   Future getIssues({required String slug,required String projectId,String input = '', required bool parent}) async {
     String query = parent ? 'parent' : 'blocker_blocked_by';
     try {
