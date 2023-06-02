@@ -666,8 +666,12 @@ class IssuesProvider extends ChangeNotifier {
   Future getIssueProperties() async {
     issueState = AuthStateEnum.loading;
     log(APIs.issueProperties
-        .replaceAll("\$SLUG",
-            ref!.read(ProviderList.workspaceProvider).currentWorkspace['slug'])
+        .replaceAll(
+            "\$SLUG",
+            ref!
+                .read(ProviderList.workspaceProvider)
+                .selectedWorkspace!
+                .workspaceSlug)
         .replaceAll('\$PROJECTID',
             ref!.read(ProviderList.projectProvider).currentProject['id']));
     try {
@@ -678,7 +682,8 @@ class IssuesProvider extends ChangeNotifier {
                 "\$SLUG",
                 ref!
                     .read(ProviderList.workspaceProvider)
-                    .currentWorkspace['slug'])
+                    .selectedWorkspace!
+                    .workspaceSlug)
             .replaceAll('\$PROJECTID',
                 ref!.read(ProviderList.projectProvider).currentProject['id']),
         hasBody: false,
@@ -693,7 +698,8 @@ class IssuesProvider extends ChangeNotifier {
                     "\$SLUG",
                     ref!
                         .read(ProviderList.workspaceProvider)
-                        .currentWorkspace['slug'])
+                        .selectedWorkspace!
+                        .workspaceSlug)
                 .replaceAll(
                     '\$PROJECTID',
                     ref!
@@ -757,7 +763,8 @@ class IssuesProvider extends ChangeNotifier {
                 "\$SLUG",
                 ref!
                     .read(ProviderList.workspaceProvider)
-                    .currentWorkspace['slug'])
+                    .selectedWorkspace!
+                    .workspaceSlug)
             .replaceAll('\$PROJECTID',
                 ref!.read(ProviderList.projectProvider).currentProject['id']),
         hasBody: true,
@@ -799,7 +806,8 @@ class IssuesProvider extends ChangeNotifier {
                 "\$SLUG",
                 ref!
                     .read(ProviderList.workspaceProvider)
-                    .currentWorkspace['slug'])
+                    .selectedWorkspace!
+                    .workspaceSlug)
             .replaceAll('\$PROJECTID',
                 ref!.read(ProviderList.projectProvider).currentProject['id']),
         hasBody: true,
@@ -840,7 +848,8 @@ class IssuesProvider extends ChangeNotifier {
                 "\$SLUG",
                 ref!
                     .read(ProviderList.workspaceProvider)
-                    .currentWorkspace['slug'])
+                    .selectedWorkspace!
+                    .workspaceSlug)
             .replaceAll('\$PROJECTID',
                 ref!.read(ProviderList.projectProvider).currentProject['id']),
         hasBody: false,

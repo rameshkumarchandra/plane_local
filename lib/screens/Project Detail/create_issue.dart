@@ -28,8 +28,10 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
     var prov = ref.read(ProviderList.issuesProvider);
     if (prov.states.isEmpty) {
       prov.getStates(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          slug: ref
+              .read(ProviderList.workspaceProvider)
+              .selectedWorkspace!
+              .workspaceSlug,
           projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     }
     prov.createIssuedata['priority'] = {
@@ -226,11 +228,13 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                             Expanded(child: Container()),
                             GestureDetector(
                               onTap: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
                                 showModalBottomSheet(
                                     enableDrag: true,
                                     backgroundColor: Colors.transparent,
                                     context: context,
-                                    builder: (ctx) => SelectStates(createIssue: true));
+                                    builder: (ctx) =>
+                                        SelectStates(createIssue: true));
                               },
                               child: Row(
                                 children: [
@@ -303,11 +307,13 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                             Expanded(child: Container()),
                             GestureDetector(
                               onTap: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
                                 showModalBottomSheet(
                                     backgroundColor: Colors.transparent,
                                     context: context,
-                                    builder: (ctx) =>
-                                        SelectProjectMembers(createIssue: true,));
+                                    builder: (ctx) => SelectProjectMembers(
+                                          createIssue: true,
+                                        ));
                               },
                               child: issueProvider.createIssuedata['members'] ==
                                       null
@@ -428,11 +434,13 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                             Expanded(child: Container()),
                             GestureDetector(
                               onTap: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
                                 showModalBottomSheet(
                                     backgroundColor: Colors.transparent,
                                     context: context,
-                                    builder: (ctx) =>
-                                        SelectIssuePriority(createIssue: true,));
+                                    builder: (ctx) => SelectIssuePriority(
+                                          createIssue: true,
+                                        ));
                               },
                               child: issueProvider
                                           .createIssuedata['priority'] ==
@@ -519,6 +527,8 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                   Expanded(child: Container()),
                                   GestureDetector(
                                     onTap: () {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
                                       showModalBottomSheet(
                                           constraints: BoxConstraints(
                                             maxHeight: MediaQuery.of(context)
@@ -529,75 +539,73 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                           isScrollControlled: true,
                                           backgroundColor: Colors.transparent,
                                           context: context,
-                                          builder: (ctx) =>
-                                              SelectIssueLabels(createIssue: true,));
+                                          builder: (ctx) => SelectIssueLabels(
+                                                createIssue: true,
+                                              ));
                                     },
-                                    child: issueProvider
-                                                .createIssuedata['labels'] ==
-                                            null
-                                        ? Row(
-                                            children: [
-                                              CustomText(
-                                                'Select',
-                                                type: FontStyle.title,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Icon(
-                                                Icons.keyboard_arrow_down,
-                                                color: themeProvider
-                                                        .isDarkThemeEnabled
-                                                    ? darkSecondaryTextColor
-                                                    : lightSecondaryTextColor,
-                                              ),
-                                            ],
-                                          )
-                                        : Wrap(
-                                            children: [
-                                              Container(
-                                                alignment: Alignment.center,
-                                                // color: Colors.amber,
-                                                height: 30,
-                                                constraints:
-                                                    const BoxConstraints(
-                                                        maxWidth: 80,
-                                                        minWidth: 30),
-                                                child: Stack(
-                                                  alignment: Alignment.center,
-                                                  fit: StackFit.passthrough,
-                                                  children: (issueProvider
-                                                              .createIssuedata[
-                                                          'labels'] as List)
-                                                      .map((e) => Positioned(
-                                                            right: (issueProvider
-                                                                            .createIssuedata['labels']
-                                                                        as List)
-                                                                    .indexOf(
-                                                                        e) *
-                                                                15.0,
-                                                            child: Container(
-                                                              height: 25,
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              width: 25,
-                                                              decoration: BoxDecoration(
-                                                                  shape: BoxShape
-                                                                      .circle,
-                                                                  color: Color(
-                                                                      int.parse(
-                                                                          "FF${e['color'].toString().toUpperCase().replaceAll("#", "")}",
-                                                                          radix:
-                                                                              16)))
-                                                                
-                                                            ),
-                                                          ))
-                                                      .toList(),
-                                                ),
+                                    child:
+                                        issueProvider.createIssuedata[
+                                                    'labels'] ==
+                                                null
+                                            ? Row(
+                                                children: [
+                                                  CustomText(
+                                                    'Select',
+                                                    type: FontStyle.title,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Icon(
+                                                    Icons.keyboard_arrow_down,
+                                                    color: themeProvider
+                                                            .isDarkThemeEnabled
+                                                        ? darkSecondaryTextColor
+                                                        : lightSecondaryTextColor,
+                                                  ),
+                                                ],
                                               )
-                                            ],
-                                          ),
+                                            : Wrap(
+                                                children: [
+                                                  Container(
+                                                    alignment: Alignment.center,
+                                                    // color: Colors.amber,
+                                                    height: 30,
+                                                    constraints:
+                                                        const BoxConstraints(
+                                                            maxWidth: 80,
+                                                            minWidth: 30),
+                                                    child: Stack(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      fit: StackFit.passthrough,
+                                                      children: (issueProvider
+                                                                  .createIssuedata[
+                                                              'labels'] as List)
+                                                          .map(
+                                                              (e) => Positioned(
+                                                                    right: (issueProvider.createIssuedata['labels']
+                                                                                as List)
+                                                                            .indexOf(e) *
+                                                                        15.0,
+                                                                    child: Container(
+                                                                        height:
+                                                                            25,
+                                                                        alignment:
+                                                                            Alignment
+                                                                                .center,
+                                                                        width:
+                                                                            25,
+                                                                        decoration: BoxDecoration(
+                                                                            shape:
+                                                                                BoxShape.circle,
+                                                                            color: Color(int.parse("FF${e['color'].toString().toUpperCase().replaceAll("#", "")}", radix: 16)))),
+                                                                  ))
+                                                          .toList(),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                   )
                                 ],
                               ),
@@ -640,6 +648,8 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                   Expanded(child: Container()),
                                   GestureDetector(
                                     onTap: () async {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
                                       var date = await showDatePicker(
                                         builder: (context, child) => Theme(
                                           data: ThemeData.light().copyWith(
@@ -764,7 +774,8 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                           await issueProvider.createIssue(
                             slug: ref
                                 .read(ProviderList.workspaceProvider)
-                                .currentWorkspace["slug"],
+                                .selectedWorkspace!
+                                .workspaceSlug,
                             projID: ref
                                 .read(ProviderList.projectProvider)
                                 .currentProject["id"],
@@ -777,7 +788,7 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
             ),
           ),
         ),
-      ),    
+      ),
     );
   }
 }

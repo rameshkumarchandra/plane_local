@@ -18,7 +18,8 @@ class SelectStates extends ConsumerStatefulWidget {
   bool createIssue;
   String? issueId;
   int? index;
-  SelectStates({ this.index ,required this.createIssue, this.issueId, super.key});
+  SelectStates(
+      {this.index, required this.createIssue, this.issueId, super.key});
 
   @override
   ConsumerState<SelectStates> createState() => _SelectStatesState();
@@ -29,10 +30,30 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
   void initState() {
     if (ref.read(ProviderList.issuesProvider).states.isEmpty) {
       ref.read(ProviderList.issuesProvider).getStates(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          slug: ref
+              .read(ProviderList.workspaceProvider)
+              .selectedWorkspace!
+              .workspaceSlug,
           projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     }
+
+    selectedState = widget.createIssue
+        ? ref.read(ProviderList.issuesProvider).createIssuedata['state'] != null
+            ? ref.read(ProviderList.issuesProvider).createIssuedata['state']
+                ['id']
+            : ''
+        : ref.read(ProviderList.issuesProvider).states['state'] != null
+            ? ref.read(ProviderList.issuesProvider).states['state']['id']
+            : '';
+
+    selectedStateName = widget.createIssue
+        ? ref.read(ProviderList.issuesProvider).createIssuedata['state'] != null
+            ? ref.read(ProviderList.issuesProvider).createIssuedata['state']
+                ['name']
+            : ''
+        : ref.read(ProviderList.issuesProvider).states['state'] != null
+            ? ref.read(ProviderList.issuesProvider).states['state']['name']
+            : '';
 
     super.initState();
   }
@@ -43,7 +64,7 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
   @override
   Widget build(BuildContext context) {
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
-    var issueProvider = ref.read(ProviderList.issueProvider);
+    var issueProvider = ref.watch(ProviderList.issueProvider);
     return WillPopScope(
       onWillPop: () async {
         var prov = ref.read(ProviderList.issuesProvider);
@@ -52,8 +73,10 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
             'name': selectedStateName,
             "id": selectedState,
           };
+
+          prov.setsState();
+          // log(prov.createIssuedata.toString());
         }
-        prov.setsState();
         return true;
       },
       child: SingleChildScrollView(
@@ -77,7 +100,19 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                         type: FontStyle.heading,
                       ),
                       IconButton(
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () {
+                            var prov = ref.read(ProviderList.issuesProvider);
+                            if (selectedState.isNotEmpty) {
+                              prov.createIssuedata['state'] = {
+                                'name': selectedStateName,
+                                "id": selectedState,
+                              };
+
+                              prov.setsState();
+                              log(prov.createIssuedata.toString());
+                            }
+                            Navigator.pop(context);
+                          },
                           icon: const Icon(Icons.close))
                     ],
                   ),
@@ -102,6 +137,7 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                                       issuesProvider.states.keys.elementAt(i)]
                                   [j]['name'];
                             });
+                            issuesProvider.setsState();
                           } else {
                             setState(() {
                               issueDetailSelectedState = issuesProvider.states[
@@ -111,7 +147,8 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                             issueProvider.upDateIssue(
                                 slug: ref
                                     .read(ProviderList.workspaceProvider)
-                                    .currentWorkspace['slug'],
+                                    .selectedWorkspace!
+                                    .workspaceSlug,
                                 projID: ref
                                     .read(ProviderList.projectProvider)
                                     .currentProject['id'],
@@ -262,7 +299,11 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
             Icons.done,
             color: Color.fromRGBO(8, 171, 34, 1),
           )
-        : issueProvider.updateIssueState == AuthStateEnum.loading && issueDetailSelectedState == issuesProvider.states[issuesProvider.states.keys.elementAt(i)][j]['name']
+        : issueProvider.updateIssueState == AuthStateEnum.loading &&
+                issueDetailSelectedState ==
+                    issuesProvider
+                            .states[issuesProvider.states.keys.elementAt(i)][j]
+                        ['name']
             ? const SizedBox(
                 height: 20,
                 width: 20,

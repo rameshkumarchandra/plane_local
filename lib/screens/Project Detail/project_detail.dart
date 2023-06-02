@@ -52,23 +52,38 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     var prov = ref.read(ProviderList.issuesProvider);
     var projectProv = ref.read(ProviderList.projectProvider);
     prov.getProjectMembers(
-        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        slug: ref
+            .read(ProviderList.workspaceProvider)
+            .selectedWorkspace!
+            .workspaceSlug,
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     prov.getIssueProperties();
     prov.getProjectView();
     prov.getStates(
-        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        slug: ref
+            .read(ProviderList.workspaceProvider)
+            .selectedWorkspace!
+            .workspaceSlug,
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
 
     prov.getLabels(
-        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        slug: ref
+            .read(ProviderList.workspaceProvider)
+            .selectedWorkspace!
+            .workspaceSlug,
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
 
     prov.getIssues(
-        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        slug: ref
+            .read(ProviderList.workspaceProvider)
+            .selectedWorkspace!
+            .workspaceSlug,
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     projectProv.getProjectDetails(
-        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        slug: ref
+            .read(ProviderList.workspaceProvider)
+            .selectedWorkspace!
+            .workspaceSlug,
         projId: ref.read(ProviderList.projectProvider).currentProject['id']);
     // }
 
@@ -526,7 +541,14 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
               context,
               ref,
               projectProvider.currentProject['id'],
+<<<<<<< Updated upstream
               ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'])
+=======
+              ref
+                  .read(ProviderList.workspaceProvider)
+                  .selectedWorkspace!
+                  .workspaceSlug)
+>>>>>>> Stashed changes
           : Container(
               color: themeProvider.isDarkThemeEnabled
                   ? const Color.fromRGBO(29, 30, 32, 1)

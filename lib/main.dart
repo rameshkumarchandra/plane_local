@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/config/enums.dart';
+import 'package:plane_startup/models/workspace_model.dart';
 import 'package:plane_startup/screens/invite_co-workers.dart';
 import 'package:plane_startup/screens/on_boarding_screen.dart';
 import 'package:plane_startup/screens/setup_profile_screen.dart';
@@ -69,7 +70,8 @@ class _MyAppState extends ConsumerState<MyApp> {
           projectProv.getProjects(
               slug: workspaceProv.workspaces.where((element) {
             if (element['id'] == prov.userProfile.last_workspace_id) {
-              workspaceProv.currentWorkspace = element;
+              workspaceProv.selectedWorkspace =
+                  WorkspaceModel.fromJson(element);
               return true;
             }
             return false;

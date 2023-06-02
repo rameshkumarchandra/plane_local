@@ -27,8 +27,10 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
   void initState() {
     if (ref.read(ProviderList.issuesProvider).members.isEmpty) {
       ref.read(ProviderList.issuesProvider).getProjectMembers(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          slug: ref
+              .read(ProviderList.workspaceProvider)
+              .selectedWorkspace!
+              .workspaceSlug,
           projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     }
     selectedMembers =
@@ -83,7 +85,10 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                       IconButton(
                           onPressed: () {
                             issuesProvider.createIssuedata['members'] =
-                                selectedMembers;
+                                selectedMembers.isEmpty
+                                    ? null
+                                    : selectedMembers;
+                            issuesProvider.setsState();
                             Navigator.of(context).pop();
                           },
                           icon: const Icon(Icons.close))
@@ -105,13 +110,13 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                   if (selectedMembers[issuesProvider
                                           .members[index]['member']['id']] ==
                                       null) {
-                                    selectedMembers[issuesProvider.members[index]
-                                        ['member']['id']] = {
+                                    selectedMembers[issuesProvider
+                                        .members[index]['member']['id']] = {
                                       "name": issuesProvider.members[index]
                                               ['member']['first_name'] +
                                           " " +
-                                          issuesProvider.members[index]['member']
-                                              ['last_name'],
+                                          issuesProvider.members[index]
+                                              ['member']['last_name'],
                                       "id": issuesProvider.members[index]
                                           ['member']['id']
                                     };
@@ -129,8 +134,9 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                         issuesProvider.members[index]['member']
                                             ['id']);
                                   } else {
-                                    issueDetailSelectedMembers.add(issuesProvider
-                                        .members[index]['member']['id']);
+                                    issueDetailSelectedMembers.add(
+                                        issuesProvider.members[index]['member']
+                                            ['id']);
                                   }
                                 });
                               }
@@ -150,7 +156,8 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                     height: 30,
                                     width: 30,
                                     decoration: BoxDecoration(
-                                      color: const Color.fromRGBO(55, 65, 81, 1),
+                                      color:
+                                          const Color.fromRGBO(55, 65, 81, 1),
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     alignment: Alignment.center,
@@ -201,7 +208,8 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                 issueProvider.upDateIssue(
                                     slug: ref
                                         .read(ProviderList.workspaceProvider)
-                                        .currentWorkspace['slug'],
+                                        .selectedWorkspace!
+                                        .workspaceSlug,
                                     projID: ref
                                         .read(ProviderList.projectProvider)
                                         .currentProject['id'],
@@ -218,7 +226,8 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                           slug: ref
                                               .read(ProviderList
                                                   .workspaceProvider)
-                                              .currentWorkspace['slug'],
+                                              .selectedWorkspace!
+                                              .workspaceSlug,
                                           projID: ref
                                               .read(
                                                   ProviderList.projectProvider)
@@ -231,7 +240,8 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                               slug: ref
                                                   .read(ProviderList
                                                       .workspaceProvider)
-                                                  .currentWorkspace['slug'],
+                                                  .selectedWorkspace!
+                                                  .workspaceSlug,
                                               projID: ref
                                                   .read(ProviderList
                                                       .projectProvider)
