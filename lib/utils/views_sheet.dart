@@ -421,7 +421,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                         .map((tag) => GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  tag['selected'] = !tag['selected'];
+                                  tag['selected'] = !(tag['selected'] ?? false);
                                 });
                               },
                               child: Container(
@@ -430,11 +430,11 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                                     horizontal: 15, vertical: 7),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: tag['selected']
+                                  color: tag['selected'] ?? false
                                       ? primaryColor
                                       : Colors.transparent,
                                   border: Border.all(
-                                    color: tag['selected']
+                                    color: tag['selected'] ?? false
                                         ? Colors.transparent
                                         : const Color.fromARGB(
                                             255, 193, 192, 192),
@@ -443,18 +443,19 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                                 child: CustomText(tag['name'],
                                     type: FontStyle.title,
                                     color: themeProvider.isDarkThemeEnabled &&
-                                            tag['selected']
+                                            (tag['selected'] ?? false)
                                         ? Colors.white
                                         : themeProvider.isDarkThemeEnabled &&
-                                                !tag['selected']
+                                                !(tag['selected'] ?? false)
                                             ? Colors.white
                                             : !themeProvider
                                                         .isDarkThemeEnabled &&
-                                                    tag['selected']
+                                                    (tag['selected'] ?? false)
                                                 ? Colors.white
                                                 : !themeProvider
                                                             .isDarkThemeEnabled &&
-                                                        !tag['selected']
+                                                        !(tag['selected'] ??
+                                                            false)
                                                     ? Colors.black
                                                     : Colors.black),
                               ),
@@ -488,7 +489,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                               Issues.toGroupBY(groupBy) ||
                           issueProvider.issues.orderBY !=
                               Issues.toOrderBY(orderBy) ||
-                         issueProvider.issues.issueType !=
+                          issueProvider.issues.issueType !=
                               Issues.toIssueType(issueType)) {
                         //   print(orderBy);
                         //   print(' it is if');

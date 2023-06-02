@@ -429,8 +429,7 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
                       child: Container(
                           height: 45,
                           width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(
-                              top: 20, left: 20, right: 20, bottom: 15),
+                          margin: const EdgeInsets.only(top: 20, bottom: 15),
                           decoration: BoxDecoration(
                             color: const Color.fromRGBO(255, 12, 12, 1),
                             borderRadius: BorderRadius.circular(6),

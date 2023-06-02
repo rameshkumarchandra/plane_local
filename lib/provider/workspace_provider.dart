@@ -232,6 +232,8 @@ class WorkspaceProvider extends ChangeNotifier {
       ref!.read(ProviderList.profileProvider).userProfile.last_workspace_id =
           id;
 
+      ref!.read(ProviderList.issuesProvider).clearData();
+
       currentWorkspace = workspaces.where((element) {
         if (element['id'] ==
             ref!
