@@ -237,7 +237,7 @@ class FilterSheet extends ConsumerWidget {
 
           horizontalLine(),
 
-          Expanded(child: Container()),
+          // Expanded(child: Container()),
 
           const SizedBox(height: 260),
 

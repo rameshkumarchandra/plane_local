@@ -47,4 +47,5 @@ class APIs {
   static String issueDetails =
       '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issues/\$ISSUEID/';
   static String joinProject = '$baseApi/api/workspaces/\$SLUG/projects/join/';
+  static String searchIssues = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/search-issues/';
 }

@@ -114,6 +114,8 @@ flutter:
     - assets/svg_images/sub_issue.svg
     - assets/svg_images/sub_issues.svg
     - assets/svg_images/send_icon.svg
+    - assets/svg_images/blocking_icon.svg
+    - assets/svg_images/blocked_icon.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_rich_text.dart';
 import 'package:plane_startup/utils/custom_text.dart';
+import 'package:plane_startup/utils/issues_list_sheet.dart';
 import 'package:plane_startup/widgets/profile_circle_avatar_widget.dart';
 
 import '../provider/provider_list.dart';
@@ -213,17 +215,32 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                           const SizedBox(height: 8),
                           priorityWidget(),
                           const SizedBox(height: 8),
-                          expanded
-                          ? labelWidget()
-                          : Container(),
+                          expanded ? labelWidget() : Container(),
                           const SizedBox(height: 8),
-                          //a container containing text view all in center
+                          expanded ? dueDateWidget() : Container(),
                           expanded
-                          ? dueDateWidget()
-                          : Container(),
-                          const SizedBox(
-                            height: 8,
-                          ),
+                              ? const SizedBox(
+                                  height: 8,
+                                )
+                              : Container(),
+                          expanded ? parentWidget() : Container(),
+                          expanded
+                              ? const SizedBox(
+                                  height: 8,
+                                )
+                              : Container(),
+                          expanded ? blockingWidget() : Container(),
+                          expanded
+                              ? const SizedBox(
+                                  height: 8,
+                                )
+                              : Container(),
+                          expanded ? blockedByWidget() : Container(),
+                          expanded
+                              ? const SizedBox(
+                                  height: 8,
+                                )
+                              : Container(),
                           GestureDetector(
                             onTap: () {
                               setState(() {
@@ -516,11 +533,23 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                                                                                 size: 15,
                                                                                 color: greyColor,
                                                                               )
-                                                                            : const Icon(
-                                                                                Icons.calendar_month,
-                                                                                size: 15,
-                                                                                color: greyColor,
-                                                                              ),
+                                                                            : issueProvider.issueActivity[index]['field'] == 'blocks'
+                                                                                ? SvgPicture.asset(
+                                                                                    'assets/svg_images/blocked_icon.svg',
+                                                                                    height: 15,
+                                                                                    width: 15,
+                                                                                  )
+                                                                                : issueProvider.issueActivity[index]['field'] == 'blocking'
+                                                                                    ? SvgPicture.asset(
+                                                                                        'assets/svg_images/blocking_icon.svg',
+                                                                                        height: 15,
+                                                                                        width: 15,
+                                                                                      )
+                                                                                    : const Icon(
+                                                                                        Icons.calendar_month,
+                                                                                        size: 15,
+                                                                                        color: greyColor,
+                                                                                      ),
                                                           ),
                                                         ),
                                                         const SizedBox(
@@ -726,8 +755,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
         ),
       ),
       child: Padding(
-        padding:
-            const EdgeInsets.only(left: 10, right: 10),
+        padding: const EdgeInsets.only(left: 10, right: 10),
         child: Row(
           children: [
             //icon
@@ -740,8 +768,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
             CustomText(
               'State',
               type: FontStyle.subheading,
-              color:
-                  const Color.fromRGBO(143, 143, 147, 1),
+              color: const Color.fromRGBO(143, 143, 147, 1),
             ),
             Expanded(child: Container()),
             GestureDetector(
@@ -759,25 +786,18 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
               child: Row(
                 children: [
                   CustomText(
-                    issueProvider
-                            .issueDetails['state_detail']
-                        ['name'],
+                    issueProvider.issueDetails['state_detail']['name'],
                     type: FontStyle.title,
                   ),
-                  issuesProvider
-                              .createIssuedata['state'] ==
-                          null
+                  issuesProvider.createIssuedata['state'] == null
                       ? const SizedBox(
                           width: 5,
                         )
                       : Container(),
-                  issuesProvider
-                              .createIssuedata['state'] ==
-                          null
+                  issuesProvider.createIssuedata['state'] == null
                       ? Icon(
                           Icons.keyboard_arrow_down,
-                          color: themeProvider
-                                  .isDarkThemeEnabled
+                          color: themeProvider.isDarkThemeEnabled
                               ? darkSecondaryTextColor
                               : lightSecondaryTextColor,
                         )
@@ -790,7 +810,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
       ),
     );
   }
-  
+
   Widget assigneesWidget() {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.watch(ProviderList.issueProvider);
@@ -807,8 +827,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
         ),
       ),
       child: Padding(
-        padding:
-            const EdgeInsets.only(left: 10, right: 10),
+        padding: const EdgeInsets.only(left: 10, right: 10),
         child: Row(
           children: [
             //icon
@@ -829,8 +848,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
             CustomText(
               'Assignees',
               type: FontStyle.subheading,
-              color:
-                  const Color.fromRGBO(143, 143, 147, 1),
+              color: const Color.fromRGBO(143, 143, 147, 1),
             ),
             Expanded(child: Container()),
             GestureDetector(
@@ -838,8 +856,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                   showModalBottomSheet(
                       backgroundColor: Colors.transparent,
                       context: context,
-                      builder: (ctx) =>
-                          SelectProjectMembers(
+                      builder: (ctx) => SelectProjectMembers(
                             createIssue: false,
                             issueId: widget.isseId,
                             index: widget.index,
@@ -850,10 +867,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                     //             .createIssuedata['members'] ==
                     //         null
 
-                    issueProvider
-                            .issueDetails[
-                                'assignee_details']
-                            .isEmpty
+                    issueProvider.issueDetails['assignee_details'].isEmpty
                         ? Row(
                             children: [
                               CustomText(
@@ -865,125 +879,113 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                               ),
                               Icon(
                                 Icons.keyboard_arrow_down,
-                                color: themeProvider
-                                        .isDarkThemeEnabled
+                                color: themeProvider.isDarkThemeEnabled
                                     ? darkSecondaryTextColor
                                     : lightSecondaryTextColor,
                               ),
                             ],
                           )
                         : ProfileCircleAvatarsWidget(
-                            details: issueProvider
-                                    .issueDetails[
-                                'assignee_details'],
+                            details:
+                                issueProvider.issueDetails['assignee_details'],
                           ))
           ],
         ),
       ),
     );
   }
-  
+
   Widget priorityWidget() {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.watch(ProviderList.issueProvider);
     return Container(
-        height: 45,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: themeProvider.isDarkThemeEnabled
-              ? darkBackgroundColor
-              : lightBackgroundColor,
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(
-            color: Colors.grey.shade200,
-          ),
+      height: 45,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: themeProvider.isDarkThemeEnabled
+            ? darkBackgroundColor
+            : lightBackgroundColor,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: Colors.grey.shade200,
         ),
-        child: Padding(
-          padding:
-              const EdgeInsets.only(left: 10, right: 10),
-          child: Row(
-            children: [
-              //icon
-              const Icon(
-                //antenna signal icon
-                Icons.signal_cellular_alt_sharp,
-                color: Color.fromRGBO(143, 143, 147, 1),
-              ),
-              const SizedBox(width: 15),
-              // const Text(
-              //   'Priority',
-              //   style: TextStyle(
-              //     fontSize: 16,
-              //     fontWeight: FontWeight.w400,
-              //     color: Color.fromRGBO(143, 143, 147, 1),
-              //   ),
-              // ),
-              CustomText(
-                'Priority',
-                type: FontStyle.subheading,
-                color:
-                    const Color.fromRGBO(143, 143, 147, 1),
-              ),
-              Expanded(child: Container()),
-              GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (ctx) => SelectIssuePriority(
-                            createIssue: false,
-                            issueId: widget.isseId,
-                            index: widget.index,
-                          ));
-                },
-                child: issueProvider
-                            .issueDetails['priority'] ==
-                        null
-                    ? Row(
-                        children: [
-                          CustomText(
-                            'Select',
-                            type: FontStyle.title,
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Icon(
-                            Icons.keyboard_arrow_down,
-                            color: themeProvider
-                                    .isDarkThemeEnabled
-                                ? darkSecondaryTextColor
-                                : lightSecondaryTextColor,
-                          ),
-                        ],
-                      )
-                    : Row(
-                        children: [
-                          CustomText(
-                            issueProvider
-                                .issueDetails['priority']
-                                .toString()
-                                .replaceFirst(
-                                    issueProvider
-                                        .issueDetails[
-                                            'priority']
-                                        .toString()[0],
-                                    issueProvider
-                                        .issueDetails[
-                                            'priority'][0]
-                                        .toString()
-                                        .toUpperCase()),
-                            type: FontStyle.title,
-                          ),
-                        ],
-                      ),
-              )
-            ],
-          ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Row(
+          children: [
+            //icon
+            const Icon(
+              //antenna signal icon
+              Icons.signal_cellular_alt_sharp,
+              color: Color.fromRGBO(143, 143, 147, 1),
+            ),
+            const SizedBox(width: 15),
+            // const Text(
+            //   'Priority',
+            //   style: TextStyle(
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.w400,
+            //     color: Color.fromRGBO(143, 143, 147, 1),
+            //   ),
+            // ),
+            CustomText(
+              'Priority',
+              type: FontStyle.subheading,
+              color: const Color.fromRGBO(143, 143, 147, 1),
+            ),
+            Expanded(child: Container()),
+            GestureDetector(
+              onTap: () {
+                showModalBottomSheet(
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (ctx) => SelectIssuePriority(
+                          createIssue: false,
+                          issueId: widget.isseId,
+                          index: widget.index,
+                        ));
+              },
+              child: issueProvider.issueDetails['priority'] == null
+                  ? Row(
+                      children: [
+                        CustomText(
+                          'Select',
+                          type: FontStyle.title,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Icon(
+                          Icons.keyboard_arrow_down,
+                          color: themeProvider.isDarkThemeEnabled
+                              ? darkSecondaryTextColor
+                              : lightSecondaryTextColor,
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        CustomText(
+                          issueProvider.issueDetails['priority']
+                              .toString()
+                              .replaceFirst(
+                                  issueProvider.issueDetails['priority']
+                                      .toString()[0],
+                                  issueProvider.issueDetails['priority'][0]
+                                      .toString()
+                                      .toUpperCase()),
+                          type: FontStyle.title,
+                        ),
+                      ],
+                    ),
+            )
+          ],
         ),
-      );
+      ),
+    );
   }
-  
+
   Widget labelWidget() {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.watch(ProviderList.issueProvider);
@@ -1000,16 +1002,14 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(
-            left: 10, right: 10),
+        padding: const EdgeInsets.only(left: 10, right: 10),
         child: Row(
           children: [
             //icon
             const Icon(
               //antenna signal icon
               Icons.label,
-              color:
-                  Color.fromRGBO(143, 143, 147, 1),
+              color: Color.fromRGBO(143, 143, 147, 1),
             ),
             const SizedBox(width: 15),
             // const Text(
@@ -1023,8 +1023,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
             CustomText(
               'Label',
               type: FontStyle.subheading,
-              color: const Color.fromRGBO(
-                  143, 143, 147, 1),
+              color: const Color.fromRGBO(143, 143, 147, 1),
             ),
             Expanded(child: Container()),
             GestureDetector(
@@ -1038,19 +1037,15 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                     //           0.85,
                     // ),
                     isScrollControlled: false,
-                    backgroundColor:
-                        Colors.transparent,
+                    backgroundColor: Colors.transparent,
                     context: context,
-                    builder: (ctx) =>
-                        SelectIssueLabels(
+                    builder: (ctx) => SelectIssueLabels(
                           createIssue: false,
                           issueId: widget.isseId,
                           index: widget.index,
                         ));
               },
-              child: issueProvider
-                      .issueDetails['label_details']
-                      .isEmpty
+              child: issueProvider.issueDetails['label_details'].isEmpty
                   ? Row(
                       children: [
                         CustomText(
@@ -1062,8 +1057,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                         ),
                         Icon(
                           Icons.keyboard_arrow_down,
-                          color: themeProvider
-                                  .isDarkThemeEnabled
+                          color: themeProvider.isDarkThemeEnabled
                               ? darkSecondaryTextColor
                               : lightSecondaryTextColor,
                         ),
@@ -1072,47 +1066,32 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                   : Wrap(
                       children: [
                         Container(
-                          alignment:
-                              Alignment.center,
+                          alignment: Alignment.center,
                           // color: Colors.amber,
                           height: 30,
                           constraints:
-                              const BoxConstraints(
-                                  maxWidth: 80,
-                                  minWidth: 30),
+                              const BoxConstraints(maxWidth: 80, minWidth: 30),
                           child: Stack(
-                            alignment:
-                                Alignment.center,
-                            fit: StackFit
-                                .passthrough,
+                            alignment: Alignment.center,
+                            fit: StackFit.passthrough,
                             children: (issueProvider
-                                            .issueDetails[
-                                        'label_details']
-                                    as List)
+                                    .issueDetails['label_details'] as List)
                                 .map(
                                   (e) => Positioned(
-                                    right: (issueProvider.issueDetails['label_details']
-                                                as List)
-                                            .indexOf(
-                                                e) *
+                                    right: (issueProvider.issueDetails[
+                                                'label_details'] as List)
+                                            .indexOf(e) *
                                         15.0,
-                                    child:
-                                        Container(
+                                    child: Container(
                                       height: 25,
-                                      alignment:
-                                          Alignment
-                                              .center,
+                                      alignment: Alignment.center,
                                       width: 25,
-                                      decoration:
-                                          BoxDecoration(
-                                        shape: BoxShape
-                                            .circle,
-                                        color:
-                                            Color(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(
                                           int.parse(
                                               "FF${e['color'].toString().toUpperCase().replaceAll("#", "")}",
-                                              radix:
-                                                  16),
+                                              radix: 16),
                                         ),
                                       ),
                                     ),
@@ -1146,34 +1125,28 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.only(
-            left: 10, right: 10),
+        padding: const EdgeInsets.only(left: 10, right: 10),
         child: Row(
           children: [
             //icon
             const Icon(
               //antenna signal icon
               Icons.calendar_month,
-              color:
-                  Color.fromRGBO(143, 143, 147, 1),
+              color: Color.fromRGBO(143, 143, 147, 1),
             ),
             const SizedBox(width: 15),
             CustomText(
               'Due Date',
               type: FontStyle.subheading,
-              color: const Color.fromRGBO(
-                  143, 143, 147, 1),
+              color: const Color.fromRGBO(143, 143, 147, 1),
             ),
             Expanded(child: Container()),
             GestureDetector(
               onTap: () async {
                 var date = await showDatePicker(
-                  builder: (context, child) =>
-                      Theme(
-                    data:
-                        ThemeData.light().copyWith(
-                      colorScheme:
-                          const ColorScheme.light(
+                  builder: (context, child) => Theme(
+                    data: ThemeData.light().copyWith(
+                      colorScheme: const ColorScheme.light(
                         primary: primaryColor,
                       ),
                     ),
@@ -1193,26 +1166,20 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                   });
                   issueProvider.upDateIssue(
                       slug: ref
-                          .read(ProviderList
-                              .workspaceProvider)
+                          .read(ProviderList.workspaceProvider)
                           .currentWorkspace['slug'],
                       projID: ref
-                          .read(ProviderList
-                              .projectProvider)
+                          .read(ProviderList.projectProvider)
                           .currentProject['id'],
                       issueID: widget.isseId,
                       index: widget.index,
                       data: {
-                        "target_date":
-                            DateFormat('yyyy-MM-dd')
-                                .format(date),
+                        "target_date": DateFormat('yyyy-MM-dd').format(date),
                       },
                       ref: ref);
                 }
               },
-              child: issueProvider.issueDetails[
-                          'target_date'] ==
-                      null
+              child: issueProvider.issueDetails['target_date'] == null
                   ? Row(
                       children: [
                         CustomText(
@@ -1225,19 +1192,14 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                         ),
                         const Icon(
                           //antenna signal icon
-                          Icons
-                              .keyboard_arrow_down_outlined,
-                          color: Color.fromRGBO(
-                              143, 143, 147, 1),
+                          Icons.keyboard_arrow_down_outlined,
+                          color: Color.fromRGBO(143, 143, 147, 1),
                         ),
                       ],
                     )
                   : CustomText(
-                      DateFormat('yyyy-MM-dd')
-                          .format(DateTime.parse(
-                              issueProvider
-                                      .issueDetails[
-                                  'target_date'])),
+                      DateFormat('yyyy-MM-dd').format(DateTime.parse(
+                          issueProvider.issueDetails['target_date'])),
                       type: FontStyle.title,
                       color: Colors.black,
                     ),
@@ -1248,4 +1210,302 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
     );
   }
 
+  Widget parentWidget() {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    var issueProvider = ref.watch(ProviderList.issueProvider);
+    return Container(
+      height: 45,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: themeProvider.isDarkThemeEnabled
+            ? darkBackgroundColor
+            : lightBackgroundColor,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: Colors.grey.shade200,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: Row(
+          children: [
+            //icon
+            const Icon(
+              //antenna signal icon
+              Icons.person_outline_rounded,
+              color: Color.fromRGBO(143, 143, 147, 1),
+            ),
+            const SizedBox(width: 15),
+            CustomText(
+              'Parent',
+              type: FontStyle.subheading,
+              color: const Color.fromRGBO(143, 143, 147, 1),
+            ),
+            Expanded(child: Container()),
+            GestureDetector(
+              onTap: () async {
+                showModalBottomSheet(
+                    isScrollControlled: false,
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (ctx) => IssuesListSheet(
+                          parent: true,
+                          issueId: issueProvider.issueDetails['id'],
+                        ));
+              },
+              child: issueProvider.issueDetails['parent_detail'] == null
+                  ? Row(
+                      children: [
+                        CustomText(
+                          'Select issue',
+                          type: FontStyle.title,
+                          color: Colors.black,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        const Icon(
+                          //antenna signal icon
+                          Icons.keyboard_arrow_down_outlined,
+                          color: Color.fromRGBO(143, 143, 147, 1),
+                        ),
+                      ],
+                    )
+                  : CustomText(
+                      issueProvider.issueDetails['project_detail']
+                              ['identifier'] +
+                          '-' +
+                          issueProvider.issueDetails['parent_detail']
+                                  ['sequence_id']
+                              .toString(),
+                      type: FontStyle.title,
+                      color: Colors.black,
+                    ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget blockingWidget() {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    var issueProvider = ref.watch(ProviderList.issueProvider);
+    return Container(
+      // height: 45,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: themeProvider.isDarkThemeEnabled
+            ? darkBackgroundColor
+            : lightBackgroundColor,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: Colors.grey.shade200,
+        ),
+      ),
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              //icon
+              SvgPicture.asset(
+                'assets/svg_images/blocking_icon.svg',
+                height: 15,
+                width: 15,
+              ),
+              const SizedBox(width: 15),
+              CustomText(
+                'Blocking',
+                type: FontStyle.subheading,
+                color: const Color.fromRGBO(143, 143, 147, 1),
+              ),
+              Expanded(child: Container()),
+              GestureDetector(
+                  onTap: () async {
+                    showModalBottomSheet(
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (ctx) => IssuesListSheet(
+                              parent: false,
+                              issueId: issueProvider.issueDetails['id'],
+                            ));
+                  },
+                  child: Row(
+                    children: [
+                      CustomText(
+                        'Select issues',
+                        type: FontStyle.title,
+                        color: Colors.black,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      const Icon(
+                        //antenna signal icon
+                        Icons.keyboard_arrow_down_outlined,
+                        color: Color.fromRGBO(143, 143, 147, 1),
+                      ),
+                    ],
+                  ))
+            ],
+          ),
+          issueProvider.issueDetails['blocker_issues'].isNotEmpty &&
+                  issueProvider.issueDetails['blocker_issues'] != null
+              ? const SizedBox(
+                  height: 10,
+                )
+              : Container(),
+          issueProvider.issueDetails['blocker_issues'].isNotEmpty &&
+                  issueProvider.issueDetails['blocker_issues'] != null
+              ? Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children:
+                      (issueProvider.issueDetails['blocker_issues'] as List)
+                          .map((e) => Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: lightYellowColor),
+                                padding: const EdgeInsets.all(5),
+                                child: CustomRichText(widgets: [
+                                  TextSpan(
+                                    text: issueProvider
+                                                .issueDetails['project_detail']
+                                            ['identifier'] +
+                                        '-' +
+                                        e['blocker_issue_detail']['sequence_id']
+                                            .toString(),
+                                  ),
+                                  const WidgetSpan(
+                                      child: SizedBox(
+                                    width: 10,
+                                  )),
+                                  const WidgetSpan(
+                                      child: Icon(
+                                    Icons.close,
+                                    size: 20,
+                                    color: greyColor,
+                                  ))
+                                ]),
+                              ))
+                          .toList(),
+                )
+              : Container()
+        ],
+      ),
+    );
+  }
+
+  Widget blockedByWidget() {
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    var issueProvider = ref.watch(ProviderList.issueProvider);
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: themeProvider.isDarkThemeEnabled
+            ? darkBackgroundColor
+            : lightBackgroundColor,
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: Colors.grey.shade200,
+        ),
+      ),
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              //icon
+              SvgPicture.asset(
+                'assets/svg_images/blocked_icon.svg',
+                height: 15,
+                width: 15,
+              ),
+              const SizedBox(width: 15),
+              CustomText(
+                'Blocked by',
+                type: FontStyle.subheading,
+                color: const Color.fromRGBO(143, 143, 147, 1),
+              ),
+              Expanded(child: Container()),
+              GestureDetector(
+                onTap: () async {
+                  showModalBottomSheet(
+                      isScrollControlled: false,
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      builder: (ctx) => IssuesListSheet(
+                          parent: false,
+                          issueId: issueProvider.issueDetails['id']));
+                },
+                child: Row(
+                  children: [
+                    CustomText(
+                      'Select issues',
+                      type: FontStyle.title,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    const Icon(
+                      //antenna signal icon
+                      Icons.keyboard_arrow_down_outlined,
+                      color: Color.fromRGBO(143, 143, 147, 1),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          issueProvider.issueDetails['blocked_issues'].isNotEmpty &&
+                  issueProvider.issueDetails['blocked_issues'] != null
+              ? const SizedBox(
+                  height: 10,
+                )
+              : Container(),
+          issueProvider.issueDetails['blocked_issues'].isNotEmpty &&
+                  issueProvider.issueDetails['blocked_issues'] != null
+              ? Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children:
+                      (issueProvider.issueDetails['blocked_issues'] as List)
+                          .map((e) => Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: lightYellowColor),
+                                padding: const EdgeInsets.all(5),
+                                child: CustomRichText(widgets: [
+                                  TextSpan(
+                                    text: issueProvider
+                                                .issueDetails['project_detail']
+                                            ['identifier'] +
+                                        '-' +
+                                        e['blocked_issue_detail']['sequence_id']
+                                            .toString(),
+                                  ),
+                                  const WidgetSpan(
+                                      child: SizedBox(
+                                    width: 10,
+                                  )),
+                                  const WidgetSpan(
+                                      child: Icon(
+                                    Icons.close,
+                                    size: 20,
+                                    color: greyColor,
+                                  ))
+                                ]),
+                              ))
+                          .toList(),
+                )
+              : Container(),
+        ],
+      ),
+    );
+  }
 }

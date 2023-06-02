@@ -103,7 +103,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.watch(ProviderList.issuesProvider);
 
-    Widget _customHorizontalLine() {
+    Widget customHorizontalLine() {
       return Container(
         color: themeProvider.isDarkThemeEnabled
             ? darkThemeBorder
@@ -214,7 +214,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
             ),
           ),
 
-          _customHorizontalLine(),
+          customHorizontalLine(),
 
           //expansion tile for order by having two checkboxes last created and last updated
           CustomExpansionTile(
@@ -270,7 +270,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
             ),
           ),
 
-          _customHorizontalLine(),
+          customHorizontalLine(),
 
           //expansion tile for issue type having three checkboxes all issues, active issues and backlog issues
           CustomExpansionTile(
@@ -326,7 +326,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
             ),
           ),
 
-          _customHorizontalLine(),
+          customHorizontalLine(),
 
           CustomExpansionTile(
             title: 'Show empty state',
@@ -375,7 +375,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
             ),
           ),
 
-          _customHorizontalLine(),
+          customHorizontalLine(),
 
           Container(
             height: 20,

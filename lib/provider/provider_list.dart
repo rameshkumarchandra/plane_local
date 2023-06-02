@@ -5,6 +5,7 @@ import 'package:plane_startup/provider/file_upload_provider.dart';
 import 'package:plane_startup/provider/issue_provider.dart';
 import 'package:plane_startup/provider/profile_provider.dart';
 import 'package:plane_startup/provider/projects_provider.dart';
+import 'package:plane_startup/provider/search_issue_provider.dart';
 import 'package:plane_startup/provider/workspace_provider.dart';
 
 import 'issues_provider.dart';
@@ -29,5 +30,7 @@ class ProviderList {
       ChangeNotifierProvider<FeaturesProvider>((_) => FeaturesProvider());
   static var issueProvider=
       ChangeNotifierProvider<IssueProvider>((_) => IssueProvider());
+  static var searchIssueProvider=
+    ChangeNotifierProvider<SearchIssueProvider>((_) => SearchIssueProvider());
 }
 

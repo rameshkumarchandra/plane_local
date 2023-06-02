@@ -11,7 +11,8 @@ class SelectProjectMembers extends ConsumerStatefulWidget {
   bool createIssue;
   String? issueId;
   int? index;
-  SelectProjectMembers({ this.index  ,this.issueId,  required this.createIssue, super.key});
+  SelectProjectMembers(
+      {this.index, this.issueId, required this.createIssue, super.key});
 
   @override
   ConsumerState<SelectProjectMembers> createState() =>
@@ -32,14 +33,17 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
     }
     selectedMembers =
         ref.read(ProviderList.issuesProvider).createIssuedata['members'] ?? {};
-    if(!widget.createIssue) getIssueMembers();
+    if (!widget.createIssue) getIssueMembers();
     super.initState();
   }
 
   getIssueMembers() {
     final issueProvider = ref.read(ProviderList.issueProvider);
-    for(int i = 0; i < issueProvider.issueDetails['assignee_details'].length; i++){
-      issueDetailSelectedMembers.add(issueProvider.issueDetails['assignee_details'][i]['id']);
+    for (int i = 0;
+        i < issueProvider.issueDetails['assignee_details'].length;
+        i++) {
+      issueDetailSelectedMembers
+          .add(issueProvider.issueDetails['assignee_details'][i]['id']);
     }
   }
 
@@ -62,11 +66,12 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
               topLeft: Radius.circular(10), topRight: Radius.circular(10)),
         ),
         width: double.infinity,
+        height: height * 0.5,
         child: Stack(
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 20),
-              child: Wrap(
+              child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,134 +92,129 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                   Container(
                     height: 15,
                   ),
-                  ListView.builder(
-                      itemCount: issuesProvider.members.length,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            if (widget.createIssue) {
-                              setState(() {
-                                if (selectedMembers[issuesProvider
-                                        .members[index]['member']['id']] ==
-                                    null) {
-                                  selectedMembers[issuesProvider.members[index]
-                                      ['member']['id']] = {
-                                    "name": issuesProvider.members[index]
-                                            ['member']['first_name'] +
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: issuesProvider.members.length,
+                        // shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              if (widget.createIssue) {
+                                setState(() {
+                                  if (selectedMembers[issuesProvider
+                                          .members[index]['member']['id']] ==
+                                      null) {
+                                    selectedMembers[issuesProvider.members[index]
+                                        ['member']['id']] = {
+                                      "name": issuesProvider.members[index]
+                                              ['member']['first_name'] +
+                                          " " +
+                                          issuesProvider.members[index]['member']
+                                              ['last_name'],
+                                      "id": issuesProvider.members[index]
+                                          ['member']['id']
+                                    };
+                                  } else {
+                                    selectedMembers.remove(issuesProvider
+                                        .members[index]['member']['id']);
+                                  }
+                                });
+                              } else {
+                                setState(() {
+                                  if (issueDetailSelectedMembers.contains(
+                                      issuesProvider.members[index]['member']
+                                          ['id'])) {
+                                    issueDetailSelectedMembers.remove(
+                                        issuesProvider.members[index]['member']
+                                            ['id']);
+                                  } else {
+                                    issueDetailSelectedMembers.add(issuesProvider
+                                        .members[index]['member']['id']);
+                                  }
+                                });
+                              }
+                            },
+                            child: Container(
+                              height: 40,
+                              padding: const EdgeInsets.only(
+                                left: 5,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: Color.fromRGBO(248, 249, 250, 1),
+                              ),
+                              margin: const EdgeInsets.only(bottom: 10),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 30,
+                                    width: 30,
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromRGBO(55, 65, 81, 1),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: CustomText(
+                                      issuesProvider.members[index]['member']
+                                              ['email'][0]
+                                          .toString()
+                                          .toUpperCase(),
+                                      type: FontStyle.subheading,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 10,
+                                  ),
+                                  CustomText(
+                                    issuesProvider.members[index]['member']
+                                            ['first_name'] +
                                         " " +
                                         issuesProvider.members[index]['member']
                                             ['last_name'],
-                                    "id": issuesProvider.members[index]
-                                        ['member']['id']
-                                  };
-                                } else {
-                                  selectedMembers.remove(issuesProvider
-                                      .members[index]['member']['id']);
-                                }
-                              });
-                            } else {
-                              setState(() {
-                                if(issueDetailSelectedMembers.contains(issuesProvider.members[index]['member']['id'])){
-                                  issueDetailSelectedMembers.remove(issuesProvider.members[index]['member']['id']);
-                                }
-                                else{
-                                issueDetailSelectedMembers.add(issuesProvider
-                                    .members[index]['member']['id']);
-                                }
-                              });
-                            }
-                          },
-                          child: Container(
-                            height: 40,
-                            padding: const EdgeInsets.only(
-                              left: 5,
-                            ),
-                            decoration: const BoxDecoration(
-                              color: Color.fromRGBO(248, 249, 250, 1),
-                            ),
-                            margin: const EdgeInsets.only(bottom: 10),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: BoxDecoration(
-                                    color: const Color.fromRGBO(55, 65, 81, 1),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: CustomText(
-                                    issuesProvider.members[index]['member']
-                                            ['email'][0]
-                                        .toString()
-                                        .toUpperCase(),
                                     type: FontStyle.subheading,
-                                    color: Colors.white,
                                   ),
-                                ),
-                                Container(
-                                  width: 10,
-                                ),
-                                CustomText(
-                                  issuesProvider.members[index]['member']
-                                          ['first_name'] +
-                                      " " +
-                                      issuesProvider.members[index]['member']
-                                          ['last_name'],
-                                  type: FontStyle.subheading,
-                                ),
-                                const Spacer(),
-                                widget.createIssue ?
-                                createIsseuSelectedMembersWidget(index)
-                                : issueDetailSelectedMembersWidget(index),
-                                const SizedBox(
-                                  width: 10,
-                                )
-                              ],
+                                  const Spacer(),
+                                  widget.createIssue
+                                      ? createIsseuSelectedMembersWidget(index)
+                                      : issueDetailSelectedMembersWidget(index),
+                                  const SizedBox(
+                                    width: 10,
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      }),
+                          );
+                        }),
+                  ),
                   Container(
                     height: 15,
                   ),
-                  !widget.createIssue ?
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor),
-                        onPressed: () {
-                          issueProvider.upDateIssue(
-                                slug: ref
-                                    .read(ProviderList.workspaceProvider)
-                                    .currentWorkspace['slug'],
-                                projID: ref
-                                    .read(ProviderList.projectProvider)
-                                    .currentProject['id'],
-                                issueID: widget.issueId!,
-                                index: widget.index!,
-                                ref: ref,
-                                data: {
-                                  "assignees_list": issueDetailSelectedMembers
-                                }).then((value) {
-                              ref
-                                  .read(ProviderList.issueProvider)
-                                  .getIssueDetails(
-                                      slug: ref
-                                          .read(ProviderList.workspaceProvider)
-                                          .currentWorkspace['slug'],
-                                      projID: ref
-                                          .read(ProviderList.projectProvider)
-                                          .currentProject['id'],
-                                      issueID: widget.issueId!)
-                                  .then(
-                                    (value) => ref
-                                        .read(ProviderList.issueProvider)
-                                        .getIssueActivity(
+                  !widget.createIssue
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: primaryColor),
+                              onPressed: () {
+                                issueProvider.upDateIssue(
+                                    slug: ref
+                                        .read(ProviderList.workspaceProvider)
+                                        .currentWorkspace['slug'],
+                                    projID: ref
+                                        .read(ProviderList.projectProvider)
+                                        .currentProject['id'],
+                                    issueID: widget.issueId!,
+                                    index: widget.index!,
+                                    ref: ref,
+                                    data: {
+                                      "assignees_list":
+                                          issueDetailSelectedMembers
+                                    }).then((value) {
+                                  ref
+                                      .read(ProviderList.issueProvider)
+                                      .getIssueDetails(
                                           slug: ref
                                               .read(ProviderList
                                                   .workspaceProvider)
@@ -223,20 +223,32 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                               .read(
                                                   ProviderList.projectProvider)
                                               .currentProject['id'],
-                                          issueID: widget.issueId!,
-                                        ),
-                                  );
-                            });
-                        },
-                        child: CustomText(
-                          'Add',
-                          type: FontStyle.buttonText,
-                        ),
-                      ),
-                    ],
-                  )
-                  
-                  : Container()
+                                          issueID: widget.issueId!)
+                                      .then(
+                                        (value) => ref
+                                            .read(ProviderList.issueProvider)
+                                            .getIssueActivity(
+                                              slug: ref
+                                                  .read(ProviderList
+                                                      .workspaceProvider)
+                                                  .currentWorkspace['slug'],
+                                              projID: ref
+                                                  .read(ProviderList
+                                                      .projectProvider)
+                                                  .currentProject['id'],
+                                              issueID: widget.issueId!,
+                                            ),
+                                      );
+                                });
+                              },
+                              child: CustomText(
+                                'Add',
+                                type: FontStyle.buttonText,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Container()
                 ],
               ),
             ),
@@ -270,24 +282,22 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
 
   Widget createIsseuSelectedMembersWidget(int idx) {
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
-    return selectedMembers[issuesProvider.members[idx]
-            ['member']['id']] !=
-        null
-    ? const Icon(
-        Icons.done,
-        color: Color.fromRGBO(8, 171, 34, 1),
-      )
-    : const SizedBox();
+    return selectedMembers[issuesProvider.members[idx]['member']['id']] != null
+        ? const Icon(
+            Icons.done,
+            color: Color.fromRGBO(8, 171, 34, 1),
+          )
+        : const SizedBox();
   }
 
   Widget issueDetailSelectedMembersWidget(int idx) {
     var issuesProvider = ref.read(ProviderList.issuesProvider);
-    return issueDetailSelectedMembers.contains(issuesProvider.members[idx]['member']['id'])
-    ? const Icon(
-        Icons.done,
-        color: Color.fromRGBO(8, 171, 34, 1),
-      )
-    : const SizedBox();
+    return issueDetailSelectedMembers
+            .contains(issuesProvider.members[idx]['member']['id'])
+        ? const Icon(
+            Icons.done,
+            color: Color.fromRGBO(8, 171, 34, 1),
+          )
+        : const SizedBox();
   }
-
 }

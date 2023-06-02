@@ -8,6 +8,7 @@ const primaryColor = Color.fromRGBO(63, 118, 255, 1);
 const primaryLightColor = Color.fromRGBO(63, 118, 255, 0.1);
 const greyColor = Color.fromRGBO(136, 136, 136, 1);
 const lightGreeyColor = Color.fromRGBO(238, 238, 238, 1);
+const lightYellowColor = Color.fromRGBO(252, 190, 29, 0.16);
 
 const lightPrimaryTextColor = Colors.black;
 const lightSecondaryTextColor = Color.fromARGB(255, 97, 97, 97);

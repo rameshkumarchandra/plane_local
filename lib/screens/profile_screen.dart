@@ -244,6 +244,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 'Are you sure you want to logout from your account?',
                 type: FontStyle.subheading,
                 textAlign: TextAlign.left,
+                maxLines: 4,
               ),
               const Spacer(),
               Button(
