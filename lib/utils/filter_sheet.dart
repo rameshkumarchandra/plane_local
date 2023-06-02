@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/utils/button.dart';
 import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_expansionTile.dart';
 
 import '../provider/provider_list.dart';
 import 'custom_text.dart';
@@ -74,32 +75,32 @@ class FilterSheet extends ConsumerWidget {
       );
     }
 
-    Widget customExpansionItem({required String title, required Widget child}) {
-      return ExpansionTile(
-        expandedAlignment: Alignment.centerLeft,
-        tilePadding: const EdgeInsets.all(0),
-        childrenPadding: EdgeInsets.only(left: 18),
-        title: Row(
-          children: [
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 15,
-              color: Color.fromRGBO(65, 65, 65, 1),
-            ),
-            const SizedBox(width: 10),
-            CustomText(
-              title,
-              type: FontStyle.subheading,
-            ),
-          ],
-        ),
-        trailing: const SizedBox.shrink(),
-        children: [child],
-      );
-    }
+    // Widget customExpansionItem({required String title, required Widget child}) {
+    //   return ExpansionTile(
+    //     expandedAlignment: Alignment.centerLeft,
+    //     tilePadding: const EdgeInsets.all(0),
+    //     childrenPadding: EdgeInsets.only(left: 18),
+    //     title: Row(
+    //       children: [
+    //         const Icon(
+    //           Icons.arrow_forward_ios,
+    //           size: 15,
+    //           color: Color.fromRGBO(65, 65, 65, 1),
+    //         ),
+    //         const SizedBox(width: 10),
+    //         CustomText(
+    //           title,
+    //           type: FontStyle.subheading,
+    //         ),
+    //       ],
+    //     ),
+    //     trailing: const SizedBox.shrink(),
+    //     children: [child],
+    //   );
+    // }
 
     return Container(
-      padding: const EdgeInsets.only(top: 23, left: 23, right: 23),
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
       // color: themeProvider.isDarkThemeEnabled
       //     ? darkSecondaryBackgroundColor
       //     : lightSecondaryBackgroundColor,
@@ -127,7 +128,7 @@ class FilterSheet extends ConsumerWidget {
 
           const SizedBox(height: 10),
 
-          customExpansionItem(
+          CustomExpansionTile(
             title: 'Priority',
             child: Wrap(
               children: [
@@ -147,7 +148,7 @@ class FilterSheet extends ConsumerWidget {
 
           horizontalLine(),
 
-          customExpansionItem(
+          CustomExpansionTile(
             title: 'State',
             child: Wrap(
               children: [
@@ -167,7 +168,7 @@ class FilterSheet extends ConsumerWidget {
 
           horizontalLine(),
 
-          customExpansionItem(
+          CustomExpansionTile(
             title: 'Assignees',
             child: Wrap(
               children: [
@@ -192,7 +193,7 @@ class FilterSheet extends ConsumerWidget {
 
           horizontalLine(),
 
-          customExpansionItem(
+          CustomExpansionTile(
             title: 'Created by',
             child: Wrap(
               children: [
@@ -217,7 +218,7 @@ class FilterSheet extends ConsumerWidget {
 
           horizontalLine(),
 
-          customExpansionItem(
+          CustomExpansionTile(
             title: 'Labels',
             child: Wrap(
               children: [
