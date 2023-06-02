@@ -139,8 +139,16 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                     ? Container()
                                     : ListTile(
                                         onTap: () {
+                                          if (projectProvider.currentProject !=
+                                              projectProvider.projects[index]) {
+                                            ref
+                                                .read(
+                                                    ProviderList.issuesProvider)
+                                                .clearData();
+                                          }
                                           projectProvider.currentProject =
                                               projectProvider.projects[index];
+
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(

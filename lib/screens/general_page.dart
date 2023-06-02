@@ -102,11 +102,13 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                       child: Center(
                         child: selectedEmoji ??
                             CustomText(
-                              int.tryParse(projectProvider.projectDetailModel!.emoji!) != null ?
-                              String.fromCharCode(int.parse(
-                                  projectProvider.projectDetailModel!.emoji!)
-                              )
-                              : '🚀',
+                              int.tryParse(projectProvider
+                                          .projectDetailModel!.emoji!) !=
+                                      null
+                                  ? String.fromCharCode(int.parse(
+                                      projectProvider
+                                          .projectDetailModel!.emoji!))
+                                  : '🚀',
                             ),
                       ),
                     ),
@@ -302,15 +304,14 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                       child: Container(
                           height: 45,
                           width: MediaQuery.of(context).size.width,
-                          margin: const EdgeInsets.only(
-                              top: 20, left: 20, right: 20, bottom: 15),
+                          margin: const EdgeInsets.only(top: 20, bottom: 15),
                           decoration: BoxDecoration(
                             color: const Color.fromRGBO(255, 12, 12, 1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Center(
                               child: CustomText(
-                            'Delete Workspace',
+                            'Delete Project',
                             color: Colors.white,
                             type: FontStyle.buttonText,
                           ))),

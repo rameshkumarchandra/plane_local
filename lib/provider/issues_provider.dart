@@ -67,6 +67,9 @@ class IssuesProvider extends ChangeNotifier {
   void clearData() {
     isGroupBy = false;
     groupBy_response = {};
+    issues.groupBY = GroupBY.state;
+    issues.orderBY = OrderBY.manual;
+    issues.issueType = IssueType.all;
     notifyListeners();
   }
 
@@ -157,10 +160,9 @@ class IssuesProvider extends ChangeNotifier {
       //  log(issues.groupBY.toString());
       element.leading = issues.groupBY == GroupBY.priority
           ? element.title == 'Urgent'
-              ?  Icon(
+              ? Icon(
                   Icons.error_outline,
                   size: 18,
-                  
                 )
               : element.title == 'High'
                   ? const Icon(
@@ -277,7 +279,6 @@ class IssuesProvider extends ChangeNotifier {
         issues.displayProperties.linkCount ||
         issues.displayProperties.attachmentCount;
   }
-  
 
   List<BoardListsData> initializeBoard({bool list = false}) {
     var themeProvider = ref!.read(ProviderList.themeProvider);
@@ -354,10 +355,9 @@ class IssuesProvider extends ChangeNotifier {
               ),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color:  themeProvider
-                                                            .isDarkThemeEnabled
-                                                        ? const Color.fromRGBO(
-                                                            39, 42, 45, 1):const Color.fromRGBO(222, 226, 230, 1)),
+                  color: themeProvider.isDarkThemeEnabled
+                      ? const Color.fromRGBO(39, 42, 45, 1)
+                      : const Color.fromRGBO(222, 226, 230, 1)),
               height: 25,
               width: 35,
               child: CustomText(
@@ -389,12 +389,15 @@ class IssuesProvider extends ChangeNotifier {
   Future getLabels({required String slug, required String projID}) async {
     labelState = AuthStateEnum.loading;
     // notifyListeners();
+
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
-        url: APIs.issueLabels
-            .replaceAll("\$SLUG", slug)
-            .replaceAll('\$PROJECTID', projID),
+        // url: APIs.issueLabels
+        //     .replaceAll("\$SLUG", slug)
+        //     .replaceAll('\$PROJECTID', projID),
+        url:
+            'https://boarding.plane.so/api/workspaces/$slug/projects/$projID/issue-labels/',
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
@@ -403,6 +406,7 @@ class IssuesProvider extends ChangeNotifier {
       labelState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
+      log('Error in getLabels  ${e.message}');
       log(e.error.toString());
       labelState = AuthStateEnum.error;
       notifyListeners();
@@ -895,9 +899,7 @@ class IssuesProvider extends ChangeNotifier {
       notifyListeners();
       var response = await DioConfig().dioServe(
           hasAuth: true,
-          url: APIs.joinProject.replaceAll(
-              "\$SLUG",
-              slug!),
+          url: APIs.joinProject.replaceAll("\$SLUG", slug!),
           hasBody: true,
           httpMethod: HttpMethod.post,
           data: {

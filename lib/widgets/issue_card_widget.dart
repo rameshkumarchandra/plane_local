@@ -222,6 +222,9 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
                             width: 0,
                           ),
                     (issueProvider.issues.displayProperties.label == true &&
+                            issueProvider.issuesResponse[widget.cardIndex]
+                                    ['label_details'] !=
+                                null &&
                             issueProvider
                                 .issuesResponse[widget.cardIndex]
                                     ['label_details']
@@ -285,10 +288,13 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
                             width: 0,
                           ),
                     issueProvider.issues.displayProperties.assignee == true
-                        ? issueProvider
-                                .issuesResponse[widget.cardIndex]
-                                    ['assignee_details']
-                                .isNotEmpty
+                        ? (issueProvider.issuesResponse[widget.cardIndex]
+                                        ['assignee_details'] !=
+                                    null &&
+                                issueProvider
+                                    .issuesResponse[widget.cardIndex]
+                                        ['assignee_details']
+                                    .isNotEmpty)
                             ? SizedBox(
                                 height: 30,
                                 child: Container(
@@ -582,7 +588,7 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
             child: Container(
               margin: const EdgeInsets.only(right: 12),
               //color: Colors.amber,
-           
+
               child: CustomText(
                 issueProvider.issuesResponse[widget.cardIndex]['name'],
                 type: FontStyle.title,
