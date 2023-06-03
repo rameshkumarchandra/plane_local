@@ -745,7 +745,8 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                   issueProvider.orderByIssues(
                     slug: ref
                         .read(ProviderList.workspaceProvider)
-                        .currentWorkspace["slug"],
+                        .selectedWorkspace!
+                        .workspaceSlug,
                     projID: ref
                         .read(ProviderList.projectProvider)
                         .currentProject["id"],

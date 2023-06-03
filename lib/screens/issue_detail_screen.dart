@@ -49,13 +49,17 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
       var issueProvider = ref.watch(ProviderList.issueProvider);
       issueProvider.clearData();
       await ref.read(ProviderList.issueProvider).getIssueDetails(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          slug: ref
+              .read(ProviderList.workspaceProvider)
+              .selectedWorkspace!
+              .workspaceSlug,
           projID: ref.read(ProviderList.projectProvider).currentProject['id'],
           issueID: widget.isseId);
       await ref.read(ProviderList.issueProvider).getIssueActivity(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          slug: ref
+              .read(ProviderList.workspaceProvider)
+              .selectedWorkspace!
+              .workspaceSlug,
           projID: ref.read(ProviderList.projectProvider).currentProject['id'],
           issueID: widget.isseId);
       title.text = issueProvider.issueDetails['name'];
@@ -1167,7 +1171,8 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                   issueProvider.upDateIssue(
                       slug: ref
                           .read(ProviderList.workspaceProvider)
-                          .currentWorkspace['slug'],
+                          .selectedWorkspace!
+                          .workspaceSlug,
                       projID: ref
                           .read(ProviderList.projectProvider)
                           .currentProject['id'],

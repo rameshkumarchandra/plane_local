@@ -13,7 +13,8 @@ class SelectIssueLabels extends ConsumerStatefulWidget {
   bool createIssue;
   String? issueId;
   int? index;
-  SelectIssueLabels({this.index,  this.issueId ,required this.createIssue,  super.key});
+  SelectIssueLabels(
+      {this.index, this.issueId, required this.createIssue, super.key});
 
   @override
   ConsumerState<SelectIssueLabels> createState() => _SelectIssueLabelsState();
@@ -47,23 +48,29 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
   @override
   void initState() {
     ref.read(ProviderList.issuesProvider).getLabels(
-        slug: ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+        slug: ref
+            .read(ProviderList.workspaceProvider)
+            .selectedWorkspace!
+            .workspaceSlug,
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     colorController.text = '#BC009E';
-  
-    selectedLabels.addAll((ref
-            .read(ProviderList.issuesProvider)
-            .createIssuedata['labels']??[] as List)
-        .map((e) => e['index'])
-        .toList());
-    if(!widget.createIssue) getIssueLabels();
+
+    selectedLabels.addAll(
+        (ref.read(ProviderList.issuesProvider).createIssuedata['labels'] ??
+                [] as List)
+            .map((e) => e['index'])
+            .toList());
+    if (!widget.createIssue) getIssueLabels();
     super.initState();
   }
 
   getIssueLabels() {
     final issueProvider = ref.read(ProviderList.issueProvider);
-    for(int i = 0; i < issueProvider.issueDetails['label_details'].length; i++){
-      issueDetailsLabels.add(issueProvider.issueDetails['label_details'][i]['id']);
+    for (int i = 0;
+        i < issueProvider.issueDetails['label_details'].length;
+        i++) {
+      issueDetailsLabels
+          .add(issueProvider.issueDetails['label_details'][i]['id']);
     }
   }
 
@@ -122,20 +129,21 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            if(widget.createIssue){
+                            if (widget.createIssue) {
                               if (selectedLabels.contains(index)) {
                                 selectedLabels.remove(index);
                               } else {
                                 selectedLabels.add(index);
                               }
-                            }
-                            else {
+                            } else {
                               setState(() {
-                                if(issueDetailsLabels.contains(issuesProvider.labels[index]['id'])){
-                                  issueDetailsLabels.remove(issuesProvider.labels[index]['id']);
-                                }
-                                else {
-                                  issueDetailsLabels.add(issuesProvider.labels[index]['id']);
+                                if (issueDetailsLabels.contains(
+                                    issuesProvider.labels[index]['id'])) {
+                                  issueDetailsLabels.remove(
+                                      issuesProvider.labels[index]['id']);
+                                } else {
+                                  issueDetailsLabels
+                                      .add(issuesProvider.labels[index]['id']);
                                 }
                               });
                             }
@@ -178,9 +186,9 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                                 type: FontStyle.subheading,
                               ),
                               const Spacer(),
-                              widget.createIssue ?
-                              createIssueSelectedIconsWidget(index)
-                              : issueDetailSelectedIconsWidget(index),
+                              widget.createIssue
+                                  ? createIssueSelectedIconsWidget(index)
+                                  : issueDetailSelectedIconsWidget(index),
                               const SizedBox(
                                 width: 10,
                               )
@@ -259,7 +267,8 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                                   await issuesProvider.createLabels(
                                       slug: ref
                                           .read(ProviderList.workspaceProvider)
-                                          .currentWorkspace['slug'],
+                                          .selectedWorkspace!
+                                          .workspaceSlug,
                                       projID: ref
                                           .read(ProviderList.projectProvider)
                                           .currentProject['id'],
@@ -379,91 +388,94 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                         ),
                       )
                     : Container(),
-
-                widget.createIssue ?
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      createNew = true;
-                    });
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 5, top: 15),
-                    child: Row(
-                      children: [
-                        const SizedBox(
-                            height: 25,
-                            width: 25,
-                            // decoration: BoxDecoration(
-                            //   color: Colors.grey,
-                            //   borderRadius: BorderRadius.circular(5),
-                            // ),
-                            child: Icon(Icons.add)),
-                        Container(
-                          width: 10,
-                        ),
-                        CustomText(
-                          'Create New Label',
-                          type: FontStyle.subheading,
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: primaryColor),
-                        onPressed: () {
-                          issueProvider.upDateIssue(
-                                slug: ref
-                                    .read(ProviderList.workspaceProvider)
-                                    .currentWorkspace['slug'],
-                                    index: widget.index!,
-                                    ref: ref,
-                                projID: ref
-                                    .read(ProviderList.projectProvider)
-                                    .currentProject['id'],
-                                issueID: widget.issueId!,
-                                data: {
-                                  "labels_list": issueDetailsLabels
-                                }).then((value) {
-                              ref
-                                  .read(ProviderList.issueProvider)
-                                  .getIssueDetails(
-                                      slug: ref
-                                          .read(ProviderList.workspaceProvider)
-                                          .currentWorkspace['slug'],
-                                      projID: ref
-                                          .read(ProviderList.projectProvider)
-                                          .currentProject['id'],
-                                      issueID: widget.issueId!)
-                                  .then(
-                                    (value) => ref
-                                        .read(ProviderList.issueProvider)
-                                        .getIssueActivity(
-                                          slug: ref
-                                              .read(ProviderList
-                                                  .workspaceProvider)
-                                              .currentWorkspace['slug'],
-                                          projID: ref
-                                              .read(
-                                                  ProviderList.projectProvider)
-                                              .currentProject['id'],
-                                          issueID: widget.issueId!,
-                                        ),
-                                  );
-                            });
+                widget.createIssue
+                    ? GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            createNew = true;
+                          });
                         },
-                        child: CustomText(
-                          'Add',
-                          type: FontStyle.buttonText,
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 5, top: 15),
+                          child: Row(
+                            children: [
+                              const SizedBox(
+                                  height: 25,
+                                  width: 25,
+                                  // decoration: BoxDecoration(
+                                  //   color: Colors.grey,
+                                  //   borderRadius: BorderRadius.circular(5),
+                                  // ),
+                                  child: Icon(Icons.add)),
+                              Container(
+                                width: 10,
+                              ),
+                              CustomText(
+                                'Create New Label',
+                                type: FontStyle.subheading,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
-                  )
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: primaryColor),
+                            onPressed: () {
+                              issueProvider.upDateIssue(
+                                  slug: ref
+                                      .read(ProviderList.workspaceProvider)
+                                      .selectedWorkspace!
+                                      .workspaceSlug,
+                                  index: widget.index!,
+                                  ref: ref,
+                                  projID: ref
+                                      .read(ProviderList.projectProvider)
+                                      .currentProject['id'],
+                                  issueID: widget.issueId!,
+                                  data: {
+                                    "labels_list": issueDetailsLabels
+                                  }).then((value) {
+                                ref
+                                    .read(ProviderList.issueProvider)
+                                    .getIssueDetails(
+                                        slug: ref
+                                            .read(
+                                                ProviderList.workspaceProvider)
+                                            .selectedWorkspace!
+                                            .workspaceSlug,
+                                        projID: ref
+                                            .read(ProviderList.projectProvider)
+                                            .currentProject['id'],
+                                        issueID: widget.issueId!)
+                                    .then(
+                                      (value) => ref
+                                          .read(ProviderList.issueProvider)
+                                          .getIssueActivity(
+                                            slug: ref
+                                                .read(ProviderList
+                                                    .workspaceProvider)
+                                                .selectedWorkspace!
+                                                .workspaceSlug,
+                                            projID: ref
+                                                .read(ProviderList
+                                                    .projectProvider)
+                                                .currentProject['id'],
+                                            issueID: widget.issueId!,
+                                          ),
+                                    );
+                              });
+                            },
+                            child: CustomText(
+                              'Add',
+                              type: FontStyle.buttonText,
+                            ),
+                          ),
+                        ],
+                      )
               ],
             ),
             issuesProvider.labelState == AuthStateEnum.loading
@@ -499,21 +511,20 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
 
   Widget createIssueSelectedIconsWidget(int idx) {
     return selectedLabels.contains(idx)
-    ? const Icon(
-        Icons.done,
-        color: Color.fromRGBO(8, 171, 34, 1),
-      )
-    : const SizedBox();
+        ? const Icon(
+            Icons.done,
+            color: Color.fromRGBO(8, 171, 34, 1),
+          )
+        : const SizedBox();
   }
 
   Widget issueDetailSelectedIconsWidget(int idx) {
     final issuesProvider = ref.watch(ProviderList.issuesProvider);
     return issueDetailsLabels.contains(issuesProvider.labels[idx]['id'])
-    ? const Icon(
-        Icons.done,
-        color: Color.fromRGBO(8, 171, 34, 1),
-      )
-    : const SizedBox();
+        ? const Icon(
+            Icons.done,
+            color: Color.fromRGBO(8, 171, 34, 1),
+          )
+        : const SizedBox();
   }
-
 }

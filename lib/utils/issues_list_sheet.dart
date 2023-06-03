@@ -21,8 +21,10 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
     super.initState();
     ref.read(ProviderList.searchIssueProvider).setStateToLoading();
     ref.read(ProviderList.searchIssueProvider).getIssues(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          slug: ref
+              .read(ProviderList.workspaceProvider)
+              .selectedWorkspace!
+              .workspaceSlug,
           projectId:
               ref.read(ProviderList.projectProvider).currentProject['id'],
           parent: widget.parent,
@@ -72,7 +74,8 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                   onChanged: (value) => searchIssueProviderRead.getIssues(
                       slug: ref
                           .read(ProviderList.workspaceProvider)
-                          .currentWorkspace['slug'],
+                          .selectedWorkspace!
+                          .workspaceSlug,
                       projectId: ref
                           .read(ProviderList.projectProvider)
                           .currentProject['id'],
@@ -93,7 +96,8 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                               issueProvider.upDateIssue(
                                 slug: ref
                                     .read(ProviderList.workspaceProvider)
-                                    .currentWorkspace['slug'],
+                                    .selectedWorkspace!
+                                    .workspaceSlug,
                                 projID: ref
                                     .read(ProviderList.projectProvider)
                                     .currentProject['id'],
