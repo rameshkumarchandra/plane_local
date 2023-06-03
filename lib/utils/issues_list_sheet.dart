@@ -28,6 +28,7 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
           projectId:
               ref.read(ProviderList.projectProvider).currentProject['id'],
           parent: widget.parent,
+          issueId: widget.issueId
         );
   }
 
@@ -80,7 +81,9 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                           .read(ProviderList.projectProvider)
                           .currentProject['id'],
                       input: value,
-                      parent: widget.parent),
+                      parent: widget.parent,
+                      issueId: widget.issueId
+                    ),
                 ),
                 const SizedBox(
                   height: 20,

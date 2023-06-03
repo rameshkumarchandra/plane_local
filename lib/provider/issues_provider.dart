@@ -61,6 +61,15 @@ class IssuesProvider extends ChangeNotifier {
   bool isGroupBy = false;
   var shrinkStates = [];
 
+  String orderBy = '';
+  String groupBy = '';
+  String issueType = '';
+  List filterPriorities = [];
+  List filterStates = [];
+  List filterAssignes = [];
+  List filterCreatedBy = [];
+  List filterLabels = [];
+
   void clear() {
     issueView = {};
     showEmptyStates = true;
@@ -91,6 +100,14 @@ class IssuesProvider extends ChangeNotifier {
     groupBy_response = {};
     isGroupBy = false;
     shrinkStates = [];
+    orderBy = '';
+    groupBy = '';
+    issueType = '';
+    filterPriorities = [];
+    filterStates = [];
+    filterAssignes = [];
+    filterCreatedBy = [];
+    filterLabels = [];
   }
 
   void setsState() {
@@ -460,20 +477,31 @@ class IssuesProvider extends ChangeNotifier {
     }
   }
 
-  Future createLabels(
+  Future issueLabels(
       {required String slug,
       required String projID,
-      required dynamic data}) async {
+      required dynamic data,
+      CRUD? method,
+      String? labelId,
+      }) async {
     labelState = AuthStateEnum.loading;
     notifyListeners();
+    String url = 
+    method == CRUD.update ?
+    '${APIs.issueLabels.replaceAll("\$SLUG", slug).replaceAll('\$PROJECTID', projID)}$labelId/' :
+    APIs.issueLabels.replaceAll("\$SLUG", slug).replaceAll('\$PROJECTID', projID);
+
+    print(url);
+    print(labelId);
     try {
       var response = await DioConfig().dioServe(
           hasAuth: true,
-          url: APIs.issueLabels
-              .replaceAll("\$SLUG", slug)
-              .replaceAll('\$PROJECTID', projID),
+          url: url,
           hasBody: true,
-          httpMethod: HttpMethod.post,
+          httpMethod: 
+          method == CRUD.update ?
+          HttpMethod.patch :
+          HttpMethod.post,
           data: data);
       //   log(response.data.toString());
       await getLabels(slug: slug, projID: projID);
@@ -870,47 +898,97 @@ class IssuesProvider extends ChangeNotifier {
     }
   }
 
-  //08d59d96-9dfb-40e5-aa30-ecc66319450f
-
   Future orderByIssues({
     required String slug,
     required String projID,
-    required String orderBY,
-    required String groupBY,
-    required String type,
+    // required String orderBY,
+    // required String groupBY,
+    // required String type,
   }) async {
     orderByState = AuthStateEnum.loading;
     notifyListeners();
 
-    if (orderBY == '') {
-      orderBY = '-created_at';
+    if (orderBy == '') {
+      orderBy = '-created_at';
     }
-    if (groupBY == '') {
-      groupBY = 'state';
+    if (groupBy == '') {
+      groupBy = 'state';
     }
-    if (type == '') {
-      type = 'all';
+    if (issueType == '') {
+      issueType = 'all';
     }
-    issues.groupBY = Issues.toGroupBY(groupBY);
-    issues.orderBY = Issues.toOrderBY(orderBY);
-    issues.issueType = Issues.toIssueType(type);
+    issues.groupBY = Issues.toGroupBY(groupBy);
+    issues.orderBY = Issues.toOrderBY(orderBy);
+    issues.issueType = Issues.toIssueType(issueType);
     if (issues.groupBY == GroupBY.labels) {
       getLabels(slug: slug, projID: projID);
     } else if (issues.groupBY == GroupBY.createdBY) {
       getProjectMembers(slug: slug, projID: projID);
     }
-    var url = (type != 'all')
-        ? APIs.orderByGroupByTypeIssues
+
+    String url;
+
+    if(issueType != 'all'){
+      print('======IF=====');
+      url = APIs.orderByGroupByTypeIssues
             .replaceAll("\$SLUG", slug)
             .replaceAll('\$PROJECTID', projID)
-            .replaceAll('\$ORDERBY', orderBY)
-            .replaceAll('\$GROUPBY', groupBY)
-            .replaceAll('\$TYPE', type)
-        : APIs.orderByGroupByIssues
+            .replaceAll('\$ORDERBY', orderBy)
+            .replaceAll('\$GROUPBY', groupBy)
+            .replaceAll('\$TYPE', issueType);
+      if(filterPriorities.isNotEmpty) {
+        url = '$url&priority=${filterPriorities.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+      }
+      if(filterStates.isNotEmpty) {
+        url = '$url&state=${filterStates.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+        print( url);
+
+      }
+      if(filterAssignes.isNotEmpty) {
+        url = '$url&assignees=${filterAssignes.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      }
+      if(filterCreatedBy.isNotEmpty) {
+        url = '$url&created_by=${filterCreatedBy.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+      }
+      if(filterLabels.isNotEmpty) {
+        url = '$url&labels=${filterLabels.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      }
+      else {
+        url = url;
+      }
+    }
+    else {
+      print('ELSE');
+      url = APIs.orderByGroupByIssues
             .replaceAll("\$SLUG", slug)
             .replaceAll('\$PROJECTID', projID)
-            .replaceAll('\$ORDERBY', orderBY)
-            .replaceAll('\$GROUPBY', groupBY);
+            .replaceAll('\$ORDERBY', orderBy)
+            .replaceAll('\$GROUPBY', groupBy);
+      if(filterPriorities.isNotEmpty) {
+        url = '$url&priority=${filterPriorities.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+      }
+      if(filterStates.isNotEmpty) {
+        url = '$url&state=${filterStates.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+        print( url);
+
+      }
+      if(filterAssignes.isNotEmpty) {
+        url = '$url&assignees=${filterAssignes.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      }
+      if(filterCreatedBy.isNotEmpty) {
+        url = '$url&created_by=${filterCreatedBy.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+      }
+      if(filterLabels.isNotEmpty) {
+        url = '$url&labels=${filterLabels.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      }
+      else {
+        url = url;
+      }
+    }
     //log('URL: $url');
     try {
       var response = await DioConfig().dioServe(
@@ -923,7 +1001,7 @@ class IssuesProvider extends ChangeNotifier {
 
       issuesResponse = [];
 
-      if (groupBY == 'state') {
+      if (groupBy == 'state') {
         isGroupBy = false;
         groupBy_response = {};
         (response.data as Map).forEach((key, value) {
@@ -938,6 +1016,7 @@ class IssuesProvider extends ChangeNotifier {
 
       // log(issues.toString());
       // log(labels.toString());
+      print('==== SUCCESS =====');
       orderByState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {

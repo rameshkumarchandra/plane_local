@@ -34,7 +34,7 @@ class WorkspaceProvider extends ChangeNotifier {
     workspaces = [];
     selectedWorkspace = null;
     urlNotAvailable = false;
-    currentWorkspace = {};
+    // currentWorkspace = {};
     workspaceMembers = [];
   }
 

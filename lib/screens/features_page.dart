@@ -42,7 +42,7 @@ class _FeaturesPageState extends ConsumerState<FeaturesPage> {
   @override
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
-    var featuresProvider = ref.watch(ProviderList.featuresProvider);
+    var projectsProvider = ref.watch(ProviderList.projectProvider);
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
@@ -85,22 +85,37 @@ class _FeaturesPageState extends ConsumerState<FeaturesPage> {
                     ),
                     InkWell(
                       onTap: () {
-                        featuresProvider.features[index+1]['show'] = !featuresProvider.features[index+1]['show'];
-                        featuresProvider.setState();
+                        projectsProvider.features[index + 1]['show'] =
+                            !projectsProvider.features[index + 1]['show'];
+                        projectsProvider.setState();
+                        projectsProvider.updateProject(
+                          slug: ref
+                              .read(ProviderList.workspaceProvider)
+                              .selectedWorkspace!
+                              .workspaceSlug,
+                          projId: ref.read(ProviderList.projectProvider).currentProject['id'],
+                          data: {
+                            if(projectsProvider.features[index + 1]['title'] == 'Cycles') "cycle_view": projectsProvider.features[index + 1]['show'],
+                            if(projectsProvider.features[index + 1]['title'] == 'Modules') "module_view": projectsProvider.features[index + 1]['show'],
+                            if(projectsProvider.features[index + 1]['title'] == 'Views') "issue_views_view": projectsProvider.features[index + 1]['show'],
+                            if(projectsProvider.features[index + 1]['title'] == 'Pages') "page_view": projectsProvider.features[index + 1]['show'],
+                          }
+                        );
                       },
                       child: Container(
-                        width: 20,
+                        width: 30,
                         padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: featuresProvider.features[index+1]['show']
+                            borderRadius: BorderRadius.circular(10),
+                            color: projectsProvider.features[index + 1]['show']
                                 ? Colors.green
-                                : greyColor),
+                                : Colors.grey[300]),
                         child: Align(
-                          alignment: featuresProvider.features[index+1]['show']
+                          alignment: projectsProvider.features[index + 1]
+                                  ['show']
                               ? Alignment.centerRight
                               : Alignment.centerLeft,
-                          child: const CircleAvatar(radius: 3),
+                          child: const CircleAvatar(radius: 6),
                         ),
                       ),
                     )

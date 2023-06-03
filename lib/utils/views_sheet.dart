@@ -724,7 +724,6 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                     issueType == '' &&
                     !isTagsEnabled() &&
                     issueProvider.showEmptyStates == showEmptyStates) {
-                  Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.red[400],
@@ -742,6 +741,11 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                         Issues.toIssueType(issueType)) {
                   //   print(orderBy);
                   //   print(' it is if');
+                  setState(() {
+                    issueProvider.orderBy = orderBy;
+                    issueProvider.groupBy = groupBy;
+                    issueProvider.issueType = issueType;
+                  });
                   issueProvider.orderByIssues(
                     slug: ref
                         .read(ProviderList.workspaceProvider)
@@ -750,9 +754,9 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                     projID: ref
                         .read(ProviderList.projectProvider)
                         .currentProject["id"],
-                    orderBY: orderBy,
-                    groupBY: groupBy,
-                    type: issueType,
+                    // orderBY: orderBy,
+                    // groupBY: groupBy,
+                    // type: issueType,
                   );
                 }
 

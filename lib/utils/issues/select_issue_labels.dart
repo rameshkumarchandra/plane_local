@@ -122,81 +122,83 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                 Container(
                   height: 15,
                 ),
-                ListView.builder(
-                    itemCount: issuesProvider.labels.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (widget.createIssue) {
-                              if (selectedLabels.contains(index)) {
-                                selectedLabels.remove(index);
-                              } else {
-                                selectedLabels.add(index);
-                              }
-                            } else {
-                              setState(() {
-                                if (issueDetailsLabels.contains(
-                                    issuesProvider.labels[index]['id'])) {
-                                  issueDetailsLabels.remove(
-                                      issuesProvider.labels[index]['id']);
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: issuesProvider.labels.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (widget.createIssue) {
+                                if (selectedLabels.contains(index)) {
+                                  selectedLabels.remove(index);
                                 } else {
-                                  issueDetailsLabels
-                                      .add(issuesProvider.labels[index]['id']);
+                                  selectedLabels.add(index);
                                 }
-                              });
-                            }
-                          });
-                        },
-                        child: Container(
-                          height: 40,
-                          padding: const EdgeInsets.only(
-                            left: 5,
-                          ),
-                          decoration: const BoxDecoration(
-                            color: Color.fromRGBO(248, 249, 250, 1),
-                          ),
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 30,
-                                width: 30,
-                                decoration: BoxDecoration(
-                                  color: Color(int.parse(
-                                      "FF${issuesProvider.labels[index]['color'].toString().toUpperCase().replaceAll("#", "")}",
-                                      radix: 16)),
-                                  borderRadius: BorderRadius.circular(15),
+                              } else {
+                                setState(() {
+                                  if (issueDetailsLabels.contains(
+                                      issuesProvider.labels[index]['id'])) {
+                                    issueDetailsLabels.remove(
+                                        issuesProvider.labels[index]['id']);
+                                  } else {
+                                    issueDetailsLabels
+                                        .add(issuesProvider.labels[index]['id']);
+                                  }
+                                });
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 40,
+                            padding: const EdgeInsets.only(
+                              left: 5,
+                            ),
+                            decoration: const BoxDecoration(
+                              color: Color.fromRGBO(248, 249, 250, 1),
+                            ),
+                            margin: const EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 30,
+                                  width: 30,
+                                  decoration: BoxDecoration(
+                                    color: Color(int.parse(
+                                        "FF${issuesProvider.labels[index]['color'].toString().toUpperCase().replaceAll("#", "")}",
+                                        radix: 16)),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  alignment: Alignment.center,
+                                  // child: index == 4
+                                  //     ? Transform.rotate(
+                                  //         angle: 40,
+                                  //         child: priorities[index]['icon']
+                                  //             as Widget,
+                                  //       )
+                                  //     : priorities[index]['icon'] as Widget
                                 ),
-                                alignment: Alignment.center,
-                                // child: index == 4
-                                //     ? Transform.rotate(
-                                //         angle: 40,
-                                //         child: priorities[index]['icon']
-                                //             as Widget,
-                                //       )
-                                //     : priorities[index]['icon'] as Widget
-                              ),
-                              Container(
-                                width: 10,
-                              ),
-                              CustomText(
-                                issuesProvider.labels[index]['name'].toString(),
-                                type: FontStyle.subheading,
-                              ),
-                              const Spacer(),
-                              widget.createIssue
-                                  ? createIssueSelectedIconsWidget(index)
-                                  : issueDetailSelectedIconsWidget(index),
-                              const SizedBox(
-                                width: 10,
-                              )
-                            ],
+                                Container(
+                                  width: 10,
+                                ),
+                                CustomText(
+                                  issuesProvider.labels[index]['name'].toString(),
+                                  type: FontStyle.subheading,
+                                ),
+                                const Spacer(),
+                                widget.createIssue
+                                    ? createIssueSelectedIconsWidget(index)
+                                    : issueDetailSelectedIconsWidget(index),
+                                const SizedBox(
+                                  width: 10,
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      }),
+                ),
                 createNew
                     ? Container(
                         margin: const EdgeInsets.only(bottom: 15),
@@ -264,7 +266,7 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                             GestureDetector(
                               onTap: () async {
                                 if (labelContrtoller.text.isNotEmpty) {
-                                  await issuesProvider.createLabels(
+                                  await issuesProvider.issueLabels(
                                       slug: ref
                                           .read(ProviderList.workspaceProvider)
                                           .selectedWorkspace!
@@ -282,6 +284,7 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                                     colorController.clear();
                                     labelContrtoller.clear();
                                   });
+                                  Navigator.of(context).pop();
                                 }
                               },
                               child: Container(

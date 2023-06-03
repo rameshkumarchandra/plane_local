@@ -1255,7 +1255,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                     context: context,
                     builder: (ctx) => IssuesListSheet(
                           parent: true,
-                          issueId: issueProvider.issueDetails['id'],
+                          issueId: widget.isseId,
                         ));
               },
               child: issueProvider.issueDetails['parent_detail'] == null

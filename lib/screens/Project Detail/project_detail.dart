@@ -178,7 +178,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                   width: MediaQuery.of(context).size.width,
                   height: 48,
                   child: ListView.builder(
-                    itemCount: featuresProvider.features.length,
+                    itemCount: projectProvider.features.length,
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
@@ -189,7 +189,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                             //  selected = index;
                             //});
                           },
-                          child: featuresProvider.features[index]['show']
+                          child: projectProvider.features[index]['show']
                               ? Column(
                                   children: [
                                     Container(
@@ -198,7 +198,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                           right: 25,
                                           top: 10),
                                       child: CustomText(
-                                        featuresProvider.features[index]
+                                        projectProvider.features[index]
                                                 ['title']
                                             .toString(),
                                         // color: index == selected
@@ -217,7 +217,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                                 right: 25,
                                                 top: 10),
                                             height: 7,
-                                            width: double.parse(featuresProvider
+                                            width: double.parse(projectProvider
                                                 .features[index]['width']
                                                 .toString()),
                                             color: const Color.fromRGBO(
@@ -541,14 +541,10 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
               context,
               ref,
               projectProvider.currentProject['id'],
-<<<<<<< Updated upstream
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'])
-=======
               ref
                   .read(ProviderList.workspaceProvider)
                   .selectedWorkspace!
                   .workspaceSlug)
->>>>>>> Stashed changes
           : Container(
               color: themeProvider.isDarkThemeEnabled
                   ? const Color.fromRGBO(29, 30, 32, 1)

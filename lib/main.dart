@@ -31,8 +31,8 @@ void main() async {
   Const.appBearerToken =
       SharedPrefrenceServices.sharedPreferences!.getString("token");
   log(Const.appBearerToken.toString());
-  //Const.appBearerToken = null;
-  //SharedPrefrenceServices.sharedPreferences!.clear();
+  // Const.appBearerToken = null;
+  // SharedPrefrenceServices.sharedPreferences!.clear();
   WidgetsFlutterBinding.ensureInitialized();
   var pref = await SharedPreferences.getInstance();
   //pref.setString('token',
