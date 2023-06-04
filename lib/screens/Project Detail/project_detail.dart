@@ -104,6 +104,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     var issueProvider = ref.watch(ProviderList.issuesProvider);
     var featuresProvider = ref.watch(ProviderList.featuresProvider);
     var projectProvider = ref.watch(ProviderList.projectProvider);
+    // log(issueProvider.issues.issues[0].items.length.toString());
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -198,8 +199,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                           right: 25,
                                           top: 10),
                                       child: CustomText(
-                                        projectProvider.features[index]
-                                                ['title']
+                                        projectProvider.features[index]['title']
                                             .toString(),
                                         // color: index == selected
                                         //     ? primaryColor
@@ -557,157 +557,175 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                       issueProvider.projectViewState == AuthStateEnum.loading ||
                       issueProvider.orderByState == AuthStateEnum.loading
                   ? Container()
-                  : issueProvider.issues.projectView == ProjectView.list
-                      ? Container(
-                          margin: const EdgeInsets.only(top: 5),
-                          child: SingleChildScrollView(
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: issueProvider.issues.issues
-                                    .map((state) => SizedBox(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                padding: const EdgeInsets.only(
-                                                    left: 15),
-                                                margin: const EdgeInsets.only(
-                                                    bottom: 10),
-                                                child: Row(
-                                                  children: [
-                                                    state.leading!,
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                        left: 10,
-                                                      ),
-                                                      child: CustomText(
-                                                        state.title!,
-                                                        type: FontStyle
-                                                            .subheading,
-                                                        color: themeProvider
-                                                                .isDarkThemeEnabled
-                                                            ? Colors.white
-                                                            : Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                      ),
+                  : issueProvider.isISsuesEmpty
+                      ? EmptyPlaceholder.emptyIssues(context)
+                      : issueProvider.issues.projectView == ProjectView.list
+                          ? Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: issueProvider.issues.issues
+                                        .map((state) => SizedBox(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 15),
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            bottom: 10),
+                                                    child: Row(
+                                                      children: [
+                                                        state.leading!,
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                            left: 10,
+                                                          ),
+                                                          child: CustomText(
+                                                            state.title!,
+                                                            type: FontStyle
+                                                                .subheading,
+                                                            color: themeProvider
+                                                                    .isDarkThemeEnabled
+                                                                ? Colors.white
+                                                                : Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          margin:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                            left: 15,
+                                                          ),
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15),
+                                                              color: themeProvider
+                                                                      .isDarkThemeEnabled
+                                                                  ? const Color
+                                                                          .fromRGBO(
+                                                                      39,
+                                                                      42,
+                                                                      45,
+                                                                      1)
+                                                                  : const Color
+                                                                          .fromRGBO(
+                                                                      222,
+                                                                      226,
+                                                                      230,
+                                                                      1)),
+                                                          height: 25,
+                                                          width: 30,
+                                                          child: CustomText(
+                                                            state.items.length
+                                                                .toString(),
+                                                            type: FontStyle
+                                                                .subtitle,
+                                                          ),
+                                                        ),
+                                                        const Spacer(),
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .push(MaterialPageRoute(
+                                                                      builder:
+                                                                          (ctx) =>
+                                                                              const CreateIssue()));
+                                                            },
+                                                            icon: const Icon(
+                                                              Icons.add,
+                                                              color: greyColor,
+                                                            )),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Container(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                        left: 15,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                  15),
-                                                          color: themeProvider
-                                                                  .isDarkThemeEnabled
-                                                              ? const Color
-                                                                      .fromRGBO(
-                                                                  39, 42, 45, 1)
-                                                              : const Color
-                                                                      .fromRGBO(
-                                                                  222,
-                                                                  226,
-                                                                  230,
-                                                                  1)),
-                                                      height: 25,
-                                                      width: 30,
-                                                      child: CustomText(
-                                                        state.items.length
-                                                            .toString(),
-                                                        type:
-                                                            FontStyle.subtitle,
-                                                      ),
-                                                    ),
-                                                    const Spacer(),
-                                                    IconButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context).push(
-                                                              MaterialPageRoute(
-                                                                  builder: (ctx) =>
-                                                                      const CreateIssue()));
-                                                        },
-                                                        icon: const Icon(
-                                                          Icons.add,
-                                                          color: greyColor,
-                                                        )),
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: state.items
-                                                      .map((e) => e)
-                                                      .toList()),
-                                              state.items.isEmpty
-                                                  ? Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              bottom: 10),
-                                                      width:
-                                                          MediaQuery.of(context)
+                                                  ),
+                                                  Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: state.items
+                                                          .map((e) => e)
+                                                          .toList()),
+                                                  state.items.isEmpty
+                                                      ? Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 10),
+                                                          width: MediaQuery.of(
+                                                                  context)
                                                               .size
                                                               .width,
-                                                      color: themeProvider
-                                                              .isDarkThemeEnabled
-                                                          ? darkBackgroundColor
-                                                          : Colors.white,
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 15,
-                                                              bottom: 15,
-                                                              left: 15),
-                                                      child: CustomText(
-                                                        'No issues.',
-                                                        type: FontStyle.title,
-                                                        maxLines: 10,
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                      ),
-                                                    )
-                                                  : Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              bottom: 10),
-                                                    )
-                                            ],
-                                          ),
-                                        ))
-                                    .toList()),
-                          ),
-                        )
-                      : KanbanBoard(
-                          issueProvider.isGroupBy
-                              ? issueProvider.priorityBoard()
-                              : issueProvider.initializeBoard(),
-                          groupEmptyStates: !issueProvider.showEmptyStates,
-                          backgroundColor: themeProvider.isDarkThemeEnabled
-                              ? const Color.fromRGBO(29, 30, 32, 1)
-                              : lightSecondaryBackgroundColor,
-                          listScrollConfig: ScrollConfig(
-                              offset: 65,
-                              duration: const Duration(milliseconds: 100),
-                              curve: Curves.linear),
-                          listTransitionDuration:
-                              const Duration(milliseconds: 200),
-                          cardTransitionDuration:
-                              const Duration(milliseconds: 400),
-                          textStyle: TextStyle(
-                              fontSize: 19,
-                              height: 1.3,
-                              color: Colors.grey.shade800,
-                              fontWeight: FontWeight.w500),
-                        ),
+                                                          color: themeProvider
+                                                                  .isDarkThemeEnabled
+                                                              ? darkBackgroundColor
+                                                              : Colors.white,
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 15,
+                                                                  bottom: 15,
+                                                                  left: 15),
+                                                          child: CustomText(
+                                                            'No issues.',
+                                                            type:
+                                                                FontStyle.title,
+                                                            maxLines: 10,
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                          ),
+                                                        )
+                                                      : Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  bottom: 10),
+                                                        )
+                                                ],
+                                              ),
+                                            ))
+                                        .toList()),
+                              ),
+                            )
+                          : KanbanBoard(
+                              issueProvider.isGroupBy
+                                  ? issueProvider.priorityBoard()
+                                  : issueProvider.initializeBoard(),
+                              groupEmptyStates: !issueProvider.showEmptyStates,
+                              backgroundColor: themeProvider.isDarkThemeEnabled
+                                  ? const Color.fromRGBO(29, 30, 32, 1)
+                                  : lightSecondaryBackgroundColor,
+                              listScrollConfig: ScrollConfig(
+                                  offset: 65,
+                                  duration: const Duration(milliseconds: 100),
+                                  curve: Curves.linear),
+                              listTransitionDuration:
+                                  const Duration(milliseconds: 200),
+                              cardTransitionDuration:
+                                  const Duration(milliseconds: 400),
+                              textStyle: TextStyle(
+                                  fontSize: 19,
+                                  height: 1.3,
+                                  color: Colors.grey.shade800,
+                                  fontWeight: FontWeight.w500),
+                            ),
             ),
     );
   }

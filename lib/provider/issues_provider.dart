@@ -33,6 +33,7 @@ class IssuesProvider extends ChangeNotifier {
   var createIssueState = AuthStateEnum.empty;
   var issueView = {};
   bool showEmptyStates = true;
+  bool isISsuesEmpty = true;
   Issues issues = Issues(
       issues: [],
       projectView: ProjectView.kanban,
@@ -477,19 +478,20 @@ class IssuesProvider extends ChangeNotifier {
     }
   }
 
-  Future issueLabels(
-      {required String slug,
-      required String projID,
-      required dynamic data,
-      CRUD? method,
-      String? labelId,
-      }) async {
+  Future issueLabels({
+    required String slug,
+    required String projID,
+    required dynamic data,
+    CRUD? method,
+    String? labelId,
+  }) async {
     labelState = AuthStateEnum.loading;
     notifyListeners();
-    String url = 
-    method == CRUD.update ?
-    '${APIs.issueLabels.replaceAll("\$SLUG", slug).replaceAll('\$PROJECTID', projID)}$labelId/' :
-    APIs.issueLabels.replaceAll("\$SLUG", slug).replaceAll('\$PROJECTID', projID);
+    String url = method == CRUD.update
+        ? '${APIs.issueLabels.replaceAll("\$SLUG", slug).replaceAll('\$PROJECTID', projID)}$labelId/'
+        : APIs.issueLabels
+            .replaceAll("\$SLUG", slug)
+            .replaceAll('\$PROJECTID', projID);
 
     print(url);
     print(labelId);
@@ -498,10 +500,8 @@ class IssuesProvider extends ChangeNotifier {
           hasAuth: true,
           url: url,
           hasBody: true,
-          httpMethod: 
-          method == CRUD.update ?
-          HttpMethod.patch :
-          HttpMethod.post,
+          httpMethod:
+              method == CRUD.update ? HttpMethod.patch : HttpMethod.post,
           data: data);
       //   log(response.data.toString());
       await getLabels(slug: slug, projID: projID);
@@ -602,7 +602,9 @@ class IssuesProvider extends ChangeNotifier {
                   DateFormat('yyyy-MM-dd').format(createIssuedata['due_date'])
           });
       // log(response.data.toString());
+
       issuesResponse.add(response.data);
+      isISsuesEmpty = issuesResponse.isEmpty;
       createIssueState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
@@ -625,7 +627,10 @@ class IssuesProvider extends ChangeNotifier {
       );
 
       log("DONE");
+
       issuesResponse = response.data;
+      isISsuesEmpty = issuesResponse.isEmpty;
+      log(issuesResponse.toString());
       issueState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
@@ -928,64 +933,69 @@ class IssuesProvider extends ChangeNotifier {
 
     String url;
 
-    if(issueType != 'all'){
+    if (issueType != 'all') {
       print('======IF=====');
       url = APIs.orderByGroupByTypeIssues
-            .replaceAll("\$SLUG", slug)
-            .replaceAll('\$PROJECTID', projID)
-            .replaceAll('\$ORDERBY', orderBy)
-            .replaceAll('\$GROUPBY', groupBy)
-            .replaceAll('\$TYPE', issueType);
-      if(filterPriorities.isNotEmpty) {
-        url = '$url&priority=${filterPriorities.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+          .replaceAll("\$SLUG", slug)
+          .replaceAll('\$PROJECTID', projID)
+          .replaceAll('\$ORDERBY', orderBy)
+          .replaceAll('\$GROUPBY', groupBy)
+          .replaceAll('\$TYPE', issueType);
+      if (filterPriorities.isNotEmpty) {
+        url =
+            '$url&priority=${filterPriorities.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
       }
-      if(filterStates.isNotEmpty) {
-        url = '$url&state=${filterStates.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
-        print( url);
-
-      }
-      if(filterAssignes.isNotEmpty) {
-        url = '$url&assignees=${filterAssignes.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+      if (filterStates.isNotEmpty) {
+        url =
+            '$url&state=${filterStates.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
         print(url);
       }
-      if(filterCreatedBy.isNotEmpty) {
-        url = '$url&created_by=${filterCreatedBy.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
-      }
-      if(filterLabels.isNotEmpty) {
-        url = '$url&labels=${filterLabels.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+      if (filterAssignes.isNotEmpty) {
+        url =
+            '$url&assignees=${filterAssignes.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
         print(url);
       }
-      else {
+      if (filterCreatedBy.isNotEmpty) {
+        url =
+            '$url&created_by=${filterCreatedBy.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+      }
+      if (filterLabels.isNotEmpty) {
+        url =
+            '$url&labels=${filterLabels.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      } else {
         url = url;
       }
-    }
-    else {
+    } else {
       print('ELSE');
       url = APIs.orderByGroupByIssues
-            .replaceAll("\$SLUG", slug)
-            .replaceAll('\$PROJECTID', projID)
-            .replaceAll('\$ORDERBY', orderBy)
-            .replaceAll('\$GROUPBY', groupBy);
-      if(filterPriorities.isNotEmpty) {
-        url = '$url&priority=${filterPriorities.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+          .replaceAll("\$SLUG", slug)
+          .replaceAll('\$PROJECTID', projID)
+          .replaceAll('\$ORDERBY', orderBy)
+          .replaceAll('\$GROUPBY', groupBy);
+      if (filterPriorities.isNotEmpty) {
+        url =
+            '$url&priority=${filterPriorities.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
       }
-      if(filterStates.isNotEmpty) {
-        url = '$url&state=${filterStates.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
-        print( url);
-
-      }
-      if(filterAssignes.isNotEmpty) {
-        url = '$url&assignees=${filterAssignes.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+      if (filterStates.isNotEmpty) {
+        url =
+            '$url&state=${filterStates.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
         print(url);
       }
-      if(filterCreatedBy.isNotEmpty) {
-        url = '$url&created_by=${filterCreatedBy.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
-      }
-      if(filterLabels.isNotEmpty) {
-        url = '$url&labels=${filterLabels.toString().replaceAll('[','').replaceAll(']', '').replaceAll(' ', '')}';
+      if (filterAssignes.isNotEmpty) {
+        url =
+            '$url&assignees=${filterAssignes.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
         print(url);
       }
-      else {
+      if (filterCreatedBy.isNotEmpty) {
+        url =
+            '$url&created_by=${filterCreatedBy.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+      }
+      if (filterLabels.isNotEmpty) {
+        url =
+            '$url&labels=${filterLabels.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      } else {
         url = url;
       }
     }
@@ -1009,14 +1019,28 @@ class IssuesProvider extends ChangeNotifier {
             issuesResponse.add(element);
           }
         });
+        log('State');
+        isISsuesEmpty = issuesResponse.isEmpty;
       } else {
         groupBy_response = response.data;
         isGroupBy = true;
+
+        //check is each key of groupBy_response is empty or not using for loop
+        isISsuesEmpty = true;
+        for (var key in groupBy_response.keys) {
+          if (groupBy_response[key].isNotEmpty) {
+            isISsuesEmpty = false;
+            break;
+          }
+        }
       }
+      log('Filter');
+      log(groupBy_response.toString());
 
       // log(issues.toString());
       // log(labels.toString());
       print('==== SUCCESS =====');
+
       orderByState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {

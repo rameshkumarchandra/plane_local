@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/screens/Project%20Detail/create_issue.dart';
 import 'package:plane_startup/screens/create_page_screen.dart';
 import 'package:plane_startup/screens/create_view_screen.dart';
 import 'package:plane_startup/utils/constants.dart';
@@ -238,6 +239,247 @@ class EmptyPlaceholder {
                   ),
                   CustomText(
                     'Add Cycle',
+                    type: FontStyle.buttonText,
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  static Widget emptyIssues(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      //  margin: const EdgeInsets.only(top: 150),
+      child: Wrap(
+        direction: Axis.vertical,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Stack(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(left: 30),
+                height: 120,
+                width: 300,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.grey.shade300)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 10, top: 10),
+                      child: CustomText(
+                        'Adding a new screen to the app',
+                        type: FontStyle.subheading,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          height: 12,
+                          width: 80,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 15),
+                          height: 12,
+                          width: 80,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10)),
+                        )
+                      ],
+                    ),
+                    const Spacer(),
+                    Container(
+                      height: 50,
+                      width: 300,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                          color: Color.fromRGBO(250, 250, 250, 1)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 5,
+                            width: 50,
+                            color: const Color.fromRGBO(222, 226, 230, 1),
+                          ),
+                          Container(
+                            height: 5,
+                            width: 50,
+                            color: const Color.fromRGBO(38, 181, 206, 1),
+                          ),
+                          Container(
+                            height: 5,
+                            width: 40,
+                            color: const Color.fromRGBO(247, 174, 89, 1),
+                          ),
+                          Container(
+                            height: 5,
+                            width: 100,
+                            color: const Color.fromRGBO(214, 135, 255, 1),
+                          ),
+                          Container(
+                            height: 5,
+                            width: 30,
+                            color: const Color.fromRGBO(9, 169, 83, 1),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 30),
+                height: 120,
+                width: 300,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: Colors.grey.shade300)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(left: 10, top: 10),
+                      child: CustomText(
+                        //any random issue,
+                        'Implementing a new design for the home page',
+                        type: FontStyle.subheading,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          height: 12,
+                          width: 80,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 15),
+                          height: 12,
+                          width: 80,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10)),
+                        )
+                      ],
+                    ),
+                    const Spacer(),
+                    Container(
+                      height: 50,
+                      width: 300,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                          color: Color.fromRGBO(250, 250, 250, 1)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 5,
+                            width: 50,
+                            color: const Color.fromRGBO(222, 226, 230, 1),
+                          ),
+                          Container(
+                            height: 5,
+                            width: 50,
+                            color: const Color.fromRGBO(38, 181, 206, 1),
+                          ),
+                          Container(
+                            height: 5,
+                            width: 40,
+                            color: const Color.fromRGBO(247, 174, 89, 1),
+                          ),
+                          Container(
+                            height: 5,
+                            width: 100,
+                            color: const Color.fromRGBO(214, 135, 255, 1),
+                          ),
+                          Container(
+                            height: 5,
+                            width: 30,
+                            color: const Color.fromRGBO(9, 169, 83, 1),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 35),
+            child: CustomText(
+              'Issues',
+              type: FontStyle.heading,
+            ),
+          ),
+          Container(
+            width: 300,
+            padding: const EdgeInsets.only(top: 10),
+            child: CustomText(
+              //create issues text
+              'Create issues and track them easily with the help of our app.',
+
+              color: const Color.fromRGBO(133, 142, 150, 1),
+              textAlign: TextAlign.center,
+              type: FontStyle.title,
+              maxLines: 3,
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const CreateIssue()));
+            },
+            child: Container(
+              height: 40,
+              width: 150,
+              margin: const EdgeInsets.only(top: 30),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: const Color.fromRGBO(63, 118, 255, 1),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  CustomText(
+                    'Add Issues',
                     type: FontStyle.buttonText,
                   )
                 ],
@@ -856,46 +1098,44 @@ class EmptyPlaceholder {
                   .joinProject(projectId: projectId, slug: slug);
             },
             child: Container(
-                height: 40,
-                width: 150,
-                margin: const EdgeInsets.only(top: 30),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6),
-                  color: const Color.fromRGBO(63, 118, 255, 1),
-                ),
-                child:
-                    ref.watch(ProviderList.issuesProvider).joinprojectState ==
-                            AuthStateEnum.loading
-                    ?
-                    const Center(
-                  child: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 1.5,
-                      color: Colors.white,
+              height: 40,
+              width: 150,
+              margin: const EdgeInsets.only(top: 30),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6),
+                color: const Color.fromRGBO(63, 118, 255, 1),
+              ),
+              child: ref.watch(ProviderList.issuesProvider).joinprojectState ==
+                      AuthStateEnum.loading
+                  ? const Center(
+                      child: SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1.5,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.assignment_outlined,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        CustomText(
+                          'Click to join',
+                          type: FontStyle.buttonText,
+                        ),
+                      ],
                     ),
-                  ),
-                )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.assignment_outlined,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      CustomText(
-                        'Click to join',
-                        type: FontStyle.buttonText,
-                      ),
-                    ],
-                  ),
-                ),
+            ),
           )
         ],
       ),
