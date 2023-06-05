@@ -1,26 +1,30 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/utils/constants.dart';
 
 import 'button.dart';
 import 'custom_text.dart';
 
-class MemberStatus extends StatefulWidget {
+class MemberStatus extends ConsumerStatefulWidget {
   String firstName;
   String lastName;
   int role;
+  String userId;
   MemberStatus(
       {super.key,
       required this.firstName,
       required this.lastName,
-      required this.role});
+      required this.role,
+      required this.userId});
 
   @override
-  State<MemberStatus> createState() => _MemberStatusState();
+  ConsumerState<MemberStatus> createState() => _MemberStatusState();
 }
 
-class _MemberStatusState extends State<MemberStatus> {
+class _MemberStatusState extends ConsumerState<MemberStatus> {
   String name = '';
   int selectedRole = 0;
   @override
@@ -38,6 +42,8 @@ class _MemberStatusState extends State<MemberStatus> {
 
   @override
   Widget build(BuildContext context) {
+    var projectProvider = ref.read(ProviderList.projectProvider);
+    var profileProvider = ref.watch(ProviderList.profileProvider);
     return Padding(
       padding: const EdgeInsets.only(top: 23, left: 23, right: 23),
       child: Column(
@@ -202,12 +208,36 @@ class _MemberStatusState extends State<MemberStatus> {
                 height: 40,
               ),
               //red remove text
-              CustomText(
-                'Remove',
-                type: FontStyle.heading,
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-                color: Colors.red,
+
+//https://boarding.plane.so/api/workspaces/delete-member/projects/ed31cf07-b492-4a12-9091-69860efeeba3/member/89ff9ac3-3f3e-4bdd-b489-98a17b34df70/
+//
+
+              InkWell(
+                onTap: () async {
+                  await projectProvider.deleteProjectMember(
+                    slug: ref
+                        .read(ProviderList.workspaceProvider)
+                        .selectedWorkspace!
+                        .workspaceSlug,
+                    projId: ref.read(ProviderList.projectProvider).currentProject['id'],
+                    userId: widget.userId
+                  );
+                  ref.read(ProviderList.projectProvider).getProjectMembers(
+                    slug: ref
+                        .read(ProviderList.workspaceProvider)
+                        .selectedWorkspace!
+                        .workspaceSlug,
+                    projId: ref.read(ProviderList.projectProvider).currentProject['id'],
+                  );
+                  Navigator.of(context).pop();
+                },
+                child: CustomText(
+                  'Remove',
+                  type: FontStyle.heading,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.red,
+                ),
               ),
             ],
           ),

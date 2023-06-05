@@ -20,21 +20,31 @@ class WorkspaceProvider extends ChangeNotifier {
   var workspaces = [];
   WorkspaceModel? selectedWorkspace;
   var urlNotAvailable = false;
-  var currentWorkspace = {};
+  // var currentWorkspace = {};
   var workspaceMembers = [];
+  String tempLogo = '';
   WorkspaceModel? workspace;
   AuthStateEnum workspaceInvitationState = AuthStateEnum.empty;
   AuthStateEnum selectWorkspaceState = AuthStateEnum.empty;
   AuthStateEnum uploadImageState = AuthStateEnum.empty;
   AuthStateEnum getMembersState = AuthStateEnum.empty;
 
+  void clear() {
+    workspaceInvitations = [];
+    workspaces = [];
+    selectedWorkspace = null;
+    urlNotAvailable = false;
+    // currentWorkspace = {};
+    workspaceMembers = [];
+  }
+
   void changeLogo({required String logo}) {
-    selectedWorkspace!.workspaceLogo = logo;
+    tempLogo = logo;
     notifyListeners();
   }
 
   void removeLogo() {
-    selectedWorkspace!.workspaceLogo = '';
+    tempLogo = '';
     notifyListeners();
   }
 
@@ -191,17 +201,20 @@ class WorkspaceProvider extends ChangeNotifier {
                 .read(ProviderList.profileProvider)
                 .userProfile
                 .last_workspace_id) {
-          currentWorkspace = element;
+          // currentWorkspace = element;
+
           selectedWorkspace = WorkspaceModel.fromJson(element);
+          tempLogo = selectedWorkspace!.workspaceLogo;
+
           return true;
         }
         return false;
       });
 
       if (isWorkspacePresent.isEmpty) {
-        currentWorkspace = workspaces[0];
+        // currentWorkspace = workspaces[0];
         selectedWorkspace = WorkspaceModel.fromJson(workspaces[0]);
-        log('AFTER DELETE WORKSPACE ${selectedWorkspace!.workspaceName}  ${currentWorkspace['id']}');
+        log('AFTER DELETE WORKSPACE ${selectedWorkspace!.workspaceName} }');
       }
 
       log(response.data.toString());
@@ -234,17 +247,21 @@ class WorkspaceProvider extends ChangeNotifier {
 
       ref!.read(ProviderList.issuesProvider).clearData();
 
-      currentWorkspace = workspaces.where((element) {
-        if (element['id'] ==
-            ref!
-                .read(ProviderList.profileProvider)
-                .userProfile
-                .last_workspace_id) {
-          currentWorkspace = element;
-          return true;
-        }
-        return false;
-      }).first;
+      // currentWorkspace = workspaces.where((element) {
+      //   if (element['id'] ==
+      //       ref!
+      //           .read(ProviderList.profileProvider)
+      //           .userProfile
+      //           .last_workspace_id) {
+      //     currentWorkspace = element;
+      //     return true;
+      //   }
+      //   return false;
+      // }).first;
+      selectedWorkspace = WorkspaceModel.fromJson(
+          workspaces.where((element) => element['id'] == id).first);
+
+      tempLogo = selectedWorkspace!.workspaceLogo;
 
       // ref!.read(ProviderList.projectProvider).getProjects(
       //         slug: currentWorkspace['slug']);
@@ -277,6 +294,7 @@ class WorkspaceProvider extends ChangeNotifier {
       log(response.data.toString());
       // response = jsonDecode(response.data);
       selectedWorkspace = WorkspaceModel.fromJson(response.data);
+      tempLogo = selectedWorkspace!.workspaceLogo;
 
       log('SELECTED WORKSPACE ${selectedWorkspace!.workspaceName}');
 
@@ -307,6 +325,7 @@ class WorkspaceProvider extends ChangeNotifier {
       log(response.data.toString());
       // response = jsonDecode(response.data);
       selectedWorkspace = WorkspaceModel.fromJson(response.data);
+      tempLogo = selectedWorkspace!.workspaceLogo;
 
       log('SELECTED WORKSPACE');
       log(selectedWorkspace!.toString());

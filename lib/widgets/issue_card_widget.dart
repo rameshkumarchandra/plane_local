@@ -172,7 +172,8 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
                                         ? darkThemeBorder
                                         : lightGreeyColor),
                                 borderRadius: BorderRadius.circular(5)),
-                            child: Wrap(
+                            child: 
+                            Wrap(
                               children: [
                                 SizedBox(
                                   height: 20,
@@ -184,11 +185,14 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
                                 const SizedBox(
                                   width: 5,
                                 ),
-                                CustomText(
-                                  issueProvider.issuesResponse[widget.cardIndex]
-                                      ['state_detail']['name'],
-                                  type: FontStyle.subtitle,
-                                  fontSize: 13,
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 2),
+                                  child: CustomText(
+                                    issueProvider.issuesResponse[widget.cardIndex]
+                                        ['state_detail']['name'],
+                                    type: FontStyle.subtitle,
+                                    fontSize: 13,
+                                  ),
                                 ),
                               ],
                             ),

@@ -27,8 +27,10 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
   void initState() {
     if (ref.read(ProviderList.issuesProvider).members.isEmpty) {
       ref.read(ProviderList.issuesProvider).getProjectMembers(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          slug: ref
+              .read(ProviderList.workspaceProvider)
+              .selectedWorkspace!
+              .workspaceSlug,
           projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     }
     selectedMembers =
@@ -51,6 +53,7 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
   Widget build(BuildContext context) {
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
     var issueProvider = ref.read(ProviderList.issueProvider);
+    var themeProvider = ref.read(ProviderList.themeProvider);
     return WillPopScope(
       onWillPop: () async {
         issuesProvider.createIssuedata['members'] =
@@ -60,9 +63,11 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
       },
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: themeProvider.isDarkThemeEnabled
+              ? darkBackgroundColor
+              : lightBackgroundColor,
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10), topRight: Radius.circular(10)),
         ),
         width: double.infinity,
@@ -83,7 +88,10 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                       IconButton(
                           onPressed: () {
                             issuesProvider.createIssuedata['members'] =
-                                selectedMembers;
+                                selectedMembers.isEmpty
+                                    ? null
+                                    : selectedMembers;
+                            issuesProvider.setsState();
                             Navigator.of(context).pop();
                           },
                           icon: const Icon(Icons.close))
@@ -105,13 +113,13 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                   if (selectedMembers[issuesProvider
                                           .members[index]['member']['id']] ==
                                       null) {
-                                    selectedMembers[issuesProvider.members[index]
-                                        ['member']['id']] = {
+                                    selectedMembers[issuesProvider
+                                        .members[index]['member']['id']] = {
                                       "name": issuesProvider.members[index]
                                               ['member']['first_name'] +
                                           " " +
-                                          issuesProvider.members[index]['member']
-                                              ['last_name'],
+                                          issuesProvider.members[index]
+                                              ['member']['last_name'],
                                       "id": issuesProvider.members[index]
                                           ['member']['id']
                                     };
@@ -129,8 +137,9 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                         issuesProvider.members[index]['member']
                                             ['id']);
                                   } else {
-                                    issueDetailSelectedMembers.add(issuesProvider
-                                        .members[index]['member']['id']);
+                                    issueDetailSelectedMembers.add(
+                                        issuesProvider.members[index]['member']
+                                            ['id']);
                                   }
                                 });
                               }
@@ -140,8 +149,10 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                               padding: const EdgeInsets.only(
                                 left: 5,
                               ),
-                              decoration: const BoxDecoration(
-                                color: Color.fromRGBO(248, 249, 250, 1),
+                              decoration: BoxDecoration(
+                                color: themeProvider.isDarkThemeEnabled
+                                    ? darkSecondaryBackgroundColor
+                                    : const Color.fromRGBO(248, 249, 250, 1),
                               ),
                               margin: const EdgeInsets.only(bottom: 10),
                               child: Row(
@@ -150,7 +161,8 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                     height: 30,
                                     width: 30,
                                     decoration: BoxDecoration(
-                                      color: const Color.fromRGBO(55, 65, 81, 1),
+                                      color:
+                                          const Color.fromRGBO(55, 65, 81, 1),
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     alignment: Alignment.center,
@@ -201,7 +213,8 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                 issueProvider.upDateIssue(
                                     slug: ref
                                         .read(ProviderList.workspaceProvider)
-                                        .currentWorkspace['slug'],
+                                        .selectedWorkspace!
+                                        .workspaceSlug,
                                     projID: ref
                                         .read(ProviderList.projectProvider)
                                         .currentProject['id'],
@@ -218,7 +231,8 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                           slug: ref
                                               .read(ProviderList
                                                   .workspaceProvider)
-                                              .currentWorkspace['slug'],
+                                              .selectedWorkspace!
+                                              .workspaceSlug,
                                           projID: ref
                                               .read(
                                                   ProviderList.projectProvider)
@@ -231,7 +245,8 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                                               slug: ref
                                                   .read(ProviderList
                                                       .workspaceProvider)
-                                                  .currentWorkspace['slug'],
+                                                  .selectedWorkspace!
+                                                  .workspaceSlug,
                                               projID: ref
                                                   .read(ProviderList
                                                       .projectProvider)

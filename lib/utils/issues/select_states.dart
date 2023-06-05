@@ -18,7 +18,8 @@ class SelectStates extends ConsumerStatefulWidget {
   bool createIssue;
   String? issueId;
   int? index;
-  SelectStates({ this.index ,required this.createIssue, this.issueId, super.key});
+  SelectStates(
+      {this.index, required this.createIssue, this.issueId, super.key});
 
   @override
   ConsumerState<SelectStates> createState() => _SelectStatesState();
@@ -29,10 +30,30 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
   void initState() {
     if (ref.read(ProviderList.issuesProvider).states.isEmpty) {
       ref.read(ProviderList.issuesProvider).getStates(
-          slug:
-              ref.read(ProviderList.workspaceProvider).currentWorkspace['slug'],
+          slug: ref
+              .read(ProviderList.workspaceProvider)
+              .selectedWorkspace!
+              .workspaceSlug,
           projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     }
+
+    selectedState = widget.createIssue
+        ? ref.read(ProviderList.issuesProvider).createIssuedata['state'] != null
+            ? ref.read(ProviderList.issuesProvider).createIssuedata['state']
+                ['id']
+            : ''
+        : ref.read(ProviderList.issuesProvider).states['state'] != null
+            ? ref.read(ProviderList.issuesProvider).states['state']['id']
+            : '';
+
+    selectedStateName = widget.createIssue
+        ? ref.read(ProviderList.issuesProvider).createIssuedata['state'] != null
+            ? ref.read(ProviderList.issuesProvider).createIssuedata['state']
+                ['name']
+            : ''
+        : ref.read(ProviderList.issuesProvider).states['state'] != null
+            ? ref.read(ProviderList.issuesProvider).states['state']['name']
+            : '';
 
     super.initState();
   }
@@ -43,7 +64,8 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
   @override
   Widget build(BuildContext context) {
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
-    var issueProvider = ref.read(ProviderList.issueProvider);
+    var issueProvider = ref.watch(ProviderList.issueProvider);
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return WillPopScope(
       onWillPop: () async {
         var prov = ref.read(ProviderList.issuesProvider);
@@ -52,16 +74,20 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
             'name': selectedStateName,
             "id": selectedState,
           };
+
+          prov.setsState();
+          // log(prov.createIssuedata.toString());
         }
-        prov.setsState();
         return true;
       },
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: themeProvider.isDarkThemeEnabled
+                ? darkBackgroundColor
+                : lightBackgroundColor,
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10)),
           ),
           width: double.infinity,
@@ -77,11 +103,23 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                         type: FontStyle.heading,
                       ),
                       IconButton(
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () {
+                            var prov = ref.read(ProviderList.issuesProvider);
+                            if (selectedState.isNotEmpty) {
+                              prov.createIssuedata['state'] = {
+                                'name': selectedStateName,
+                                "id": selectedState,
+                              };
+
+                              prov.setsState();
+                              log(prov.createIssuedata.toString());
+                            }
+                            Navigator.pop(context);
+                          },
                           icon: const Icon(Icons.close))
                     ],
                   ),
-                  Container(
+                  const SizedBox(
                     height: 15,
                   ),
                   for (int i = 0; i < issuesProvider.states.length; i++)
@@ -102,6 +140,7 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                                       issuesProvider.states.keys.elementAt(i)]
                                   [j]['name'];
                             });
+                            issuesProvider.setsState();
                           } else {
                             setState(() {
                               issueDetailSelectedState = issuesProvider.states[
@@ -111,7 +150,8 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                             issueProvider.upDateIssue(
                                 slug: ref
                                     .read(ProviderList.workspaceProvider)
-                                    .currentWorkspace['slug'],
+                                    .selectedWorkspace!
+                                    .workspaceSlug,
                                 projID: ref
                                     .read(ProviderList.projectProvider)
                                     .currentProject['id'],
@@ -129,8 +169,8 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                           padding: const EdgeInsets.only(
                             left: 5,
                           ),
-                          decoration: const BoxDecoration(
-                            color: Color.fromRGBO(248, 249, 250, 1),
+                          decoration: BoxDecoration(
+                            color: themeProvider.isDarkThemeEnabled ? darkSecondaryBackgroundColor :  Color.fromRGBO(248, 249, 250, 1),
                           ),
                           margin: const EdgeInsets.only(bottom: 10),
                           child: Row(
@@ -262,7 +302,11 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
             Icons.done,
             color: Color.fromRGBO(8, 171, 34, 1),
           )
-        : issueProvider.updateIssueState == AuthStateEnum.loading && issueDetailSelectedState == issuesProvider.states[issuesProvider.states.keys.elementAt(i)][j]['name']
+        : issueProvider.updateIssueState == AuthStateEnum.loading &&
+                issueDetailSelectedState ==
+                    issuesProvider
+                            .states[issuesProvider.states.keys.elementAt(i)][j]
+                        ['name']
             ? const SizedBox(
                 height: 20,
                 width: 20,

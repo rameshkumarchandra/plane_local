@@ -338,6 +338,12 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                               : ListTile(
                                   onTap: () {
                                     //   log(projectProvider.projects[index].toString());
+                                    if (projectProvider.currentProject !=
+                                        projectProvider.projects[index]) {
+                                      ref
+                                          .read(ProviderList.issuesProvider)
+                                          .clearData();
+                                    }
                                     projectProvider.currentProject =
                                         projectProvider.projects[index];
                                     Navigator.push(

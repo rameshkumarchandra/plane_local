@@ -111,6 +111,7 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                           type: FontStyle.text,
                           textAlign: TextAlign.start,
                           color: Colors.white,
+                          overflow: TextOverflow.visible,
                         ),
                       ),
                       const Icon(

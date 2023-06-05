@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/utils/constants.dart';
 
+import '../config/enums.dart';
 import '../provider/provider_list.dart';
 import '../utils/custom_text.dart';
 
@@ -48,6 +49,7 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var projectProvider = ref.watch(ProviderList.projectProvider);
+    var projectProviderRead = ref.read(ProviderList.projectProvider);
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
@@ -300,7 +302,33 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                       color: Colors.grey,
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () async {
+                        await projectProviderRead.deleteProject(
+                          slug: ref
+                              .read(ProviderList.workspaceProvider)
+                              .selectedWorkspace!
+                              .workspaceSlug,
+                          projId: projectProviderRead.currentProject['id']
+                        );
+                        Navigator.of(context)..pop()..pop();
+                        projectProviderRead.getProjects(slug: 
+                        ref.read(ProviderList.workspaceProvider)
+                              .selectedWorkspace!
+                              .workspaceSlug,
+                        );
+                        projectProviderRead.getProjects(slug: 
+                        ref.read(ProviderList.workspaceProvider)
+                              .selectedWorkspace!
+                              .workspaceSlug,
+                        );
+                        projectProviderRead.favouriteProjects(
+                        slug: ref.read(ProviderList.workspaceProvider)
+                              .selectedWorkspace!
+                              .workspaceSlug,
+                        method: HttpMethod.get,
+                        projectID: "",
+                        index: 0);
+                      },
                       child: Container(
                           height: 45,
                           width: MediaQuery.of(context).size.width,

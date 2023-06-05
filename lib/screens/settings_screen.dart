@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/screens/control_page.dart';
 import 'package:plane_startup/screens/estimates_page.dart';
@@ -13,18 +14,19 @@ import 'package:plane_startup/screens/states_pages.dart';
 import 'package:plane_startup/utils/button.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_rich_text.dart';
+import 'package:plane_startup/widgets/loading_widget.dart';
 
 import '../utils/custom_appBar.dart';
 import '../utils/custom_text.dart';
 
-class SettingScreen extends StatefulWidget {
+class SettingScreen extends ConsumerStatefulWidget {
   const SettingScreen({super.key});
 
   @override
-  State<SettingScreen> createState() => _SettingScreenState();
+  ConsumerState<SettingScreen> createState() => _SettingScreenState();
 }
 
-class _SettingScreenState extends State<SettingScreen> {
+class _SettingScreenState extends ConsumerState<SettingScreen> {
   List<String> tabs = [
     'General',
     'Control',
@@ -40,6 +42,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var projectprovider = ref.watch(ProviderList.projectProvider);
     return Scaffold(
       // backgroundColor: themeProvider.secondaryBackgroundColor,
       appBar: CustomAppBar(
@@ -70,7 +73,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     ),
                     context: context,
                     builder: (context) {
-                      return const BottomSheet();
+                      return CreateLabel(method: CRUD.create,);
                     },
                   );
                 }
@@ -82,248 +85,138 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
             )
           : Container(),
-      body: SizedBox(
-        height: height,
-        child: Column(
-          children: [
-            //grey line
-            const SizedBox(
-              height: 1,
-              width: double.infinity,
-              // color: themeProvider.secondaryBackgroundColor,
-            ),
-            Container(
-              height: 15,
-              // color: themeProvider.backgroundColor,
-            ),
-            SizedBox(
-              //padding: const EdgeInsets.symmetric(horizontal: 20),
-              // color: themeProvider.backgroundColor,
-              height: 34,
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                itemCount: tabs.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = index;
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 20),
-                      child: Column(
-                        children: [
-                          CustomText(
-                            tabs[index],
-                            type: FontStyle.subheading,
-                          ),
-                          const SizedBox(height: 5),
-                          Container(
-                            height: 7,
-                            //set the width of the container to the length of the text
-                            width: tabs[index].length * 10.1,
-                            decoration: BoxDecoration(
-                              color: selectedIndex == index
-                                  ? const Color.fromRGBO(63, 118, 255, 1)
-                                  : Colors.transparent,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+      body: LoadingWidget(
+        loading: projectprovider.deleteProjectState == AuthStateEnum.loading,
+        widgetClass: SizedBox(
+          height: height,
+          child: Column(
+            children: [
+              //grey line
+              const SizedBox(
+                height: 1,
+                width: double.infinity,
+                // color: themeProvider.secondaryBackgroundColor,
               ),
-            ),
-            //grey line
-            const SizedBox(
-              height: 1,
-              width: double.infinity,
-              // color: themeProvider.secondaryBackgroundColor,
-            ),
-            Expanded(
-                child: selectedIndex == 0
-                    ? const GeneralPage()
-                    : selectedIndex == 1
-                        ? const ControlPage()
-                        : selectedIndex == 2
-                            ? MembersListWidget(
-                                fromWorkspace: false,
-                              )
-                            : selectedIndex == 3
-                                ? const FeaturesPage()
-                                : selectedIndex == 4
-                                    ? const StatesPage()
-                                    : selectedIndex == 5
-                                        ? LablesPage()
-                                        : selectedIndex == 6
-                                            ? const IntegrationsWidget()
-                                            : selectedIndex == 7
-                                                ? const EstimatsPage()
-                                                : Container()),
-          ],
+              Container(
+                height: 15,
+                // color: themeProvider.backgroundColor,
+              ),
+              SizedBox(
+                //padding: const EdgeInsets.symmetric(horizontal: 20),
+                // color: themeProvider.backgroundColor,
+                height: 34,
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: tabs.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: Column(
+                          children: [
+                            CustomText(
+                              tabs[index],
+                              type: FontStyle.subheading,
+                            ),
+                            const SizedBox(height: 5),
+                            Container(
+                              height: 7,
+                              //set the width of the container to the length of the text
+                              width: tabs[index].length * 10.1,
+                              decoration: BoxDecoration(
+                                color: selectedIndex == index
+                                    ? const Color.fromRGBO(63, 118, 255, 1)
+                                    : Colors.transparent,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              //grey line
+              const SizedBox(
+                height: 1,
+                width: double.infinity,
+                // color: themeProvider.secondaryBackgroundColor,
+              ),
+              Expanded(
+                  child: selectedIndex == 0
+                      ? const GeneralPage()
+                      : selectedIndex == 1
+                          ? const ControlPage()
+                          : selectedIndex == 2
+                              ? MembersListWidget(
+                                  fromWorkspace: false,
+                                )
+                              : selectedIndex == 3
+                                  ? const FeaturesPage()
+                                  : selectedIndex == 4
+                                      ? const StatesPage()
+                                      : selectedIndex == 5
+                                          ? const LablesPage()
+                                          : selectedIndex == 6
+                                              ? const IntegrationsWidget()
+                                              : selectedIndex == 7
+                                                  ? const EstimatsPage()
+                                                  : Container()),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class BottomSheet extends ConsumerStatefulWidget {
-  const BottomSheet({super.key});
+
+class CreateLabel extends ConsumerStatefulWidget {
+  String? label;
+  String? labelColor;
+  CRUD method;
+  String? labelId;
+  CreateLabel({this.label, this.labelColor, required this.method,this.labelId,  super.key});
 
   @override
-  ConsumerState<BottomSheet> createState() => _BottomSheetState();
+  ConsumerState<CreateLabel> createState() => _CreateLabelState();
 }
 
-class _BottomSheetState extends ConsumerState<BottomSheet> {
-  @override
+class _CreateLabelState extends ConsumerState<CreateLabel> {
+
   TextEditingController lableController = TextEditingController();
-  Widget lable = Container(
-    height: 40,
-    width: 40,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(5),
-      color: Colors.red,
-    ),
-  );
-  List<Widget> colors = [
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.red,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.green,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.purple,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.orange,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.blueAccent,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.brown,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.lightBlue,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.deepPurple,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.pink,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.lightGreenAccent,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.lightBlueAccent,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.pink,
-      ),
-    ),
-    Container(
-      height: 40,
-      width: 40,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.black,
-      ),
-    ),
+  String lable = '';
+  List colors = [
+    '#FF6900',
+    '#FCB900',
+    '#7BDCB5',
+    '#00D084',
+    '#8ED1FC',
+    '#0693E3',
+    '#ABB8C3',
+    '#EB144C',
+    '#F78DA7',
+    '#9900EF'
   ];
-  List<Widget> colorList = [];
   bool showColoredBox = false;
+
+  @override
+  void initState() {
+    super.initState();
+    lableController.text = widget.label ?? '';
+    lable = widget.labelColor ?? '#ABB8C3';
+  }
 
   @override
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
-    // List<Widget> generateWidget() {
-    //   for (int i = 0; i < colors.length; i++) {
-    //       colorList.add(
-    //         InkWell(
-    //           onTap: () {
-    //             setState(() {
-    //               lableColor = colors[i];
-    //               showColoredBox = false;
-    //             });
-    //           },
-    //           child: Container(
-    //             height: 40,
-    //             width: 40,
-    //             decoration: BoxDecoration(
-    //               borderRadius: BorderRadius.circular(5),
-    //               color: colors[i],
-    //             ),
-    //           ),
-    //         ),
-    //       );
-    //   }
-    //   return colorList;
-    // }
-
+    var issuesProvider = ref.read(ProviderList.issuesProvider);
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -368,12 +261,20 @@ class _BottomSheetState extends ConsumerState<BottomSheet> {
                       height: 10,
                     ),
                     InkWell(
-                        onTap: () {
-                          setState(() {
-                            showColoredBox = !showColoredBox;
-                          });
-                        },
-                        child: lable),
+                      onTap: () {
+                        setState(() {
+                          showColoredBox = !showColoredBox;
+                        });
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Color(int.parse('0xFF${lable.toString().replaceAll('#', '')}'))
+                        ),
+                      )
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -399,10 +300,20 @@ class _BottomSheetState extends ConsumerState<BottomSheet> {
                   ],
                 ),
                 Button(
-                  text: 'Add Lable',
+                  text: widget.method == CRUD.update ? 'Update Label' : 'Add Lable',
                   ontap: () {
-                    setState(
-                      () {},
+                    issuesProvider.issueLabels(
+                      slug: ref
+                          .watch(ProviderList.workspaceProvider)
+                          .selectedWorkspace!
+                          .workspaceSlug,
+                      projID: ref.watch(ProviderList.projectProvider).currentProject['id'],
+                      method: widget.method,
+                      data: {
+                        "name": lableController.text,
+                        "color": lable,
+                      },
+                      labelId: widget.labelId
                     );
                     Navigator.of(context).pop();
                   },
@@ -437,7 +348,14 @@ class _BottomSheetState extends ConsumerState<BottomSheet> {
                                     showColoredBox = false;
                                   });
                                 },
-                                child: e,
+                                child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Color(int.parse('0xFF${e.toString().replaceAll('#', '')}')),
+                                  ),
+                                ),
                               ))
                           .toList(),
                     ),
@@ -447,5 +365,6 @@ class _BottomSheetState extends ConsumerState<BottomSheet> {
         ],
       ),
     );
+  
   }
 }

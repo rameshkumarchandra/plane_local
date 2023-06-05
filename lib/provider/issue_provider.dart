@@ -9,12 +9,19 @@ import '../config/const.dart';
 import '../services/dio_service.dart';
 
 class IssueProvider with ChangeNotifier {
-  AuthStateEnum issueDetailState = AuthStateEnum.loading;
-  AuthStateEnum issueActivityState = AuthStateEnum.loading;
+  AuthStateEnum issueDetailState = AuthStateEnum.empty;
+  AuthStateEnum issueActivityState = AuthStateEnum.empty;
   AuthStateEnum updateIssueState = AuthStateEnum.empty;
   Map<String, dynamic> issueDetails = {};
   List<dynamic> issueActivity = [];
-
+  
+  void clear(){
+    issueDetailState = AuthStateEnum.empty;
+    issueActivityState = AuthStateEnum.empty;
+    updateIssueState = AuthStateEnum.empty;
+    issueDetails = {};
+    issueActivity = [];
+  }
   Future getIssueDetails({
     required String slug,
     required String projID,

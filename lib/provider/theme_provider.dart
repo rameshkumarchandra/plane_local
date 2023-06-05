@@ -16,6 +16,10 @@ class ThemeProvider extends ChangeNotifier {
   // Color buttonColor = primaryColor;
 
   //function to change theme and stor the theme in shared preferences
+
+  void clear(){
+    isDarkThemeEnabled = false;
+  }
   Future<void> changeTheme() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
 

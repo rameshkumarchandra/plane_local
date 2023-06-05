@@ -24,3 +24,5 @@ enum OrderBY { manual, lastCreated, lastUpdated, priority }
 
 enum IssueType { all, activeIssues, backlogIssues }
 
+enum CRUD { create, read, update, delete }
+

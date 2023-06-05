@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:plane_startup/config/enums.dart';
+import 'package:plane_startup/models/workspace_model.dart';
 import 'package:plane_startup/screens/home_screen.dart';
 import 'package:plane_startup/screens/setup_profile_screen.dart';
 import 'package:plane_startup/services/shared_preference_service.dart';
@@ -245,9 +246,14 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                                         profileProvider
                                                             .userProfile
                                                             .last_workspace_id) {
+                                                      // workspaceProvider
+                                                      //         .currentWorkspace =
+                                                      //     element;
                                                       workspaceProvider
-                                                              .currentWorkspace =
-                                                          element;
+                                                              .selectedWorkspace =
+                                                          WorkspaceModel
+                                                              .fromJson(
+                                                                  element);
                                                       return true;
                                                     }
                                                     return false;

@@ -77,7 +77,7 @@ class _MembersState extends ConsumerState<Members> {
         body: LoadingWidget(
           loading: workspaceProvider.getMembersState == AuthStateEnum.loading,
           widgetClass: MembersListWidget(
-            fromWorkspace: true,
+            fromWorkspace: widget.fromWorkspace,
           ),
         ));
   }
@@ -97,9 +97,9 @@ class MembersListWidget extends ConsumerStatefulWidget {
 class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
   @override
   Widget build(BuildContext context) {
-    var issueProvider = ref.watch(ProviderList.issuesProvider);
     var workspaceProvider = ref.watch(ProviderList.workspaceProvider);
     var themeProvider = ref.watch(ProviderList.themeProvider);
+    var projectsProvider = ref.watch(ProviderList.projectProvider);
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
@@ -108,7 +108,7 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
           // shrinkWrap: true,
           itemCount: widget.fromWorkspace
               ? workspaceProvider.workspaceMembers.length
-              : issueProvider.members.length,
+              : projectsProvider.projectMembers.length,
           itemBuilder: (context, index) {
             return ListTile(
               // leading: Container(
@@ -161,13 +161,13 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                           backgroundImage: NetworkImage(workspaceProvider
                               .workspaceMembers[index]['member']['avatar']),
                         )
-                  : issueProvider.members[index]['member']['avatar'] == null ||
-                          issueProvider.members[index]['member']['avatar'] == ""
+                  : projectsProvider.projectMembers[index]['member']['avatar'] == null ||
+                          projectsProvider.projectMembers[index]['member']['avatar'] == ""
                       ? CircleAvatar(
                           radius: 20,
                           child: Center(
                             child: CustomText(
-                              issueProvider.members[index]['member']['email'][0]
+                              projectsProvider.projectMembers[index]['member']['email'][0]
                                   .toString()
                                   .toUpperCase(),
                               color: Colors.black,
@@ -178,16 +178,16 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                       : CircleAvatar(
                           radius: 20,
                           backgroundImage: NetworkImage(
-                              issueProvider.members[index]['member']['avatar']),
+                              projectsProvider.projectMembers[index]['member']['avatar']),
                         ),
               title: Wrap(
                 children: [
                   CustomText(
                     widget.fromWorkspace
                         ? '${workspaceProvider.workspaceMembers[index]['member']['first_name']} ${workspaceProvider.workspaceMembers[index]['member']['last_name'] ?? ''}'
-                        : issueProvider.members[index]['member']['first_name'] +
+                        : projectsProvider.projectMembers[index]['member']['first_name'] +
                             ' ' +
-                            issueProvider.members[index]['member']['last_name'],
+                            projectsProvider.projectMembers[index]['member']['last_name'],
                     type: FontStyle.title,
                     fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
@@ -200,7 +200,7 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                   widget.fromWorkspace
                       ? workspaceProvider.workspaceMembers[index]['member']
                           ['email']
-                      : issueProvider.members[index]['member']['email'],
+                      : projectsProvider.projectMembers[index]['member']['email'],
                   color: const Color.fromRGBO(133, 142, 150, 1),
                   textAlign: TextAlign.left,
                   type: FontStyle.subtitle,
@@ -224,17 +224,21 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                           firstName: widget.fromWorkspace
                               ? workspaceProvider.workspaceMembers[index]
                                   ['member']['first_name']
-                              : issueProvider.members[index]['member']
+                              : projectsProvider.projectMembers[index]['member']
                                   ['first_name'],
                           lastName: widget.fromWorkspace
                               ? workspaceProvider.workspaceMembers[index]
                                   ['member']['last_name']
-                              : issueProvider.members[index]['member']
+                              : projectsProvider.projectMembers[index]['member']
                                   ['last_name'],
                           role: widget.fromWorkspace
                               ? workspaceProvider.workspaceMembers[index]
                                   ['role']
-                              : issueProvider.members[index]['role'],
+                              : projectsProvider.projectMembers[index]['role'],
+                          userId: widget.fromWorkspace
+                              ? workspaceProvider.workspaceMembers[index]
+                                  ['member']['id']
+                              : projectsProvider.projectMembers[index]['id'],
                         );
                       });
                 },
@@ -262,11 +266,11 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                                               10
                                           ? 'Viewer'
                                           : 'Guest'
-                              : issueProvider.members[index]['role'] == 20
+                              : projectsProvider.projectMembers[index]['role'] == 20
                                   ? 'Admin'
-                                  : issueProvider.members[index]['role'] == 15
+                                  : projectsProvider.projectMembers[index]['role'] == 15
                                       ? 'Member'
-                                      : issueProvider.members[index]['role'] ==
+                                      : projectsProvider.projectMembers[index]['role'] ==
                                               10
                                           ? 'Viewer'
                                           : 'Guest',
@@ -299,11 +303,11 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                   //                         10
                   //                     ? 'Viewer'
                   //                     : 'Guest'
-                  //         : issueProvider.members[index]['role'] == 20
+                  //         : projectsProvider.projectMembers[index]['role'] == 20
                   //             ? 'Admin'
-                  //             : issueProvider.members[index]['role'] == 15
+                  //             : projectsProvider.projectMembers[index]['role'] == 15
                   //                 ? 'Member'
-                  //                 : issueProvider.members[index]['role'] == 10
+                  //                 : projectsProvider.projectMembers[index]['role'] == 10
                   //                     ? 'Viewer'
                   //                     : 'Guest',
                   //     decoration: const InputDecoration(

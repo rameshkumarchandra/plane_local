@@ -12,19 +12,32 @@ class SearchIssueProvider with ChangeNotifier {
   List<dynamic> issues = [];
   AuthStateEnum searchIssuesState = AuthStateEnum.loading;
 
-  Future getIssues({required String slug,required String projectId,String input = '', required bool parent}) async {
+   void clear(){
+    issues = [];
+  }
+
+  Future getIssues({required String slug,required String projectId, required String issueId,  String input = '', required bool parent}) async {
     String query = parent ? 'parent' : 'blocker_blocked_by';
+    String url = '';
+    if(input != '') {
+      url = issueId.isEmpty ?
+        '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search=$input&$query=true' :
+       '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search=$input&$query=true&issue_id=$issueId';
+    }
+    else {
+      url = issueId.isEmpty ?
+      '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search&$query=true' :
+      '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search&$query=true&issue_id=$issueId';
+    }
+    print(url);
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
-        url: 
-        input != '' ?
-        '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search=$input&$query=true' :
-        '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search&$query=true',
+        url: url,
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-      print('${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search&parent=true');
+      
       issues.clear();
       issues = response.data;
       searchIssuesState = AuthStateEnum.success;

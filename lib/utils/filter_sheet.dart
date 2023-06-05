@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:plane_startup/utils/button.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_expansionTile.dart';
@@ -7,13 +10,29 @@ import 'package:plane_startup/utils/custom_expansionTile.dart';
 import '../provider/provider_list.dart';
 import 'custom_text.dart';
 
-class FilterSheet extends ConsumerWidget {
+class FilterSheet extends ConsumerStatefulWidget {
   const FilterSheet({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<FilterSheet> createState() => _FilterSheetState();
+}
+
+class _FilterSheetState extends ConsumerState<FilterSheet> {
+  List priorities = [
+    {'icon': Icons.error_outline_rounded, 'text': 'urgent'},
+    {'icon': Icons.signal_cellular_alt, 'text': 'high'},
+    {'icon': Icons.signal_cellular_alt_2_bar, 'text': 'medium'},
+    {'icon': Icons.signal_cellular_alt_1_bar, 'text': 'low'},
+    {'icon': Icons.do_disturb_alt_outlined, 'text': 'none'}
+  ];
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
-    var issueProvider = ref.watch(ProviderList.issuesProvider);
+    var issuesProvider = ref.watch(ProviderList.issuesProvider);
+    var projectProvider = ref.watch(ProviderList.projectProvider);
 
     String tempImageOfSomeone =
         'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
@@ -21,23 +40,28 @@ class FilterSheet extends ConsumerWidget {
     String tempImageOfPurpleDot =
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoSlbRpkWoJrRefMaUE-pXXHeZd3Y3P4PmKmxZ2o4&s';
 
-    Widget childrensForExapantionItem(
-        {required IconData icon, required String text}) {
+    Widget expandedWidget(
+        {required Widget icon,
+        required String text,
+        Color? color,
+        required bool selected}) {
       return Container(
         margin: const EdgeInsets.all(6),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            border: Border.all(color: Colors.grey.shade400)),
+            border: Border.all(
+                color: selected ? Colors.transparent : Colors.grey.shade400),
+            color: color ?? Colors.white),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              size: 20,
-            ),
+            icon,
             const SizedBox(width: 5),
-            CustomText(text)
+            CustomText(
+              text.isNotEmpty ? text.replaceFirst(text[0], text[0].toUpperCase()) : text,
+              color: selected ? Colors.white : greyColor,
+            )
           ],
         ),
       );
@@ -66,38 +90,12 @@ class FilterSheet extends ConsumerWidget {
     }
 
     Widget horizontalLine() {
-      return SizedBox(
+      return Container(
         height: 1,
         width: double.infinity,
-        child: Container(
-          color: Colors.grey[300],
-        ),
+        color: Colors.grey[300],
       );
     }
-
-    // Widget customExpansionItem({required String title, required Widget child}) {
-    //   return ExpansionTile(
-    //     expandedAlignment: Alignment.centerLeft,
-    //     tilePadding: const EdgeInsets.all(0),
-    //     childrenPadding: EdgeInsets.only(left: 18),
-    //     title: Row(
-    //       children: [
-    //         const Icon(
-    //           Icons.arrow_forward_ios,
-    //           size: 15,
-    //           color: Color.fromRGBO(65, 65, 65, 1),
-    //         ),
-    //         const SizedBox(width: 10),
-    //         CustomText(
-    //           title,
-    //           type: FontStyle.subheading,
-    //         ),
-    //       ],
-    //     ),
-    //     trailing: const SizedBox.shrink(),
-    //     children: [child],
-    //   );
-    // }
 
     return Container(
       padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
@@ -131,19 +129,35 @@ class FilterSheet extends ConsumerWidget {
           CustomExpansionTile(
             title: 'Priority',
             child: Wrap(
-              children: [
-                childrensForExapantionItem(
-                    icon: Icons.dangerous_outlined, text: 'Urgent'),
-                childrensForExapantionItem(
-                    icon: Icons.wifi_2_bar_outlined, text: 'High'),
-                childrensForExapantionItem(
-                    icon: Icons.wifi_2_bar_outlined, text: 'Medium'),
-                childrensForExapantionItem(
-                    icon: Icons.wifi_2_bar_outlined, text: 'Low'),
-                childrensForExapantionItem(
-                    icon: Icons.dangerous_outlined, text: 'None'),
-              ],
-            ),
+                children: priorities
+                    .map((e) => InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (issuesProvider.filterPriorities
+                                .contains(e['text'])) {
+                              issuesProvider.filterPriorities.remove(e['text']);
+                            } else {
+                              issuesProvider.filterPriorities.add(e['text']);
+                            }
+                          });
+                        },
+                        child: expandedWidget(
+                            icon: Icon(
+                              e['icon'],
+                              size: 15,
+                              color: issuesProvider.filterPriorities
+                                      .contains(e['text'])
+                                  ? Colors.white
+                                  : greyColor,
+                            ),
+                            text: e['text'],
+                            color: issuesProvider.filterPriorities
+                                    .contains(e['text'])
+                                ? primaryColor
+                                : Colors.white,
+                            selected: issuesProvider.filterPriorities
+                                .contains(e['text']))))
+                    .toList()),
           ),
 
           horizontalLine(),
@@ -151,19 +165,55 @@ class FilterSheet extends ConsumerWidget {
           CustomExpansionTile(
             title: 'State',
             child: Wrap(
-              children: [
-                childrensForExapantionItem(
-                    icon: Icons.dangerous_outlined, text: 'Backlog'),
-                childrensForExapantionItem(
-                    icon: Icons.wifi_calling_3_outlined, text: 'To Do'),
-                childrensForExapantionItem(
-                    icon: Icons.wifi_2_bar_outlined, text: 'In Progress'),
-                childrensForExapantionItem(
-                    icon: Icons.wifi_1_bar_outlined, text: 'Done'),
-                childrensForExapantionItem(
-                    icon: Icons.dangerous_outlined, text: 'Cancelled'),
-              ],
-            ),
+                children: issuesProvider.states.values
+                    .map((e) => InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (issuesProvider.filterStates
+                                  .contains(e[0]['id'])) {
+                                issuesProvider.filterStates.remove(e[0]['id']);
+                              } else {
+                                issuesProvider.filterStates.add(e[0]['id']);
+                              }
+                            });
+                          },
+                          child: expandedWidget(
+                            icon: SvgPicture.asset(
+                              e[0]['name'] == 'Backlog'
+                                  ? 'assets/svg_images/circle.svg'
+                                  : e[0]['name'] == 'Cancelled'
+                                      ? 'assets/svg_images/cancelled.svg'
+                                      : e[0]['name'] == 'Todo'
+                                          ? 'assets/svg_images/in_progress.svg'
+                                          : e[0]['name'] == 'Done'
+                                              ? 'assets/svg_images/done.svg'
+                                              : 'assets/svg_images/circle.svg',
+                              height: 20,
+                              width: 20,
+                            ),
+                            text: e[0]['name'],
+                            color:
+                                issuesProvider.filterStates.contains(e[0]['id'])
+                                    ? primaryColor
+                                    : Colors.white,
+                            selected: issuesProvider.filterStates
+                                .contains(e[0]['id']),
+                          ),
+                        ))
+                    .toList()
+                // children: [
+                //   expandedWidget(
+                //       icon: Icons.dangerous_outlined, text: 'Backlog', selected: false),
+                //   expandedWidget(
+                //       icon: Icons.wifi_calling_3_outlined, text: 'To Do', selected: false),
+                //   expandedWidget(
+                //       icon: Icons.wifi_2_bar_outlined, text: 'In Progress', selected: false),
+                //   expandedWidget(
+                //       icon: Icons.wifi_1_bar_outlined, text: 'Done', selected: false),
+                //   expandedWidget(
+                //       icon: Icons.dangerous_outlined, text: 'Cancelled', selected: false),
+                // ],
+                ),
           ),
 
           horizontalLine(),
@@ -171,24 +221,45 @@ class FilterSheet extends ConsumerWidget {
           CustomExpansionTile(
             title: 'Assignees',
             child: Wrap(
-              children: [
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfSomeone),
-                    text: 'Srinivas'),
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfSomeone),
-                    text: 'Guru'),
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfSomeone),
-                    text: 'Vihar'),
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfSomeone),
-                    text: 'Bhavesh'),
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfSomeone),
-                    text: 'Vamsi'),
-              ],
-            ),
+                children: projectProvider.projectMembers
+                    .map(
+                      (e) => InkWell(
+                        onTap: (){
+                          setState(() {
+                            if(issuesProvider.filterAssignes.contains(e['member']['id'])){
+                              issuesProvider.filterAssignes.remove(e['member']['id']);
+                            }
+                            else {
+                              issuesProvider.filterAssignes.add(e['member']['id']);
+                            }
+                          });
+                        },
+                        child: expandedWidget(
+                            icon: e['member']['avatar'] != '' &&
+                                    e['member']['avatar'] != null
+                                ? CircleAvatar(
+                                    radius: 10,
+                                    backgroundImage: NetworkImage(e['member']['avatar']),
+                                  )
+                                : CircleAvatar(
+                                    radius: 10,
+                                    backgroundColor: darkBackgroundColor,
+                                    child: Center(
+                                        child: CustomText(
+                                      e['member']['email'][0]
+                                          .toString()
+                                          .toUpperCase(),
+                                      color: Colors.white,
+                                    )),
+                                  ),
+                            text: e['member']['first_name'] != null && e['member']['first_name'] != '' ? e['member']['first_name'] : '',
+                            selected: issuesProvider.filterAssignes.contains(e['member']['id']),
+                            color: issuesProvider.filterAssignes.contains(e['member']['id']) ? primaryColor : Colors.white
+                          ),
+                      ),
+                    )
+                    .toList(),
+                  ),
           ),
 
           horizontalLine(),
@@ -196,23 +267,44 @@ class FilterSheet extends ConsumerWidget {
           CustomExpansionTile(
             title: 'Created by',
             child: Wrap(
-              children: [
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfSomeone),
-                    text: 'Srinivas'),
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfSomeone),
-                    text: 'Guru'),
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfSomeone),
-                    text: 'Vihar'),
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfSomeone),
-                    text: 'Bhavesh'),
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfSomeone),
-                    text: 'Vamsi'),
-              ],
+              children: projectProvider.projectMembers
+                    .map(
+                      (e) => InkWell(
+                        onTap: (){
+                          setState(() {
+                            if(issuesProvider.filterCreatedBy.contains(e['member']['id'])){
+                              issuesProvider.filterCreatedBy.remove(e['member']['id']);
+                            }
+                            else {
+                              issuesProvider.filterCreatedBy.add(e['member']['id']);
+                            }
+                          });
+                        },
+                        child: expandedWidget(
+                            icon: e['member']['avatar'] != '' &&
+                                    e['member']['avatar'] != null
+                                ? CircleAvatar(
+                                    radius: 10,
+                                    backgroundImage: NetworkImage(e['member']['avatar']),
+                                  )
+                                : CircleAvatar(
+                                    radius: 10,
+                                    backgroundColor: darkBackgroundColor,
+                                    child: Center(
+                                        child: CustomText(
+                                      e['member']['email'][0]
+                                          .toString()
+                                          .toUpperCase(),
+                                      color: Colors.white,
+                                    )),
+                                  ),
+                            text: e['member']['first_name'] != null && e['member']['first_name'] != '' ? e['member']['first_name'] : '',
+                            selected: issuesProvider.filterCreatedBy.contains(e['member']['id']),
+                            color: issuesProvider.filterCreatedBy.contains(e['member']['id']) ? primaryColor : Colors.white
+                          ),
+                      ),
+                    )
+                    .toList(),
             ),
           ),
 
@@ -221,21 +313,33 @@ class FilterSheet extends ConsumerWidget {
           CustomExpansionTile(
             title: 'Labels',
             child: Wrap(
-              children: [
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfPurpleDot),
-                    text: 'label 1'),
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfPurpleDot),
-                    text: 'label 2'),
-                personForExapantionItem(
-                    imageProvider: NetworkImage(tempImageOfPurpleDot),
-                    text: 'label 3'),
-              ],
+              children: issuesProvider.labels.map((e) => 
+                InkWell(
+                  onTap: (){
+                    setState(() {
+                    if(issuesProvider.filterLabels.contains(e['id'])){
+                      issuesProvider.filterLabels.remove(e['id']);
+                    }
+                    else {
+                      issuesProvider.filterLabels.add(e['id']);
+                    }
+                    });
+                  },
+                  child: expandedWidget(
+                    icon: CircleAvatar(
+                      radius: 5,
+                      backgroundColor: Color(int.parse("0xFF${e['color'].toString().toUpperCase().replaceAll("#", "")}")),
+                    ),
+                    text: e['name'],
+                    selected: issuesProvider.filterLabels.contains(e['id']),
+                    color: issuesProvider.filterLabels.contains(e['id']) ? primaryColor : Colors.white
+                  ),
+                )
+              ).toList()
             ),
           ),
 
-          horizontalLine(),
+          // horizontalLine(),
 
           // Expanded(child: Container()),
 
@@ -246,7 +350,18 @@ class FilterSheet extends ConsumerWidget {
             margin: const EdgeInsets.only(bottom: 18),
             child: Button(
               text: 'Apply Filter',
-              ontap: () {},
+              ontap: () {
+                issuesProvider.orderByIssues(
+                  slug: ref
+                  .read(ProviderList.workspaceProvider)
+                  .selectedWorkspace!
+                  .workspaceSlug,
+                  projID: ref
+                      .read(ProviderList.projectProvider)
+                      .currentProject["id"],
+                );
+                Navigator.of(context).pop();
+              },
               textColor: Colors.white,
             ),
           ),

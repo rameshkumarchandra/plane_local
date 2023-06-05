@@ -31,8 +31,11 @@ class IssuesProvider extends ChangeNotifier {
   AuthStateEnum issuePropertyState = AuthStateEnum.empty;
   AuthStateEnum joinprojectState = AuthStateEnum.empty;
   var createIssueState = AuthStateEnum.empty;
+  String createIssueParent = '';
+  String createIssueParentId = '';
   var issueView = {};
   bool showEmptyStates = true;
+  bool isISsuesEmpty = true;
   Issues issues = Issues(
       issues: [],
       projectView: ProjectView.kanban,
@@ -60,6 +63,58 @@ class IssuesProvider extends ChangeNotifier {
   var groupBy_response = {};
   bool isGroupBy = false;
   var shrinkStates = [];
+
+  String orderBy = '';
+  String groupBy = '';
+  String issueType = '';
+  List filterPriorities = [];
+  List filterStates = [];
+  List filterAssignes = [];
+  List filterCreatedBy = [];
+  List filterLabels = [];
+
+  void clear() {
+    issueView = {};
+    showEmptyStates = true;
+    issues = Issues(
+        issues: [],
+        projectView: ProjectView.kanban,
+        groupBY: GroupBY.state,
+        orderBY: OrderBY.manual,
+        issueType: IssueType.all,
+        displayProperties: DisplayProperties(
+            assignee: false,
+            dueDate: false,
+            id: false,
+            label: false,
+            state: false,
+            subIsseCount: false,
+            priority: false,
+            attachmentCount: false,
+            linkCount: false));
+    stateIcons = {};
+    issueProperty = {};
+    createIssuedata = {};
+    createIssueParent = '';
+    createIssueParentId = '';
+    issuesResponse = [];
+    labels = [];
+    states = {};
+    members = [];
+    projectView = {};
+    groupBy_response = {};
+    isGroupBy = false;
+    shrinkStates = [];
+    orderBy = '';
+    groupBy = '';
+    issueType = '';
+    filterPriorities = [];
+    filterStates = [];
+    filterAssignes = [];
+    filterCreatedBy = [];
+    filterLabels = [];
+  }
+
   void setsState() {
     notifyListeners();
   }
@@ -74,6 +129,7 @@ class IssuesProvider extends ChangeNotifier {
   }
 
   List<BoardListsData> priorityBoard() {
+    var themeProvider = ref!.read(ProviderList.themeProvider);
     int count = 0;
     issues.issues = [];
     for (int j = 0; j < groupBy_response.length; j++) {
@@ -160,25 +216,32 @@ class IssuesProvider extends ChangeNotifier {
       //  log(issues.groupBY.toString());
       element.leading = issues.groupBY == GroupBY.priority
           ? element.title == 'Urgent'
-              ? Icon(
-                  Icons.error_outline,
+              ? Icon(Icons.error_outline,
                   size: 18,
-                )
+                  color: themeProvider.isDarkThemeEnabled
+                      ? Colors.white
+                      : Colors.black)
               : element.title == 'High'
-                  ? const Icon(
+                  ? Icon(
                       Icons.signal_cellular_alt,
-                      color: Colors.black,
+                      color: themeProvider.isDarkThemeEnabled
+                          ? Colors.white
+                          : Colors.black,
                       size: 18,
                     )
                   : element.title == 'Medium'
-                      ? const Icon(
+                      ? Icon(
                           Icons.signal_cellular_alt_2_bar,
-                          color: Colors.black,
+                          color: themeProvider.isDarkThemeEnabled
+                              ? Colors.white
+                              : Colors.black,
                           size: 18,
                         )
-                      : const Icon(
+                      : Icon(
                           Icons.signal_cellular_alt_1_bar,
-                          color: Colors.black,
+                          color: themeProvider.isDarkThemeEnabled
+                              ? Colors.white
+                              : Colors.black,
                           size: 18,
                         )
           : issues.groupBY == GroupBY.createdBY
@@ -237,7 +300,9 @@ class IssuesProvider extends ChangeNotifier {
               ),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  color: const Color.fromRGBO(222, 226, 230, 0.4)),
+                  color: themeProvider.isDarkThemeEnabled
+                      ? const Color.fromRGBO(39, 42, 45, 1)
+                      : const Color.fromRGBO(222, 226, 230, 1)),
               height: 25,
               width: 35,
               child: CustomText(
@@ -325,6 +390,10 @@ class IssuesProvider extends ChangeNotifier {
 
     issues.issues = data;
     for (int i = 0; i < issuesResponse.length; i++) {
+      if (stateIndexMapping[issuesResponse[i]["state_detail"]["id"]] == null) {
+        continue;
+      }
+
       data[stateIndexMapping[issuesResponse[i]["state_detail"]["id"]]]
           .items
           .add(IssueCardWidget(
@@ -413,20 +482,30 @@ class IssuesProvider extends ChangeNotifier {
     }
   }
 
-  Future createLabels(
-      {required String slug,
-      required String projID,
-      required dynamic data}) async {
+  Future issueLabels({
+    required String slug,
+    required String projID,
+    required dynamic data,
+    CRUD? method,
+    String? labelId,
+  }) async {
     labelState = AuthStateEnum.loading;
     notifyListeners();
+    String url = method == CRUD.update
+        ? '${APIs.issueLabels.replaceAll("\$SLUG", slug).replaceAll('\$PROJECTID', projID)}$labelId/'
+        : APIs.issueLabels
+            .replaceAll("\$SLUG", slug)
+            .replaceAll('\$PROJECTID', projID);
+
+    print(url);
+    print(labelId);
     try {
       var response = await DioConfig().dioServe(
           hasAuth: true,
-          url: APIs.issueLabels
-              .replaceAll("\$SLUG", slug)
-              .replaceAll('\$PROJECTID', projID),
+          url: url,
           hasBody: true,
-          httpMethod: HttpMethod.post,
+          httpMethod:
+              method == CRUD.update ? HttpMethod.patch : HttpMethod.post,
           data: data);
       //   log(response.data.toString());
       await getLabels(slug: slug, projID: projID);
@@ -524,10 +603,13 @@ class IssuesProvider extends ChangeNotifier {
             "state": createIssuedata['state']['id'],
             if (createIssuedata['due_date'] != null)
               "target_date":
-                  DateFormat('yyyy-MM-dd').format(createIssuedata['due_date'])
+                  DateFormat('yyyy-MM-dd').format(createIssuedata['due_date']),
+            if(createIssueParentId.isNotEmpty) "parent" : createIssueParentId
           });
       // log(response.data.toString());
+
       issuesResponse.add(response.data);
+      isISsuesEmpty = issuesResponse.isEmpty;
       createIssueState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
@@ -550,7 +632,10 @@ class IssuesProvider extends ChangeNotifier {
       );
 
       log("DONE");
+
       issuesResponse = response.data;
+      isISsuesEmpty = issuesResponse.isEmpty;
+      log(issuesResponse.toString());
       issueState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
@@ -619,8 +704,12 @@ class IssuesProvider extends ChangeNotifier {
   Future getIssueProperties() async {
     issueState = AuthStateEnum.loading;
     log(APIs.issueProperties
-        .replaceAll("\$SLUG",
-            ref!.read(ProviderList.workspaceProvider).currentWorkspace['slug'])
+        .replaceAll(
+            "\$SLUG",
+            ref!
+                .read(ProviderList.workspaceProvider)
+                .selectedWorkspace!
+                .workspaceSlug)
         .replaceAll('\$PROJECTID',
             ref!.read(ProviderList.projectProvider).currentProject['id']));
     try {
@@ -631,7 +720,8 @@ class IssuesProvider extends ChangeNotifier {
                 "\$SLUG",
                 ref!
                     .read(ProviderList.workspaceProvider)
-                    .currentWorkspace['slug'])
+                    .selectedWorkspace!
+                    .workspaceSlug)
             .replaceAll('\$PROJECTID',
                 ref!.read(ProviderList.projectProvider).currentProject['id']),
         hasBody: false,
@@ -646,7 +736,8 @@ class IssuesProvider extends ChangeNotifier {
                     "\$SLUG",
                     ref!
                         .read(ProviderList.workspaceProvider)
-                        .currentWorkspace['slug'])
+                        .selectedWorkspace!
+                        .workspaceSlug)
                 .replaceAll(
                     '\$PROJECTID',
                     ref!
@@ -710,7 +801,8 @@ class IssuesProvider extends ChangeNotifier {
                 "\$SLUG",
                 ref!
                     .read(ProviderList.workspaceProvider)
-                    .currentWorkspace['slug'])
+                    .selectedWorkspace!
+                    .workspaceSlug)
             .replaceAll('\$PROJECTID',
                 ref!.read(ProviderList.projectProvider).currentProject['id']),
         hasBody: true,
@@ -752,7 +844,8 @@ class IssuesProvider extends ChangeNotifier {
                 "\$SLUG",
                 ref!
                     .read(ProviderList.workspaceProvider)
-                    .currentWorkspace['slug'])
+                    .selectedWorkspace!
+                    .workspaceSlug)
             .replaceAll('\$PROJECTID',
                 ref!.read(ProviderList.projectProvider).currentProject['id']),
         hasBody: true,
@@ -793,7 +886,8 @@ class IssuesProvider extends ChangeNotifier {
                 "\$SLUG",
                 ref!
                     .read(ProviderList.workspaceProvider)
-                    .currentWorkspace['slug'])
+                    .selectedWorkspace!
+                    .workspaceSlug)
             .replaceAll('\$PROJECTID',
                 ref!.read(ProviderList.projectProvider).currentProject['id']),
         hasBody: false,
@@ -814,47 +908,102 @@ class IssuesProvider extends ChangeNotifier {
     }
   }
 
-  //08d59d96-9dfb-40e5-aa30-ecc66319450f
-
   Future orderByIssues({
     required String slug,
     required String projID,
-    required String orderBY,
-    required String groupBY,
-    required String type,
+    // required String orderBY,
+    // required String groupBY,
+    // required String type,
   }) async {
     orderByState = AuthStateEnum.loading;
     notifyListeners();
 
-    if (orderBY == '') {
-      orderBY = '-created_at';
+    if (orderBy == '') {
+      orderBy = '-created_at';
     }
-    if (groupBY == '') {
-      groupBY = 'state';
+    if (groupBy == '') {
+      groupBy = 'state';
     }
-    if (type == '') {
-      type = 'all';
+    if (issueType == '') {
+      issueType = 'all';
     }
-    issues.groupBY = Issues.toGroupBY(groupBY);
-    issues.orderBY = Issues.toOrderBY(orderBY);
-    issues.issueType = Issues.toIssueType(type);
+    issues.groupBY = Issues.toGroupBY(groupBy);
+    issues.orderBY = Issues.toOrderBY(orderBy);
+    issues.issueType = Issues.toIssueType(issueType);
     if (issues.groupBY == GroupBY.labels) {
       getLabels(slug: slug, projID: projID);
     } else if (issues.groupBY == GroupBY.createdBY) {
       getProjectMembers(slug: slug, projID: projID);
     }
-    var url = (type != 'all')
-        ? APIs.orderByGroupByTypeIssues
-            .replaceAll("\$SLUG", slug)
-            .replaceAll('\$PROJECTID', projID)
-            .replaceAll('\$ORDERBY', orderBY)
-            .replaceAll('\$GROUPBY', groupBY)
-            .replaceAll('\$TYPE', type)
-        : APIs.orderByGroupByIssues
-            .replaceAll("\$SLUG", slug)
-            .replaceAll('\$PROJECTID', projID)
-            .replaceAll('\$ORDERBY', orderBY)
-            .replaceAll('\$GROUPBY', groupBY);
+
+    String url;
+
+    if (issueType != 'all') {
+      print('======IF=====');
+      url = APIs.orderByGroupByTypeIssues
+          .replaceAll("\$SLUG", slug)
+          .replaceAll('\$PROJECTID', projID)
+          .replaceAll('\$ORDERBY', orderBy)
+          .replaceAll('\$GROUPBY', groupBy)
+          .replaceAll('\$TYPE', issueType);
+      if (filterPriorities.isNotEmpty) {
+        url =
+            '$url&priority=${filterPriorities.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+      }
+      if (filterStates.isNotEmpty) {
+        url =
+            '$url&state=${filterStates.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      }
+      if (filterAssignes.isNotEmpty) {
+        url =
+            '$url&assignees=${filterAssignes.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      }
+      if (filterCreatedBy.isNotEmpty) {
+        url =
+            '$url&created_by=${filterCreatedBy.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+      }
+      if (filterLabels.isNotEmpty) {
+        url =
+            '$url&labels=${filterLabels.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      } else {
+        url = url;
+      }
+    } else {
+      print('ELSE');
+      url = APIs.orderByGroupByIssues
+          .replaceAll("\$SLUG", slug)
+          .replaceAll('\$PROJECTID', projID)
+          .replaceAll('\$ORDERBY', orderBy)
+          .replaceAll('\$GROUPBY', groupBy);
+      if (filterPriorities.isNotEmpty) {
+        url =
+            '$url&priority=${filterPriorities.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+      }
+      if (filterStates.isNotEmpty) {
+        url =
+            '$url&state=${filterStates.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      }
+      if (filterAssignes.isNotEmpty) {
+        url =
+            '$url&assignees=${filterAssignes.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      }
+      if (filterCreatedBy.isNotEmpty) {
+        url =
+            '$url&created_by=${filterCreatedBy.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+      }
+      if (filterLabels.isNotEmpty) {
+        url =
+            '$url&labels=${filterLabels.toString().replaceAll('[', '').replaceAll(']', '').replaceAll(' ', '')}';
+        print(url);
+      } else {
+        url = url;
+      }
+    }
     //log('URL: $url');
     try {
       var response = await DioConfig().dioServe(
@@ -867,7 +1016,7 @@ class IssuesProvider extends ChangeNotifier {
 
       issuesResponse = [];
 
-      if (groupBY == 'state') {
+      if (groupBy == 'state') {
         isGroupBy = false;
         groupBy_response = {};
         (response.data as Map).forEach((key, value) {
@@ -875,13 +1024,28 @@ class IssuesProvider extends ChangeNotifier {
             issuesResponse.add(element);
           }
         });
+        log('State');
+        isISsuesEmpty = issuesResponse.isEmpty;
       } else {
         groupBy_response = response.data;
         isGroupBy = true;
+
+        //check is each key of groupBy_response is empty or not using for loop
+        isISsuesEmpty = true;
+        for (var key in groupBy_response.keys) {
+          if (groupBy_response[key].isNotEmpty) {
+            isISsuesEmpty = false;
+            break;
+          }
+        }
       }
+      log('Filter');
+      log(groupBy_response.toString());
 
       // log(issues.toString());
       // log(labels.toString());
+      print('==== SUCCESS =====');
+
       orderByState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
