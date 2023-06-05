@@ -31,6 +31,8 @@ class IssuesProvider extends ChangeNotifier {
   AuthStateEnum issuePropertyState = AuthStateEnum.empty;
   AuthStateEnum joinprojectState = AuthStateEnum.empty;
   var createIssueState = AuthStateEnum.empty;
+  String createIssueParent = '';
+  String createIssueParentId = '';
   var issueView = {};
   bool showEmptyStates = true;
   bool isISsuesEmpty = true;
@@ -93,6 +95,8 @@ class IssuesProvider extends ChangeNotifier {
     stateIcons = {};
     issueProperty = {};
     createIssuedata = {};
+    createIssueParent = '';
+    createIssueParentId = '';
     issuesResponse = [];
     labels = [];
     states = {};
@@ -599,7 +603,8 @@ class IssuesProvider extends ChangeNotifier {
             "state": createIssuedata['state']['id'],
             if (createIssuedata['due_date'] != null)
               "target_date":
-                  DateFormat('yyyy-MM-dd').format(createIssuedata['due_date'])
+                  DateFormat('yyyy-MM-dd').format(createIssuedata['due_date']),
+            if(createIssueParentId.isNotEmpty) "parent" : createIssueParentId
           });
       // log(response.data.toString());
 

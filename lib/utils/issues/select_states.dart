@@ -65,6 +65,7 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
   Widget build(BuildContext context) {
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
     var issueProvider = ref.watch(ProviderList.issueProvider);
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return WillPopScope(
       onWillPop: () async {
         var prov = ref.read(ProviderList.issuesProvider);
@@ -82,9 +83,11 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
       child: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.all(16),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: themeProvider.isDarkThemeEnabled
+                ? darkBackgroundColor
+                : lightBackgroundColor,
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10)),
           ),
           width: double.infinity,
@@ -116,7 +119,7 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                           icon: const Icon(Icons.close))
                     ],
                   ),
-                  Container(
+                  const SizedBox(
                     height: 15,
                   ),
                   for (int i = 0; i < issuesProvider.states.length; i++)
@@ -166,8 +169,8 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                           padding: const EdgeInsets.only(
                             left: 5,
                           ),
-                          decoration: const BoxDecoration(
-                            color: Color.fromRGBO(248, 249, 250, 1),
+                          decoration: BoxDecoration(
+                            color: themeProvider.isDarkThemeEnabled ? darkSecondaryBackgroundColor :  Color.fromRGBO(248, 249, 250, 1),
                           ),
                           margin: const EdgeInsets.only(bottom: 10),
                           child: Row(

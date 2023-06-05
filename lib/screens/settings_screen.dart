@@ -162,7 +162,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                                   : selectedIndex == 4
                                       ? const StatesPage()
                                       : selectedIndex == 5
-                                          ? LablesPage()
+                                          ? const LablesPage()
                                           : selectedIndex == 6
                                               ? const IntegrationsWidget()
                                               : selectedIndex == 7

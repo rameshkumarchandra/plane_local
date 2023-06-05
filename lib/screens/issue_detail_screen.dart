@@ -586,32 +586,26 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                                                                 .start,
                                                         children: [
                                                           CircleAvatar(
-                                                            backgroundColor: themeProvider
-                                                                    .isDarkThemeEnabled
-                                                                ? lightBackgroundColor
-                                                                : darkBackgroundColor,
+                                                            backgroundColor:
+                                                                darkSecondaryBackgroundColor,
                                                             radius: 15,
                                                             child: Center(
                                                               child: CustomText(
-                                                                issueProvider
-                                                                    .issueActivity[
-                                                                        index][
-                                                                        'actor_detail']
-                                                                        [
-                                                                        'email']
-                                                                        [0]
-                                                                    .toString()
-                                                                    .toUpperCase(),
-                                                                // color: Colors.black,
-                                                                type: FontStyle
-                                                                    .buttonText,
-                                                                color: themeProvider
-                                                                        .isDarkThemeEnabled
-                                                                    ? Colors
-                                                                        .black
-                                                                    : Colors
-                                                                        .white,
-                                                              ),
+                                                                  issueProvider
+                                                                      .issueActivity[
+                                                                          index]
+                                                                          [
+                                                                          'actor_detail']
+                                                                          [
+                                                                          'email']
+                                                                          [0]
+                                                                      .toString()
+                                                                      .toUpperCase(),
+                                                                  // color: Colors.black,
+                                                                  type: FontStyle
+                                                                      .buttonText,
+                                                                  color: Colors
+                                                                      .white),
                                                             ),
                                                           ),
                                                           const SizedBox(
@@ -1190,7 +1184,6 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                         CustomText(
                           'Select',
                           type: FontStyle.title,
-                          color: Colors.black,
                         ),
                         const SizedBox(
                           width: 5,
@@ -1206,7 +1199,6 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                       DateFormat('yyyy-MM-dd').format(DateTime.parse(
                           issueProvider.issueDetails['target_date'])),
                       type: FontStyle.title,
-                      color: Colors.black,
                     ),
             )
           ],
@@ -1256,6 +1248,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                     builder: (ctx) => IssuesListSheet(
                           parent: true,
                           issueId: widget.isseId,
+                          createIssue: false,
                         ));
               },
               child: issueProvider.issueDetails['parent_detail'] == null
@@ -1264,7 +1257,6 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                         CustomText(
                           'Select issue',
                           type: FontStyle.title,
-                          color: Colors.black,
                         ),
                         const SizedBox(
                           width: 5,
@@ -1284,7 +1276,6 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                                   ['sequence_id']
                               .toString(),
                       type: FontStyle.title,
-                      color: Colors.black,
                     ),
             )
           ],
@@ -1336,6 +1327,7 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                         builder: (ctx) => IssuesListSheet(
                               parent: false,
                               issueId: issueProvider.issueDetails['id'],
+                              createIssue: false,
                             ));
                   },
                   child: Row(
@@ -1343,7 +1335,6 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                       CustomText(
                         'Select issues',
                         type: FontStyle.title,
-                        color: Colors.black,
                       ),
                       const SizedBox(
                         width: 5,
@@ -1440,19 +1431,21 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
               GestureDetector(
                 onTap: () async {
                   showModalBottomSheet(
-                      isScrollControlled: false,
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (ctx) => IssuesListSheet(
-                          parent: false,
-                          issueId: issueProvider.issueDetails['id']));
+                    isScrollControlled: false,
+                    backgroundColor: Colors.transparent,
+                    context: context,
+                    builder: (ctx) => IssuesListSheet(
+                      parent: false,
+                      issueId: issueProvider.issueDetails['id'],
+                      createIssue: false,
+                    ),
+                  );
                 },
                 child: Row(
                   children: [
                     CustomText(
                       'Select issues',
                       type: FontStyle.title,
-                      color: Colors.black,
                     ),
                     const SizedBox(
                       width: 5,

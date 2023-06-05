@@ -39,7 +39,7 @@ class CustomText extends ConsumerWidget {
     this.fontSize,
     this.fontWeight,
     this.overflow,
-    this.textAlign = TextAlign.center,
+    this.textAlign = TextAlign.start,
     this.type = FontStyle.title,
     final Key? key,
   }) : super(key: key);

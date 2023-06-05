@@ -76,6 +76,7 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
+                maxLines: 4,
               ),
               const SizedBox(
                 height: 10,
@@ -134,6 +135,7 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                     color: Colors.black,
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
+                    
                   ),
                   const Icon(
                     Icons.star_outline,
@@ -598,6 +600,7 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                             data[index]['description'],
                             type: FontStyle.description,
                             textAlign: TextAlign.center,
+                            maxLines: 5,
                           ),
                         )
                       ],

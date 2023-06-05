@@ -9,7 +9,8 @@ import 'package:plane_startup/utils/custom_text.dart';
 class IssuesListSheet extends ConsumerStatefulWidget {
   bool parent;
   String issueId;
-  IssuesListSheet({required this.parent, required this.issueId, super.key});
+  bool createIssue;
+  IssuesListSheet({required this.parent, required this.issueId, required this.createIssue, super.key});
 
   @override
   ConsumerState<IssuesListSheet> createState() => _IssuesListSheetState();
@@ -28,7 +29,7 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
           projectId:
               ref.read(ProviderList.projectProvider).currentProject['id'],
           parent: widget.parent,
-          issueId: widget.issueId
+          issueId: widget.createIssue ? '' : widget.issueId
         );
   }
 
@@ -38,11 +39,12 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
     var searchIssueProviderRead = ref.read(ProviderList.searchIssueProvider);
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.read(ProviderList.issueProvider);
+    var issuesProvider = ref.read(ProviderList.issuesProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: themeProvider.isDarkThemeEnabled ? darkBackgroundColor : lightBackgroundColor,
+        borderRadius: const BorderRadius.only(
           topRight: Radius.circular(10),
           topLeft: Radius.circular(10),
         ),
@@ -96,22 +98,37 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                         return InkWell(
                           onTap: () {
                             if (widget.parent) {
-                              issueProvider.upDateIssue(
-                                slug: ref
-                                    .read(ProviderList.workspaceProvider)
-                                    .selectedWorkspace!
-                                    .workspaceSlug,
-                                projID: ref
-                                    .read(ProviderList.projectProvider)
-                                    .currentProject['id'],
-                                issueID: widget.issueId,
-                                data: {
-                                  "parent": searchIssueProvider.issues[index]
-                                      ['id']
-                                },
-                                index: index,
-                                ref: ref,
-                              );
+                              if(widget.createIssue){
+                                  if(issuesProvider.createIssueParent == searchIssueProvider.issues[index]['project__identifier'] + '-' + searchIssueProvider.issues[index]['sequence_id'].toString()) {
+                                      issuesProvider.createIssueParent = '';
+                                      issuesProvider.createIssueParentId = '';
+                                      
+                                  }
+                                  else {
+                                      issuesProvider.createIssueParent = searchIssueProvider.issues[index]['project__identifier'] + '-' + searchIssueProvider.issues[index]['sequence_id'].toString();
+                                      issuesProvider.createIssueParentId = searchIssueProvider.issues[index]['id'];
+                                  }
+                                issuesProvider.setsState();
+                              }
+                              else {
+                                issueProvider.upDateIssue(
+                                  slug: ref
+                                      .read(ProviderList.workspaceProvider)
+                                      .selectedWorkspace!
+                                      .workspaceSlug,
+                                  projID: ref
+                                      .read(ProviderList.projectProvider)
+                                      .currentProject['id'],
+                                  issueID: widget.createIssue ? '' : widget.issueId,
+                                  data: 
+                                  {
+                                    "parent": searchIssueProvider.issues[index]
+                                        ['id']
+                                  },
+                                  index: index,
+                                  ref: ref,
+                                );
+                              }
                               Navigator.of(context).pop();
                             }
                           },
@@ -121,11 +138,14 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 !widget.parent
-                                    ? const Icon(
-                                        Icons.check_box,
-                                        color: primaryColor,
+                                    ? Icon(
+                                        Icons.check_box_outline_blank,
+                                        color: themeProvider.isDarkThemeEnabled ? lightBackgroundColor : darkBackgroundColor,
                                       )
                                     : Container(),
+                                !widget.parent ?
+                                const SizedBox(width: 5,) :
+                                Container(),
                                 CustomText(
                                   searchIssueProvider.issues[index]
                                           ['project__identifier'] +

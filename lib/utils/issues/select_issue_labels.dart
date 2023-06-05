@@ -56,8 +56,7 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
     colorController.text = '#BC009E';
 
     selectedLabels.addAll(
-        (ref.read(ProviderList.issuesProvider).createIssuedata['labels'] ??
-                [] as List)
+        (ref.read(ProviderList.issuesProvider).createIssuedata['labels'] ?? [])
             .map((e) => e['index'])
             .toList());
     if (!widget.createIssue) getIssueLabels();
@@ -97,9 +96,11 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
       child: Container(
         margin: const EdgeInsets.only(top: 26),
         padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: themeProvider.isDarkThemeEnabled
+              ? darkBackgroundColor
+              : lightBackgroundColor,
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10), topRight: Radius.circular(10)),
         ),
         width: double.infinity,
@@ -143,8 +144,8 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                                     issueDetailsLabels.remove(
                                         issuesProvider.labels[index]['id']);
                                   } else {
-                                    issueDetailsLabels
-                                        .add(issuesProvider.labels[index]['id']);
+                                    issueDetailsLabels.add(
+                                        issuesProvider.labels[index]['id']);
                                   }
                                 });
                               }
@@ -155,8 +156,10 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                             padding: const EdgeInsets.only(
                               left: 5,
                             ),
-                            decoration: const BoxDecoration(
-                              color: Color.fromRGBO(248, 249, 250, 1),
+                            decoration: BoxDecoration(
+                              color: themeProvider.isDarkThemeEnabled
+                                  ? darkSecondaryBackgroundColor
+                                  : const Color.fromRGBO(248, 249, 250, 1),
                             ),
                             margin: const EdgeInsets.only(bottom: 10),
                             child: Row(
@@ -183,7 +186,8 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                                   width: 10,
                                 ),
                                 CustomText(
-                                  issuesProvider.labels[index]['name'].toString(),
+                                  issuesProvider.labels[index]['name']
+                                      .toString(),
                                   type: FontStyle.subheading,
                                 ),
                                 const Spacer(),
@@ -234,7 +238,7 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                             Container(
                               width: 10,
                             ),
-                            Container(
+                            SizedBox(
                               height: 40,
                               width: MediaQuery.of(context).size.width - 201,
                               child: TextFormField(
@@ -341,7 +345,7 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                       )
                     : Container(),
                 showColorPallette
-                    ? Container(
+                    ? SizedBox(
                         height: 50,
                         child: Row(
                           children: [

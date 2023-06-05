@@ -55,6 +55,7 @@ class _SelectIssuePriorityState extends ConsumerState<SelectIssuePriority> {
   @override
   Widget build(BuildContext context) {
     var issueProvider = ref.watch(ProviderList.issueProvider);
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return WillPopScope(
       onWillPop: () async {
         var prov = ref.read(ProviderList.issuesProvider);
@@ -64,9 +65,11 @@ class _SelectIssuePriorityState extends ConsumerState<SelectIssuePriority> {
       },
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: themeProvider.isDarkThemeEnabled
+              ? darkBackgroundColor
+              : lightBackgroundColor,
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10), topRight: Radius.circular(10)),
         ),
         width: double.infinity,
@@ -166,27 +169,31 @@ class _SelectIssuePriorityState extends ConsumerState<SelectIssuePriority> {
                           padding: const EdgeInsets.only(
                             left: 5,
                           ),
-                          decoration: const BoxDecoration(
-                            color: Color.fromRGBO(248, 249, 250, 1),
+                          decoration: BoxDecoration(
+                            color: themeProvider.isDarkThemeEnabled
+                                ? darkSecondaryBackgroundColor
+                                : const Color.fromRGBO(248, 249, 250, 1),
                           ),
                           margin: const EdgeInsets.only(bottom: 10),
                           child: Row(
                             children: [
                               Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: BoxDecoration(
-                                    //   color: const Color.fromRGBO(55, 65, 81, 1),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: index == 4
-                                      ? Transform.rotate(
-                                          angle: 40,
-                                          child: priorities[index]['icon']
-                                              as Widget,
-                                        )
-                                      : priorities[index]['icon'] as Widget),
+                                height: 30,
+                                width: 30,
+                                decoration: BoxDecoration(
+                                  //   color: const Color.fromRGBO(55, 65, 81, 1),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                alignment: Alignment.center,
+                                
+                                child: index == 4
+                                    ? Transform.rotate(
+                                        angle: 40,
+                                        child:
+                                            priorities[index]['icon'] as Widget,
+                                      )
+                                    : priorities[index]['icon'] as Widget,
+                              ),
                               Container(
                                 width: 10,
                               ),

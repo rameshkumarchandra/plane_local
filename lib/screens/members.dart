@@ -100,7 +100,6 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
     var workspaceProvider = ref.watch(ProviderList.workspaceProvider);
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var projectsProvider = ref.watch(ProviderList.projectProvider);
-    print('FROM WORK SPACE =====>>' + widget.fromWorkspace.toString());
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
@@ -239,7 +238,7 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                           userId: widget.fromWorkspace
                               ? workspaceProvider.workspaceMembers[index]
                                   ['member']['id']
-                              : projectsProvider.projectMembers[index]['member']['id'],
+                              : projectsProvider.projectMembers[index]['id'],
                         );
                       });
                 },

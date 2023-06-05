@@ -18,14 +18,22 @@ class SearchIssueProvider with ChangeNotifier {
 
   Future getIssues({required String slug,required String projectId, required String issueId,  String input = '', required bool parent}) async {
     String query = parent ? 'parent' : 'blocker_blocked_by';
-    print('${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search&$query=true&issue_id=$issueId',);
+    String url = '';
+    if(input != '') {
+      url = issueId.isEmpty ?
+        '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search=$input&$query=true' :
+       '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search=$input&$query=true&issue_id=$issueId';
+    }
+    else {
+      url = issueId.isEmpty ?
+      '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search&$query=true' :
+      '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search&$query=true&issue_id=$issueId';
+    }
+    print(url);
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
-        url: 
-        input != '' ?
-        '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search=$input&$query=true&issue_id=$issueId' :
-        '${APIs.searchIssues.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?search&$query=true&issue_id=$issueId',
+        url: url,
         hasBody: false,
         httpMethod: HttpMethod.get,
       );

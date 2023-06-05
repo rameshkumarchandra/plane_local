@@ -14,6 +14,7 @@ import '../../utils/button.dart';
 import '../../utils/constants.dart';
 import '../../utils/custom_appBar.dart';
 import '../../utils/custom_text.dart';
+import '../../utils/issues_list_sheet.dart';
 
 class CreateIssue extends ConsumerStatefulWidget {
   const CreateIssue({super.key});
@@ -51,6 +52,16 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
 
   TextEditingController title = TextEditingController();
   var expanded = false;
+
+  @override
+  void dispose() {
+    var issuesProvider = ref.read(ProviderList.issuesProvider);
+    issuesProvider.createIssueParent = '';
+    issuesProvider.createIssueParentId = '';
+    issuesProvider.setsState();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
@@ -117,6 +128,7 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                         }
                         return null;
                       },
+                      maxLength: null,
                       controller: title,
                       decoration: InputDecoration(
                         errorStyle: const TextStyle(
@@ -708,6 +720,79 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                               ),
                             ),
                           )
+                        : Container(),
+                    const SizedBox(height: 8),
+                    expanded
+                        ? Container(
+                          height: 45,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: themeProvider.isDarkThemeEnabled
+                                ? darkBackgroundColor
+                                : lightBackgroundColor,
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(
+                              color: Colors.grey.shade200,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            child: Row(
+                              children: [
+                                //icon
+                                const Icon(
+                                  //antenna signal icon
+                                  Icons.person_outline_rounded,
+                                  color: Color.fromRGBO(143, 143, 147, 1),
+                                ),
+                                const SizedBox(width: 15),
+                                CustomText(
+                                  'Parent',
+                                  type: FontStyle.subheading,
+                                  color: const Color.fromRGBO(143, 143, 147, 1),
+                                ),
+                                Expanded(child: Container()),
+                                GestureDetector(
+                                  onTap: () async {
+                                    showModalBottomSheet(
+                                        isScrollControlled: false,
+                                        backgroundColor: Colors.transparent,
+                                        context: context,
+                                        builder: (ctx) => IssuesListSheet(
+                                            parent: true,
+                                            issueId: '',
+                                            createIssue: true,
+                                          ),
+                                        );
+                                  },
+                                  child: issueProvider.createIssueParent.isEmpty
+                                      ? Row(
+                                          children: [
+                                            CustomText(
+                                              'Select issue',
+                                              type: FontStyle.title,
+                                              color: Colors.black,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            const Icon(
+                                              //antenna signal icon
+                                              Icons.keyboard_arrow_down_outlined,
+                                              color: Color.fromRGBO(143, 143, 147, 1),
+                                            ),
+                                          ],
+                                        )
+                                      : CustomText(
+                                          issueProvider.createIssueParent,
+                                          type: FontStyle.title,
+                                          color: Colors.black,
+                                        ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
                         : Container(),
                     const SizedBox(
                       height: 8,

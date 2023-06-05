@@ -222,16 +222,13 @@ class _MemberStatusState extends ConsumerState<MemberStatus> {
                     projId: ref.read(ProviderList.projectProvider).currentProject['id'],
                     userId: widget.userId
                   );
-                  ref.read(ProviderList.issuesProvider).getProjectMembers(
+                  ref.read(ProviderList.projectProvider).getProjectMembers(
                     slug: ref
                         .read(ProviderList.workspaceProvider)
                         .selectedWorkspace!
                         .workspaceSlug,
-                    projID: ref.read(ProviderList.projectProvider).currentProject['id'],
+                    projId: ref.read(ProviderList.projectProvider).currentProject['id'],
                   );
-                  if(widget.userId == profileProvider.userProfile.id){
-                    Navigator.of(context)..pop()..pop();
-                  }
                   Navigator.of(context).pop();
                 },
                 child: CustomText(

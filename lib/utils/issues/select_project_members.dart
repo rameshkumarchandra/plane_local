@@ -53,6 +53,7 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
   Widget build(BuildContext context) {
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
     var issueProvider = ref.read(ProviderList.issueProvider);
+    var themeProvider = ref.read(ProviderList.themeProvider);
     return WillPopScope(
       onWillPop: () async {
         issuesProvider.createIssuedata['members'] =
@@ -62,9 +63,11 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
       },
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
+        decoration: BoxDecoration(
+          color: themeProvider.isDarkThemeEnabled
+              ? darkBackgroundColor
+              : lightBackgroundColor,
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10), topRight: Radius.circular(10)),
         ),
         width: double.infinity,
@@ -146,8 +149,10 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                               padding: const EdgeInsets.only(
                                 left: 5,
                               ),
-                              decoration: const BoxDecoration(
-                                color: Color.fromRGBO(248, 249, 250, 1),
+                              decoration: BoxDecoration(
+                                color: themeProvider.isDarkThemeEnabled
+                                    ? darkSecondaryBackgroundColor
+                                    : const Color.fromRGBO(248, 249, 250, 1),
                               ),
                               margin: const EdgeInsets.only(bottom: 10),
                               child: Row(

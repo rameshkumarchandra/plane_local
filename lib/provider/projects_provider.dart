@@ -21,6 +21,7 @@ class ProjectsProvider extends ChangeNotifier {
   var deleteProjectState = AuthStateEnum.empty;
   var deleteProjectMemberState = AuthStateEnum.empty;
   var updateProjecState = AuthStateEnum.empty;
+  var stateCrudState = AuthStateEnum.empty;
   var unsplashImages = [];
   var currentProject={};
   List projectMembers = [];
@@ -46,6 +47,7 @@ class ProjectsProvider extends ChangeNotifier {
     deleteProjectState = AuthStateEnum.empty;
     deleteProjectMemberState = AuthStateEnum.empty;
     updateProjecState = AuthStateEnum.empty;
+    stateCrudState = AuthStateEnum.empty;
     unsplashImages = [];
     currentProject={};
     coverUrl =
@@ -227,7 +229,7 @@ class ProjectsProvider extends ChangeNotifier {
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
-        url: "${APIs.listProjects.replaceAll('\$SLUG', slug)}$projId/members/",
+        url: APIs.projectMembers.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projId),
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
@@ -271,7 +273,7 @@ class ProjectsProvider extends ChangeNotifier {
 
   Future deleteProjectMember({required String slug, required String projId,required String userId}) async {
     try {
-      var url = "${APIs.listProjects.replaceFirst('\$SLUG', slug)}$projId/member/$userId/";
+      var url = '${APIs.projectMembers.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projId)}$userId/';
       print(url);
       deleteProjectMemberState = AuthStateEnum.loading;
       notifyListeners();
@@ -288,6 +290,38 @@ class ProjectsProvider extends ChangeNotifier {
     on DioError catch (e) {
       log(e.message.toString());
       deleteProjectMemberState = AuthStateEnum.error;
+      notifyListeners();
+    }
+  }
+
+  Future stateCrud ({required String slug, required String projId,required String stateId,required CRUD method,required Map data}) async {
+    try {
+      var url = 
+      method == CRUD.update ?
+      APIs.states.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projId) + stateId + '/' :
+      APIs.states.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projId);
+      print(url);
+      stateCrudState = AuthStateEnum.loading;
+      notifyListeners();
+      var response = await DioConfig().dioServe(
+        hasAuth: true,
+        url: url,
+        hasBody: true,
+        httpMethod: 
+        method == CRUD.create ?
+        HttpMethod.post
+        : method == CRUD.update ?
+        HttpMethod.put
+        : HttpMethod.patch,
+        data: data
+      );
+      print('====== SUCCESS =====');
+      stateCrudState = AuthStateEnum.success;
+      notifyListeners();
+    }
+    on DioError catch (e) {
+      log(e.message.toString());
+      stateCrudState = AuthStateEnum.error;
       notifyListeners();
     }
   }

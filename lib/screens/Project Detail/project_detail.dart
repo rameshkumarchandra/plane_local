@@ -122,7 +122,10 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                 ),
               );
             },
-            icon: Icon(
+            icon: 
+            issueProvider.statesState == AuthStateEnum.restricted  ?
+            Container() :
+            Icon(
               Icons.settings,
               color: themeProvider.isDarkThemeEnabled
                   ? Colors.white
