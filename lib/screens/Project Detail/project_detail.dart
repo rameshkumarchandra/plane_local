@@ -60,7 +60,14 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
             .workspaceSlug,
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     prov.getIssueProperties();
-    prov.getProjectView();
+    prov.getProjectView().then((value) {
+      prov.filterIssues(
+          slug: ref
+              .read(ProviderList.workspaceProvider)
+              .selectedWorkspace!
+              .workspaceSlug,
+          projID: ref.read(ProviderList.projectProvider).currentProject['id']);
+    });
     prov.getStates(
         slug: ref
             .read(ProviderList.workspaceProvider)
@@ -75,12 +82,6 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
             .workspaceSlug,
         projID: ref.read(ProviderList.projectProvider).currentProject['id']);
 
-    prov.getIssues(
-        slug: ref
-            .read(ProviderList.workspaceProvider)
-            .selectedWorkspace!
-            .workspaceSlug,
-        projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     projectProv.getProjectDetails(
         slug: ref
             .read(ProviderList.workspaceProvider)
@@ -200,7 +201,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
               Container(
                   margin: const EdgeInsets.only(top: 10),
                   width: MediaQuery.of(context).size.width,
-                  height: 46,
+                  height: 48,
                   child: ListView.builder(
                     itemCount: projectProvider.features.length,
                     shrinkWrap: true,
@@ -544,11 +545,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     var themeProvider = ref.read(ProviderList.themeProvider);
     var issueProvider = ref.read(ProviderList.issuesProvider);
     var projectProvider = ref.read(ProviderList.projectProvider);
-    log(issueProvider.issueState.name);
+    // log(issueProvider.issueState.name);
     if (issueProvider.issues.projectView == ProjectView.list) {
-      issueProvider.isGroupBy
-          ? issueProvider.priorityBoard()
-          : issueProvider.initializeBoard();
+      issueProvider.initializeBoard();
     }
 
     return LoadingWidget(
@@ -729,9 +728,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                               ),
                             )
                           : KanbanBoard(
-                              issueProvider.isGroupBy
-                                  ? issueProvider.priorityBoard()
-                                  : issueProvider.initializeBoard(),
+                              issueProvider.initializeBoard(),
                               groupEmptyStates: !issueProvider.showEmptyStates,
                               backgroundColor: themeProvider.isDarkThemeEnabled
                                   ? const Color.fromRGBO(29, 30, 32, 1)

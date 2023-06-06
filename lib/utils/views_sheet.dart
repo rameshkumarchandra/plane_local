@@ -889,11 +889,12 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                         //   print(orderBy);
                         //   print(' it is if');
                         setState(() {
-                          issueProvider.orderBy = orderBy;
-                          issueProvider.groupBy = groupBy;
-                          issueProvider.issueType = issueType;
+                        issueProvider.issues.orderBY = Issues.toOrderBY(orderBy);
+                    issueProvider.issues.groupBY = Issues.toGroupBY(groupBy);
+                    issueProvider.issues.issueType =
+                        Issues.toIssueType(issueType);
                         });
-                        issueProvider.orderByIssues(
+                        issueProvider.filterIssues(
                           slug: ref
                               .read(ProviderList.workspaceProvider)
                               .selectedWorkspace!
@@ -921,6 +922,7 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                       issueProvider.showEmptyStates = showEmptyStates;
                       issueProvider.updateIssueProperties(
                           properties: properties);
+                          issueProvider.updateProjectView();
 
                       Navigator.of(context).pop();
                     },

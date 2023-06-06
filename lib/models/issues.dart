@@ -22,6 +22,19 @@ class DisplayProperties {
       required this.linkCount,
       required this.attachmentCount,
       required this.priority});
+
+  static DisplayProperties initialize() {
+    return DisplayProperties(
+        assignee: true,
+        dueDate: false,
+        id: true,
+        label: false,
+        state: true,
+        subIsseCount: false,
+        linkCount: false,
+        attachmentCount: false,
+        priority: false);
+  }
 }
 
 class Issues {
@@ -30,6 +43,8 @@ class Issues {
   GroupBY groupBY = GroupBY.state;
   OrderBY orderBY = OrderBY.manual;
   IssueType issueType = IssueType.all;
+  Filters filters = Filters(
+      assignees: [], createdBy: [], labels: [], priorities: [], states: []);
 
   DisplayProperties displayProperties;
   Issues(
@@ -39,6 +54,17 @@ class Issues {
       required this.orderBY,
       required this.issueType,
       required this.displayProperties});
+
+  static Issues initialize() {
+    return Issues(
+      issues: [],
+      projectView: ProjectView.kanban,
+      groupBY: GroupBY.state,
+      orderBY: OrderBY.lastCreated,
+      issueType: IssueType.all,
+      displayProperties: DisplayProperties.initialize(),
+    );
+  }
 
   static toOrderBY(String orderBy) {
     switch (orderBy) {
@@ -54,6 +80,7 @@ class Issues {
         return OrderBY.manual;
     }
   }
+
   static fromOrderBY(OrderBY orderBy) {
     switch (orderBy) {
       case OrderBY.manual:
@@ -68,7 +95,8 @@ class Issues {
         return "manual";
     }
   }
-  static toIssueType(String issueType) {
+
+  static toIssueType(String? issueType) {
     switch (issueType) {
       case "all":
         return IssueType.all;
@@ -80,6 +108,7 @@ class Issues {
         return IssueType.all;
     }
   }
+
   static fromIssueType(IssueType issueType) {
     switch (issueType) {
       case IssueType.all:
@@ -92,6 +121,7 @@ class Issues {
         return "all";
     }
   }
+
   static toGroupBY(String groupBY) {
     switch (groupBY) {
       case "state":
@@ -108,6 +138,7 @@ class Issues {
         return GroupBY.none;
     }
   }
+
   static fromGroupBY(GroupBY groupBY) {
     switch (groupBY) {
       case GroupBY.state:
@@ -124,4 +155,19 @@ class Issues {
         return "none";
     }
   }
+}
+
+class Filters {
+  List priorities = [];
+  List states = [];
+  List assignees = [];
+  List createdBy = [];
+  List labels = [];
+  Filters({
+    required this.priorities,
+    required this.states,
+    required this.assignees,
+    required this.createdBy,
+    required this.labels,
+  });
 }
