@@ -11,6 +11,8 @@ const lightGreeyColor = Color.fromRGBO(238, 238, 238, 1);
 const lightYellowColor = Color.fromRGBO(252, 190, 29, 0.16);
 const strokeColor = Color(0xFFE5E5E5);
 const lightGreyTextColor = Color(0xFFA3A3A3);
+const greenWithOpacity = Color.fromRGBO(9, 169, 83, 0.08);
+const greenHighLight = Color(0xFF09A953);
 
 const lightPrimaryTextColor = Colors.black;
 const lightSecondaryTextColor = Color.fromARGB(255, 97, 97, 97);

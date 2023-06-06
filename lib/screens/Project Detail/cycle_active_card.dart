@@ -1,25 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/utils/custom_text.dart';
-import 'package:plane_startup/widgets/three_dots_widget.dart';
+import 'package:plane_startup/widgets/profile_circle_avatar_widget.dart';
 
-class CycleActiveCard extends StatefulWidget {
-  const CycleActiveCard({super.key});
+import '../../utils/constants.dart';
+
+class CycleActiveCard extends ConsumerStatefulWidget {
+  int index;
+  CycleActiveCard({required this.index, super.key});
 
   @override
-  State<CycleActiveCard> createState() => _CycleActiveCardState();
+  ConsumerState<CycleActiveCard> createState() => _CycleActiveCardState();
 }
 
-class _CycleActiveCardState extends State<CycleActiveCard> {
+class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
+  List states = [
+    "Backlog",
+    "Unstarted",
+    "Started",
+    "Cancelled",
+    "Completed",
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return cycleBottomWhenActiveSelected();
-  }
-
-  Widget cycleBottomWhenActiveSelected() {
     return Container(
       width: double.infinity,
       //height: 1300,
-      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      margin: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -28,9 +39,9 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          firstPart(),
+          firstPart(widget.index),
           const Divider(thickness: 1),
-          secondPart(),
+          secondPart(widget.index),
           const Divider(thickness: 1),
           thirdPart(),
           const Divider(thickness: 1),
@@ -45,7 +56,8 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
     );
   }
 
-  Widget firstPart() {
+  Widget firstPart(int index) {
+    var cyclesProvider = ref.watch(ProviderList.cyclesProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
@@ -53,29 +65,79 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Icon(Icons.brightness_6_outlined),
               const SizedBox(width: 8),
-              CustomText(
-                'Cycle Name',
-                type: FontStyle.heading2,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText(
+                    cyclesProvider.cyclesActiveData[index]['name'],
+                    type: FontStyle.heading2,
+                  ),
+                  const SizedBox(
+                    height: 14,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                        color: checkDate(
+                                    startDate: cyclesProvider
+                                        .cyclesAllData[index]['start_date'],
+                                    endDate: cyclesProvider.cyclesAllData[index]
+                                        ['end_date']) ==
+                                'Draft'
+                            ? lightGreeyColor
+                            : checkDate(
+                                        startDate: cyclesProvider
+                                            .cyclesAllData[index]['start_date'],
+                                        endDate:
+                                            cyclesProvider.cyclesAllData[index]
+                                                ['end_date']) ==
+                                    'Completed'
+                                ? primaryLightColor
+                                : greenWithOpacity,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: CustomText(
+                      checkDate(
+                        startDate: cyclesProvider.cyclesAllData[index]
+                            ['start_date'],
+                        endDate: cyclesProvider.cyclesAllData[index]
+                            ['end_date'],
+                      ),
+                      color: checkDate(
+                                startDate: cyclesProvider.cyclesAllData[index]
+                                    ['start_date'],
+                                endDate: cyclesProvider.cyclesAllData[index]
+                                    ['end_date'],
+                              ) ==
+                              'Draft'
+                          ? greyColor
+                          : checkDate(
+                                    startDate: cyclesProvider
+                                        .cyclesAllData[index]['start_date'],
+                                    endDate: cyclesProvider.cyclesAllData[index]
+                                        ['end_date'],
+                                  ) ==
+                                  'Completed'
+                              ? primaryColor
+                              : greenHighLight,
+                    ),
+                  ),
+                ],
               ),
               const Spacer(),
               const Icon(Icons.star_outline),
             ],
-          ),
-          Container(
-            margin: const EdgeInsets.only(left: 35, top: 10),
-            padding: const EdgeInsets.all(6),
-            color: Colors.grey.shade200,
-            child: CustomText('Draft'),
           ),
         ],
       ),
     );
   }
 
-  Widget secondPart() {
+  Widget secondPart(int index) {
+    var cyclesProvider = ref.watch(ProviderList.cyclesProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 1),
       //height: 330,
@@ -98,8 +160,14 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
                           Icons.calendar_month,
                           size: 20,
                         ),
+                        const SizedBox(
+                          width: 5,
+                        ),
                         CustomText(
-                          ' Jan 16, 2022',
+                          DateFormat("MMM d, yyyy").format(DateTime.parse(
+                            cyclesProvider.cyclesActiveData[index]
+                                ['start_date'],
+                          )),
                           type: FontStyle.subtitle,
                         ),
                       ],
@@ -108,22 +176,36 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
                       padding: const EdgeInsets.only(right: 15),
                       child: Row(
                         children: [
-                          Container(
-                            height: 22,
-                            width: 22,
-                            decoration: BoxDecoration(
-                                color: Colors.amber,
-                                borderRadius: BorderRadius.circular(15)),
-                            child: Center(
-                                child: CustomText(
-                              'V',
-                              color: Colors.white,
-                              fontSize: 13,
-                            )),
-                          ),
+                          cyclesProvider.cyclesActiveData[index]['owned_by']
+                                          ['avatar'] !=
+                                      '' &&
+                                  cyclesProvider.cyclesActiveData[index]
+                                          ['owned_by']['avatar'] !=
+                                      null
+                              ? CircleAvatar(
+                                  radius: 10,
+                                  backgroundImage:
+                                      cyclesProvider.cyclesActiveData[index]
+                                          ['owned_by']['avatar'],
+                                )
+                              : CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: Colors.amber,
+                                  child: Center(
+                                    child: CustomText(
+                                      cyclesProvider.cyclesActiveData[index]
+                                              ['owned_by']['email'][0]
+                                          .toString()
+                                          .toUpperCase(),
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                           const SizedBox(width: 10),
                           CustomText(
-                            'Vamsi Kurama',
+                            cyclesProvider.cyclesActiveData[index]['owned_by']
+                                    ['first_name'] ??
+                                '',
                             // color: themeProvider.secondaryTextColor,
                             type: FontStyle.subtitle,
                           ),
@@ -132,8 +214,18 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
                     ),
                     Row(
                       children: [
-                        const Icon(Icons.pages_outlined),
-                        CustomText('175 Issues')
+                        SvgPicture.asset(
+                          'assets/svg_images/issues.svg',
+                          height: 15,
+                          width: 15,
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        CustomText(
+                          cyclesProvider.cyclesActiveData[index]['total_issues']
+                              .toString(),
+                        )
                       ],
                     ),
                   ],
@@ -149,15 +241,21 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
                           // color: themeProvider.secondaryTextColor,
                           size: 20,
                         ),
+                        const SizedBox(
+                          width: 5,
+                        ),
                         CustomText(
-                          ' Apr 16, 2022',
-                          // color: themeProvider.secondaryTextColor,
+                          DateFormat("MMM d, yyyy").format(DateTime.parse(
+                            cyclesProvider.cyclesActiveData[index]['end_date'],
+                          )),
                           type: FontStyle.subtitle,
                         ),
                       ],
                     ),
-                    const ThreeDotsWidget(),
-                    Row(children: [Icon(Icons.tiktok), Text('74 Issues')])
+                    ProfileCircleAvatarsWidget(
+                        details: cyclesProvider.cyclesActiveData[index]
+                            ['assignees']),
+                    Row(children: const [Icon(Icons.tiktok), Text('74 Issues')])
                   ],
                 ),
               ],
@@ -222,6 +320,7 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
   }
 
   Widget thirdPart() {
+    var cyclesProvider = ref.watch(ProviderList.cyclesProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -265,19 +364,38 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
           ),
           const SizedBox(height: 10),
           ...List.generate(
-            4,
+            states.length,
             (index) => Row(
               children: [
                 const SizedBox(height: 50),
-                const Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: Icon(Icons.circle, color: Colors.lightBlue),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Icon(
+                    Icons.circle,
+                    color: index == 0
+                        ? const Color(0xFFF7AE59)
+                        : index == 1
+                            ? const Color(0xFFD687FF)
+                            : index == 2
+                                ? const Color(0xFF2C435F)
+                                : index == 3
+                                    ? const Color(0xFFFF9E9E)
+                                    : greenHighLight,
+                  ),
                 ),
-                CustomText('BackLog'),
+                CustomText(states[index]),
                 const Spacer(),
                 const Icon(Icons.circle_outlined),
                 const SizedBox(width: 5),
-                CustomText('50% of 3')
+                CustomText(index == 0
+                    ? '${(cyclesProvider.cyclesActiveData[0]['backlog_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']}% of ${cyclesProvider.cyclesActiveData[0]['backlog_issues']}'
+                    : index == 1
+                        ? '${(cyclesProvider.cyclesActiveData[0]['unstarted_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']}% of ${cyclesProvider.cyclesActiveData[0]['unstarted_issues']}'
+                        : index == 2
+                            ? '${(cyclesProvider.cyclesActiveData[0]['started_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']}% of ${cyclesProvider.cyclesActiveData[0]['started_issues']}'
+                            : index == 3
+                                ? '${(cyclesProvider.cyclesActiveData[0]['cancelled_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']}% of ${cyclesProvider.cyclesActiveData[0]['cancelled_issues']}'
+                                : '${(cyclesProvider.cyclesActiveData[0]['completed_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']}% of ${cyclesProvider.cyclesActiveData[0]['completed_issues']}')
               ],
             ),
           ),
@@ -287,6 +405,7 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
   }
 
   Widget fourthPart() {
+    var cyclesProvider = ref.watch(ProviderList.cyclesProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -299,23 +418,58 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
               )),
           const SizedBox(height: 10),
           ...List.generate(
-            2,
-            (index) => Row(
-              children: [
-                const SizedBox(height: 50),
-                const Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: Icon(
-                    Icons.circle,
-                    color: Colors.orange,
+            cyclesProvider.cyclesActiveData[widget.index]['assignees'].length,
+            (idx) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: cyclesProvider.cyclesActiveData[widget.index]
+                                          ['assignees'][idx]['avatar'] !=
+                                      null &&
+                                  cyclesProvider.cyclesActiveData[widget.index]
+                                          ['assignees'][idx]['avatar'] !=
+                                      ''
+                              ? CircleAvatar(
+                                  radius: 10,
+                                  backgroundImage: NetworkImage(cyclesProvider
+                                          .cyclesActiveData[widget.index]
+                                      ['assignees'][idx]['avatar']),
+                                )
+                              : CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: darkSecondaryBackgroundColor,
+                                  child: Center(
+                                    child: CustomText(
+                                      cyclesProvider
+                                              .cyclesActiveData[widget.index]
+                                                  ['assignees'][idx]
+                                                  ['first_name'][0]
+                                              .toString()
+                                              .toUpperCase() ??
+                                          '',
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                )),
+                      CustomText(cyclesProvider.cyclesActiveData[widget.index]
+                              ['assignees'][idx]['first_name'] ??
+                          ''),
+                    ],
                   ),
-                ),
-                CustomText('Vamsi'),
-                const Spacer(),
-                const Icon(Icons.circle_outlined),
-                const SizedBox(width: 5),
-                CustomText('50% of 3')
-              ],
+                  Row(
+                    children: [
+                      const Icon(Icons.circle_outlined),
+                      const SizedBox(width: 5),
+                      CustomText('50% of 3')
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ],
@@ -340,7 +494,7 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ...List.generate(
-                3,
+                1,
                 (index) => Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
@@ -383,5 +537,33 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
         )
       ]),
     );
+  }
+
+  String checkDate({required String startDate, required String endDate}) {
+    DateTime now = DateTime.now();
+    if ((startDate.isEmpty) || (endDate.isEmpty)) {
+      return 'Draft';
+    } else {
+      if (DateTime.parse(startDate).isAfter(now)) {
+        Duration difference =
+            DateTime.parse(startDate.split('+').first).difference(now);
+        if (difference.inDays == 0) {
+          return 'Today';
+        } else {
+          return '${difference.inDays.abs()} Days Left';
+        }
+      }
+      if (DateTime.parse(startDate).isBefore(now) &&
+          DateTime.parse(endDate).isAfter(now)) {
+        Duration difference = DateTime.parse(endDate).difference(now);
+        if (difference.inDays == 0) {
+          return 'Today';
+        } else {
+          return '${difference.inDays.abs()} Days Left';
+        }
+      } else {
+        return 'Completed';
+      }
+    }
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/utils/custom_text.dart';
 
 class ProfileCircleAvatarsWidget extends StatefulWidget {
   List details;
@@ -20,30 +22,72 @@ class _ProfileCircleAvatarsWidgetState
         children: [
           Positioned(
             left: 30,
-            child: CircleAvatar(
-              radius: 10,
-              backgroundColor: Colors.orange,
-              backgroundImage: NetworkImage(widget.details[0]['avatar']),
-            ),
+            child: widget.details[0]['avatar'] != "" &&
+                    widget.details[0]['avatar'] != null
+                ? CircleAvatar(
+                    radius: 10,
+                    backgroundColor: Colors.orange,
+                    backgroundImage: NetworkImage(widget.details[0]['avatar']),
+                  )
+                : CircleAvatar(
+                    radius: 10,
+                    backgroundColor: darkSecondaryBackgroundColor,
+                    child: Center(
+                        child: CustomText(
+                      widget.details[0]['first_name'][0]
+                              .toString()
+                              .toUpperCase() ??
+                          '',
+                      color: Colors.white,
+                    )),
+                  ),
           ),
-          widget.details.length == 2
+          widget.details.length >= 2
               ? Positioned(
                   left: 15,
-                  child: CircleAvatar(
-                    radius: 10,
-                    backgroundColor: Colors.blueAccent,
-                    backgroundImage: NetworkImage(widget.details[1]['avatar']),
-                  ),
+                  child: widget.details[1]['avatar'] != "" &&
+                          widget.details[1]['avatar'] != null
+                      ? CircleAvatar(
+                          radius: 10,
+                          backgroundColor: Colors.blueAccent,
+                          backgroundImage:
+                              NetworkImage(widget.details[1]['avatar']),
+                        )
+                      : CircleAvatar(
+                          radius: 10,
+                          backgroundColor: darkSecondaryBackgroundColor,
+                          child: Center(
+                              child: CustomText(
+                                  widget.details[1]['first_name'][0]
+                                          .toString()
+                                          .toUpperCase() ??
+                                      '',
+                                  color: Colors.white)),
+                        ),
                 )
               : Container(),
           widget.details.length >= 3
               ? Positioned(
                   left: 0,
-                  child: CircleAvatar(
-                    radius: 10,
-                    backgroundColor: Colors.red,
-                    backgroundImage: NetworkImage(widget.details[2]['avatar']),
-                  ),
+                  child: widget.details[2]['avatar'] != "" &&
+                          widget.details[2]['avatar'] != null
+                      ? CircleAvatar(
+                          radius: 10,
+                          backgroundColor: Colors.red,
+                          backgroundImage:
+                              NetworkImage(widget.details[2]['avatar']),
+                        )
+                      : CircleAvatar(
+                          radius: 10,
+                          backgroundColor: darkSecondaryBackgroundColor,
+                          child: Center(
+                              child: CustomText(
+                                  widget.details[2]['first_name'][0]
+                                          .toString()
+                                          .toUpperCase() ??
+                                      '',
+                                  color: Colors.white)),
+                        ),
                 )
               : Container(),
         ],

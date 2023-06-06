@@ -5,7 +5,6 @@ import 'package:plane_startup/screens/Project%20Detail/cycle_active_card.dart';
 import 'package:plane_startup/screens/Project%20Detail/cycle_card.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 import 'package:plane_startup/utils/constants.dart';
-import 'package:plane_startup/widgets/three_dots_widget.dart';
 
 class CycleWidget extends ConsumerStatefulWidget {
   const CycleWidget({super.key});
@@ -22,28 +21,33 @@ class _CycleWidgetState extends ConsumerState<CycleWidget> {
   }
 
   Widget cycles() {
-    return Container(
+    return SizedBox(
+      width: width,
+      height: height,
       child: Column(children: [
-        Expanded(flex: 1, child: cycleNaveBar()),
-        Expanded(flex: 6, child: cycleBottomBar()),
+        const SizedBox(
+          height: 15,
+        ),
+        SizedBox(height: 40, child: cycleNaveBar()),
+        const SizedBox(
+          height: 15,
+        ),
+        Expanded(child: cycleBody()),
       ]),
     );
   }
 
   Widget cycleNaveBar() {
-    return Container(
-      //margin: const EdgeInsets.only(left: 15, right: 15),
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          const SizedBox(width: 15),
-          cycleNaveBarItem('All', 0),
-          cycleNaveBarItem('Active', 1),
-          cycleNaveBarItem('Upcoming', 2),
-          cycleNaveBarItem('Completed', 3),
-          const SizedBox(width: 15),
-        ],
-      ),
+    return ListView(
+      shrinkWrap: true,
+      scrollDirection: Axis.horizontal,
+      children: [
+        cycleNaveBarItem('All', 0),
+        cycleNaveBarItem('Active', 1),
+        cycleNaveBarItem('Upcoming', 2),
+        cycleNaveBarItem('Completed', 3),
+        const SizedBox(width: 15),
+      ],
     );
   }
 
@@ -66,8 +70,10 @@ class _CycleWidgetState extends ConsumerState<CycleWidget> {
         });
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        margin: const EdgeInsets.symmetric(horizontal: 7, vertical: 25),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        margin: const EdgeInsets.only(
+          right: 10,
+        ),
         decoration: cycleNaveBarSelectedIndex == itemIndex
             ? decarationOnSelected
             : decarationOnUnSelected,
@@ -81,82 +87,124 @@ class _CycleWidgetState extends ConsumerState<CycleWidget> {
     );
   }
 
-  Widget cycleBottomBar() {
+  Widget cycleBody() {
     List<Widget> widgets = [
-      cycleBottomWhenAllSelected(),
-      cycleBottomWhenActiveSelected(),
-      cycleBottomWhenUpcomingSelected(),
-      cycleBottomWhenCompleteSelected(),
+      cycleAll(),
+      cycleActive(),
+      cycleUpcoming(),
+      cycleCompleted(),
     ];
     return widgets[cycleNaveBarSelectedIndex];
   }
 
-  Widget cycleBottomWhenAllSelected() {
-    return Padding(
-      padding: const EdgeInsets.all(25),
-      child: ListView.builder(
-          itemCount: 4,
-          itemBuilder: (context, intex) {
-            return (Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.brightness_6_outlined),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CustomText(
-                        'Cycle Name',
-                        type: FontStyle.heading2,
-                      ),
-                    ),
-                    const Spacer(),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.star_outline),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: const EdgeInsets.only(left: 50, top: 8),
-                  padding: const EdgeInsets.all(6),
-                  color: Colors.grey.shade200,
-                  child: CustomText('Draft'),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 16, bottom: 8),
-                  height: 1,
-                  color: Colors.grey[300],
-                  //width: ,
-                ),
-              ],
-            ));
-          }),
-    );
-  }
-
-  Widget cycleBottomWhenUpcomingSelected() {
-    return const Placeholder();
-  }
-
-  Widget cycleBottomWhenCompleteSelected() {
-    return const Placeholder();
-  }
-
-  Widget cycleBottomWhenActiveSelected() {
+  Widget cycleAll() {
+    var cyclesProvider = ref.watch(ProviderList.cyclesProvider);
     return ListView.builder(
-      itemCount: 3,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: cyclesProvider.cyclesAllData.length,
+        itemBuilder: (context, index) {
+          return (Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.brightness_6_outlined),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomText(
+                            cyclesProvider.cyclesAllData[index]['name'],
+                            type: FontStyle.heading2,
+                          ),
+                          const SizedBox(
+                            height: 14,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                                color: checkDate(
+                                            startDate:
+                                                cyclesProvider.cyclesAllData[index]
+                                                    ['start_date'],
+                                            endDate:
+                                                cyclesProvider.cyclesAllData[index]
+                                                    ['end_date']) ==
+                                        'Draft'
+                                    ? lightGreeyColor
+                                    : checkDate(
+                                                startDate: cyclesProvider
+                                                        .cyclesAllData[index]
+                                                    ['start_date'],
+                                                endDate: cyclesProvider
+                                                        .cyclesAllData[index]
+                                                    ['end_date']) ==
+                                            'Completed'
+                                        ? primaryLightColor
+                                        : greenWithOpacity,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: CustomText(
+                              checkDate(
+                                startDate: cyclesProvider.cyclesAllData[index]
+                                    ['start_date'],
+                                endDate: cyclesProvider.cyclesAllData[index]
+                                    ['end_date'],
+                              ),
+                              color: checkDate(
+                                        startDate: cyclesProvider
+                                            .cyclesAllData[index]['start_date'],
+                                        endDate: cyclesProvider
+                                            .cyclesAllData[index]['end_date'],
+                                      ) ==
+                                      'Draft'
+                                  ? greyColor
+                                  : checkDate(
+                                            startDate:
+                                                cyclesProvider.cyclesAllData[index]
+                                                    ['start_date'],
+                                            endDate: cyclesProvider
+                                                .cyclesAllData[index]['end_date'],
+                                          ) ==
+                                          'Completed'
+                                      ? primaryColor
+                                      : greenHighLight,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const Icon(Icons.star_outline),
+                ],
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 16, bottom: 8),
+                height: 1,
+                color: strokeColor,
+                //width: ,
+              ),
+            ],
+          ));
+        });
+  }
+
+  Widget cycleActive() {
+    return ListView.builder(
+      itemCount: 1,
       itemBuilder: (context, index) {
-        return CycleActiveCard();
+        return CycleActiveCard(index: index,);
       },
     );
   }
 
-  Widget cycleBottomWhenActiveSelectedWithCardView() {
+  Widget cycleActiveCardView() {
     var themeProvider = ref.read(ProviderList.themeProvider);
     return Container(
       color: themeProvider.isDarkThemeEnabled
@@ -179,5 +227,31 @@ class _CycleWidgetState extends ConsumerState<CycleWidget> {
         ],
       ),
     );
+  }
+
+  Widget cycleCompleted() {
+    return const Placeholder();
+  }
+
+  Widget cycleUpcoming() {
+    return const Placeholder();
+  }
+
+  String checkDate({required String startDate, required String endDate}) {
+    DateTime now = DateTime.now();
+    if ((startDate.isEmpty) || (endDate.isEmpty)) {
+      return 'Draft';
+    } else {
+      if (DateTime.parse(startDate).isAfter(now)) {
+        Duration difference = DateTime.parse(startDate).difference(now);
+        if (difference.inDays == 0) {
+          return 'Today';
+        } else {
+          return '${difference.inDays.abs()} Days Left';
+        }
+      } else {
+        return 'Completed';
+      }
+    }
   }
 }

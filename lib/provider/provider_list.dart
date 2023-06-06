@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/config/const.dart';
 import 'package:plane_startup/provider/auth_provider.dart';
-import 'package:plane_startup/provider/features_provider.dart';
+import 'package:plane_startup/provider/cycles_provider.dart';
 import 'package:plane_startup/provider/file_upload_provider.dart';
 import 'package:plane_startup/provider/issue_provider.dart';
 import 'package:plane_startup/provider/profile_provider.dart';
@@ -28,12 +28,12 @@ class ProviderList {
       (ref) => FileUploadProvider(ref));
   static var issuesProvider =
       ChangeNotifierProvider<IssuesProvider>((ref) => IssuesProvider(ref));
-  static var featuresProvider =
-      ChangeNotifierProvider<FeaturesProvider>((_) => FeaturesProvider());
   static var issueProvider =
       ChangeNotifierProvider<IssueProvider>((_) => IssueProvider());
   static var searchIssueProvider =
       ChangeNotifierProvider<SearchIssueProvider>((_) => SearchIssueProvider());
+  static var cyclesProvider =
+      ChangeNotifierProvider<CyclesProvider>((_) => CyclesProvider());
 
   static void clear({required WidgetRef ref}) {
     ref.read(issueProvider).clear();

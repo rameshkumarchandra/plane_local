@@ -33,7 +33,7 @@ Color APP_TEXT_GREY = const Color.fromRGBO(135, 135, 135, 1);
 class CustomText extends ConsumerWidget {
   CustomText(
     this.text, {
-    this.maxLines,
+    this.maxLines = 4,
     this.style,
     this.color,
     this.fontSize,

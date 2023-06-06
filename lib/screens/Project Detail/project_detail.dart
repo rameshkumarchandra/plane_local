@@ -10,6 +10,7 @@ import 'package:plane_startup/screens/Project%20Detail/create_issue.dart';
 import 'package:plane_startup/screens/Project%20Detail/create_module.dart';
 import 'package:plane_startup/screens/Project%20Detail/empty.dart';
 import 'package:plane_startup/screens/Project%20Detail/page_card.dart';
+import 'package:plane_startup/screens/Project%20Detail/project_details_cycles.dart';
 import 'package:plane_startup/screens/Project%20Detail/view_card.dart';
 import 'package:plane_startup/screens/create_page_screen.dart';
 import 'package:plane_startup/screens/create_view_screen.dart';
@@ -51,6 +52,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   void initState() {
     var prov = ref.read(ProviderList.issuesProvider);
     var projectProv = ref.read(ProviderList.projectProvider);
+    var cyclesProv = ref.read(ProviderList.cyclesProvider);
     prov.getProjectMembers(
         slug: ref
             .read(ProviderList.workspaceProvider)
@@ -85,6 +87,24 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
             .selectedWorkspace!
             .workspaceSlug,
         projId: ref.read(ProviderList.projectProvider).currentProject['id']);
+    cyclesProv.cyclesCrud(
+      slug: ref
+            .read(ProviderList.workspaceProvider)
+            .selectedWorkspace!
+            .workspaceSlug,
+      projectId: ref.read(ProviderList.projectProvider).currentProject['id'],
+      method: CRUD.read,
+      query: 'all'
+    );
+    cyclesProv.cyclesCrud(
+      slug: ref
+            .read(ProviderList.workspaceProvider)
+            .selectedWorkspace!
+            .workspaceSlug,
+      projectId: ref.read(ProviderList.projectProvider).currentProject['id'],
+      method: CRUD.read,
+      query: 'current'
+    );
     // }
 
     pages = [
@@ -102,7 +122,6 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issueProvider = ref.watch(ProviderList.issuesProvider);
-    var featuresProvider = ref.watch(ProviderList.featuresProvider);
     var projectProvider = ref.watch(ProviderList.projectProvider);
     // log(issueProvider.issues.issues[0].items.length.toString());
 
@@ -733,27 +752,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
 
   Widget cycles() {
     var themeProvider = ref.read(ProviderList.themeProvider);
-    return Container(
-      color: themeProvider.isDarkThemeEnabled
-          ? darkSecondaryBackgroundColor
-          : lightSecondaryBackgroundColor,
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
-      child: ListView(
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-              child: CustomText(
-            ' Current Cycles',
-            type: FontStyle.heading,
-            // color: themeProvider.primaryTextColor,
-          )),
-          const CycleCard(),
-          const CycleCard(),
-          const CycleCard()
-        ],
-      ),
-    );
+    return CycleWidget();
   }
 
   Widget modules() {

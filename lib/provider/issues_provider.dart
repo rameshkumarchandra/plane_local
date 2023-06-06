@@ -639,7 +639,6 @@ class IssuesProvider extends ChangeNotifier {
 
       issuesResponse = response.data;
       isISsuesEmpty = issuesResponse.isEmpty;
-      log(issuesResponse.toString());
       issueState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
