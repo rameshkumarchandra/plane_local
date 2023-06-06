@@ -14,8 +14,18 @@ class CyclesProvider with ChangeNotifier {
   List<dynamic> cyclesAllData = [];
   List<dynamic> cyclesActiveData = [];
 
-  Future cyclesCrud({required String slug, required String projectId, required CRUD method, required String query}) async {
-    var url = '${APIs.cycles.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?cycle_view=$query';
+  Future cyclesCrud({
+    required String slug,
+    required String projectId,
+    required CRUD method,
+    required String query,
+    Map<String, dynamic>? data,
+  }) async {
+    var url = query == ''
+        ? APIs.cycles
+            .replaceFirst('\$SLUG', slug)
+            .replaceFirst('\$PROJECTID', projectId)
+        : '${APIs.cycles.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?cycle_view=$query';
     print(url);
     try {
       // cyclesState = AuthStateEnum.loading;
@@ -23,19 +33,21 @@ class CyclesProvider with ChangeNotifier {
       var response = await DioConfig().dioServe(
         hasAuth: true,
         url: url,
-        hasBody: false,
-        httpMethod: 
-        method == CRUD.read ?
-        HttpMethod.get
-        : HttpMethod.patch,
+        hasBody: data != null ? true : false,
+        httpMethod: method == CRUD.read
+            ? HttpMethod.get
+            : method == CRUD.create
+                ? HttpMethod.post
+                : HttpMethod.patch,
+        data: data,
       );
 
       // * RESPONSE FROM API CONVERTED TO MODEL IS THROWING ERRORS FOR VIEW PROPS ATTRIBUTE * //
       // cyclesData = CyclesModel.fromJson(response.data);
-      if(query == 'all') {
+      if (query == 'all') {
         cyclesAllData = response.data;
       }
-      if(query == 'current') {
+      if (query == 'current') {
         cyclesActiveData = response.data;
       }
       cyclesState = AuthStateEnum.success;

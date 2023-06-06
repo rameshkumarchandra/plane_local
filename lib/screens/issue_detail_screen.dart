@@ -131,6 +131,8 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                               }
                               return null;
                             },
+                            //make lines of textfield to be dynamic
+                            maxLines: null,
                             controller: title,
                             decoration: InputDecoration(
                               errorStyle: const TextStyle(

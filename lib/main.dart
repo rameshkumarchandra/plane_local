@@ -65,6 +65,7 @@ class _MyAppState extends ConsumerState<MyApp> {
           if (workspaceProv.workspaces.isEmpty) {
             return;
           }
+
           // log(prov.userProfile.last_workspace_id.toString());
 
           projectProv.getProjects(
@@ -123,7 +124,8 @@ class _MyAppState extends ConsumerState<MyApp> {
 
         textTheme: TextTheme(
           subtitle1: TextStyle(
-            color: themeProvider.isDarkThemeEnabled ? Colors.white : Colors.black,
+            color:
+                themeProvider.isDarkThemeEnabled ? Colors.white : Colors.black,
           ),
         ),
 

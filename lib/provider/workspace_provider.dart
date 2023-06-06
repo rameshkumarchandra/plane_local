@@ -217,6 +217,8 @@ class WorkspaceProvider extends ChangeNotifier {
         log('AFTER DELETE WORKSPACE ${selectedWorkspace!.workspaceName} }');
       }
 
+      getWorkspaceMembers();
+
       log(response.data.toString());
       log('SELECTED WORKSPACE ${selectedWorkspace!.workspaceName}');
       notifyListeners();
@@ -260,6 +262,8 @@ class WorkspaceProvider extends ChangeNotifier {
       // }).first;
       selectedWorkspace = WorkspaceModel.fromJson(
           workspaces.where((element) => element['id'] == id).first);
+
+      getWorkspaceMembers();
 
       tempLogo = selectedWorkspace!.workspaceLogo;
 

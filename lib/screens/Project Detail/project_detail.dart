@@ -88,23 +88,21 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
             .workspaceSlug,
         projId: ref.read(ProviderList.projectProvider).currentProject['id']);
     cyclesProv.cyclesCrud(
-      slug: ref
+        slug: ref
             .read(ProviderList.workspaceProvider)
             .selectedWorkspace!
             .workspaceSlug,
-      projectId: ref.read(ProviderList.projectProvider).currentProject['id'],
-      method: CRUD.read,
-      query: 'all'
-    );
+        projectId: ref.read(ProviderList.projectProvider).currentProject['id'],
+        method: CRUD.read,
+        query: 'all');
     cyclesProv.cyclesCrud(
-      slug: ref
+        slug: ref
             .read(ProviderList.workspaceProvider)
             .selectedWorkspace!
             .workspaceSlug,
-      projectId: ref.read(ProviderList.projectProvider).currentProject['id'],
-      method: CRUD.read,
-      query: 'current'
-    );
+        projectId: ref.read(ProviderList.projectProvider).currentProject['id'],
+        method: CRUD.read,
+        query: 'current');
     // }
 
     pages = [
@@ -130,7 +128,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
         onPressed: () {
           Navigator.pop(context);
         },
-        text: ref.read(ProviderList.projectProvider).currentProject['name'], // 'Project Name'
+        text: ref
+            .read(ProviderList.projectProvider)
+            .currentProject['name'], // 'Project Name'
         actions: [
           IconButton(
             onPressed: () {
@@ -581,6 +581,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                       ? EmptyPlaceholder.emptyIssues(context)
                       : issueProvider.issues.projectView == ProjectView.list
                           ? Container(
+                              color: themeProvider.isDarkThemeEnabled
+                                  ? const Color.fromRGBO(29, 30, 32, 1)
+                                  : lightSecondaryBackgroundColor,
                               margin: const EdgeInsets.only(top: 5),
                               child: SingleChildScrollView(
                                 child: Column(
@@ -668,7 +671,8 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                                             },
                                                             icon: const Icon(
                                                               Icons.add,
-                                                              color: greyColor,
+                                                              color:
+                                                                  primaryColor,
                                                             )),
                                                         const SizedBox(
                                                           width: 10,
@@ -760,7 +764,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
-          : lightSecondaryBackgroundColor,
+          : Colors.white,
       padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -782,7 +786,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
-          : lightSecondaryBackgroundColor,
+          : Colors.white,
       padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -804,7 +808,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
-          : lightSecondaryBackgroundColor,
+          : Colors.white,
       padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

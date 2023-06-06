@@ -9,6 +9,8 @@ class APIs {
   static String joinWorkspace = '$baseApi/api/users/me/invitations/workspaces/';
   static String createWorkspace = '$baseApi/api/workspaces/';
   static String inviteToWorkspace = '$baseApi/api/workspaces/\$SLUG/invite/';
+  static String inviteToProject =
+      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/invite/';
   static String listWorkspaces = "$baseApi/api/users/me/workspaces/";
   static String retrieveWorkspace = '$baseApi/api/workspaces/\$SLUG/';
   static String getWorkspaceMembers = '$baseApi/api/workspaces/\$SLUG/members/';
@@ -47,6 +49,8 @@ class APIs {
   static String issueDetails =
       '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/issues/\$ISSUEID/';
   static String joinProject = '$baseApi/api/workspaces/\$SLUG/projects/join/';
-  static String searchIssues = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/search-issues/';
-  static String cycles = '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/cycles/';
+  static String searchIssues =
+      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/search-issues/';
+  static String cycles =
+      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/cycles/';
 }

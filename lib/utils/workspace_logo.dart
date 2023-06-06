@@ -33,16 +33,16 @@ class _WorkspaceLogoState extends ConsumerState<WorkspaceLogo> {
     var workspaceProvider = ref.watch(ProviderList.workspaceProvider);
     var fileProvider = ref.watch(ProviderList.fileUploadProvider);
     var themeProvider = ref.watch(ProviderList.themeProvider);
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        //color: Colors.white,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-      ),
-      child: Stack(
-        children: [
-          Column(
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: const BoxDecoration(
+            //color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          ),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
@@ -131,36 +131,44 @@ class _WorkspaceLogoState extends ConsumerState<WorkspaceLogo> {
               ),
             ],
           ),
-          fileProvider.fileUploadState == AuthStateEnum.loading
-              ? Container(
-                  alignment: Alignment.center,
+        ),
+        fileProvider.fileUploadState == AuthStateEnum.loading
+            ? Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
                   color: themeProvider.isDarkThemeEnabled
                       ? Colors.black.withOpacity(0.7)
                       : Colors.white.withOpacity(0.7),
-                  // height: 25,
-                  // width: 25,
-                  child: Wrap(
-                    children: [
-                      SizedBox(
-                        height: 25,
-                        width: 25,
-                        child: LoadingIndicator(
-                          indicatorType: Indicator.lineSpinFadeLoader,
-                          colors: [
-                            themeProvider.isDarkThemeEnabled
-                                ? Colors.white
-                                : Colors.black
-                          ],
-                          strokeWidth: 1.0,
-                          backgroundColor: Colors.transparent,
-                        ),
+                  //color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30)),
+                ),
+                alignment: Alignment.center,
+
+                // height: 25,
+                // width: 25,
+                child: Wrap(
+                  children: [
+                    SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: LoadingIndicator(
+                        indicatorType: Indicator.lineSpinFadeLoader,
+                        colors: [
+                          themeProvider.isDarkThemeEnabled
+                              ? Colors.white
+                              : Colors.black
+                        ],
+                        strokeWidth: 1.0,
+                        backgroundColor: Colors.transparent,
                       ),
-                    ],
-                  ),
-                )
-              : const SizedBox(),
-        ],
-      ),
+                    ),
+                  ],
+                ),
+              )
+            : const SizedBox(),
+      ],
     );
   }
 }

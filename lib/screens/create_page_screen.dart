@@ -25,63 +25,75 @@ class CreatePage extends ConsumerWidget {
         },
         text: 'Create Page',
       ),
-      body: Container(
-        padding: const EdgeInsets.only(top: 23, left: 15, right: 15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            //form conatining title and description
-            Row(
+      body: LayoutBuilder(builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Text(
-                //   'Page Title',
-                //   style: TextStyle(
-                //     fontSize: 15,
-                //     fontWeight: FontWeight.w400,
-                //     color: themeProvider.secondaryTextColor,
-                //   ),
-                // ),
-                CustomText(
-                  'Page Title',
-                  type: FontStyle.title,
-                  // color: themeProvider.secondaryTextColor,
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //form conatining title and description
+                      Row(
+                        children: [
+                          // Text(
+                          //   'Page Title',
+                          //   style: TextStyle(
+                          //     fontSize: 15,
+                          //     fontWeight: FontWeight.w400,
+                          //     color: themeProvider.secondaryTextColor,
+                          //   ),
+                          // ),
+                          CustomText(
+                            'Page Title',
+                            type: FontStyle.title,
+                            // color: themeProvider.secondaryTextColor,
+                          ),
+                          // const Text(
+                          //   ' *',
+                          //   style: TextStyle(
+                          //     fontSize: 15,
+                          //     fontWeight: FontWeight.w400,
+                          //     color: Colors.red,
+                          //   ),
+                          // ),
+                          CustomText(
+                            ' *',
+                            type: FontStyle.title,
+                            color: Colors.red,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      TextField(
+                        decoration: kTextFieldDecoration.copyWith(
+                          fillColor: themeProvider.isDarkThemeEnabled
+                              ? darkBackgroundColor
+                              : lightBackgroundColor,
+                          filled: true,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                // const Text(
-                //   ' *',
-                //   style: TextStyle(
-                //     fontSize: 15,
-                //     fontWeight: FontWeight.w400,
-                //     color: Colors.red,
-                //   ),
-                // ),
-                CustomText(
-                  ' *',
-                  type: FontStyle.title,
-                  color: Colors.red,
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                  child: Button(
+                    text: 'Create Page',
+                    ontap: () {},
+                    textColor: Colors.white,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 5),
-            TextField(
-              decoration: kTextFieldDecoration.copyWith(
-                fillColor: themeProvider.isDarkThemeEnabled
-                    ? darkBackgroundColor
-                    : lightBackgroundColor,
-                filled: true,
-              ),
-            ),
-
-            const Spacer(),
-            //blue button with white text at the bottom
-            Button(
-              text: 'Create Page',
-              ontap: () {},
-              textColor: Colors.white,
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+          ),
+        );
+      }),
     );
   }
 }

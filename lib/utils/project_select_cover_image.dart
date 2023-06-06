@@ -115,16 +115,16 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     return NotificationListener<ScrollNotification>(
       onNotification: onNotification,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          //color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-        ),
-        child: Stack(
-          children: [
-            Column(
+      child: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              //color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+            ),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(
@@ -405,37 +405,45 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                     : Container()
               ],
             ),
-            projectProvider.unsplashImageState == AuthStateEnum.loading ||
-                    fileProvider.fileUploadState == AuthStateEnum.loading
-                ? Container(
-                    alignment: Alignment.center,
+          ),
+          projectProvider.unsplashImageState == AuthStateEnum.loading ||
+                  fileProvider.fileUploadState == AuthStateEnum.loading
+              ? Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
                     color: themeProvider.isDarkThemeEnabled
                         ? darkSecondaryBackgroundColor.withOpacity(0.7)
                         : lightSecondaryBackgroundColor.withOpacity(0.7),
-                    // height: 25,
-                    // width: 25,
-                    child: Wrap(
-                      children: [
-                        SizedBox(
-                          height: 25,
-                          width: 25,
-                          child: LoadingIndicator(
-                            indicatorType: Indicator.lineSpinFadeLoader,
-                            colors: [
-                              themeProvider.isDarkThemeEnabled
-                                  ? darkPrimaryTextColor
-                                  : lightPrimaryTextColor
-                            ],
-                            strokeWidth: 1.0,
-                            backgroundColor: Colors.transparent,
-                          ),
+                    //color: Colors.white,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)),
+                  ),
+                  alignment: Alignment.center,
+
+                  // height: 25,
+                  // width: 25,
+                  child: Wrap(
+                    children: [
+                      SizedBox(
+                        height: 25,
+                        width: 25,
+                        child: LoadingIndicator(
+                          indicatorType: Indicator.lineSpinFadeLoader,
+                          colors: [
+                            themeProvider.isDarkThemeEnabled
+                                ? darkPrimaryTextColor
+                                : lightPrimaryTextColor
+                          ],
+                          strokeWidth: 1.0,
+                          backgroundColor: Colors.transparent,
                         ),
-                      ],
-                    ),
-                  )
-                : const SizedBox(),
-          ],
-        ),
+                      ),
+                    ],
+                  ),
+                )
+              : const SizedBox(),
+        ],
       ),
     );
   }

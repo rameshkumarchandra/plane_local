@@ -22,22 +22,24 @@ class ProjectsProvider extends ChangeNotifier {
   var deleteProjectMemberState = AuthStateEnum.empty;
   var updateProjecState = AuthStateEnum.empty;
   var stateCrudState = AuthStateEnum.empty;
+  var projectLabelsState = AuthStateEnum.empty;
+  var projectInvitationState = AuthStateEnum.empty;
   var unsplashImages = [];
-  var currentProject={};
+  var currentProject = {};
   List projectMembers = [];
   var coverUrl =
       "https://app.plane.so/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1575116464504-9e7652fddcb3%3Fcrop%3Dentropy%26cs%3Dtinysrgb%26fit%3Dmax%26fm%3Djpg%26ixid%3DMnwyODUyNTV8MHwxfHNlYXJjaHwxOHx8cGxhbmV8ZW58MHx8fHwxNjgxNDY4NTY5%26ixlib%3Drb-4.0.3%26q%3D80%26w%3D1080&w=1920&q=75";
   ProjectDetailModel? projectDetailModel;
 
-    List features = [
-      {'title': 'Issues', 'width': 60, 'show' : true},
-      {'title': 'Cycles', 'width': 60, 'show' : true},
-      {'title': 'Modules', 'width': 75, 'show' : true},
-      {'title': 'Views', 'width': 60, 'show' : true},
-      {'title': 'Pages', 'width': 50, 'show' : true},
-    ];
+  List features = [
+    {'title': 'Issues', 'width': 60, 'show': true},
+    {'title': 'Cycles', 'width': 60, 'show': true},
+    {'title': 'Modules', 'width': 75, 'show': true},
+    {'title': 'Views', 'width': 60, 'show': true},
+    {'title': 'Pages', 'width': 50, 'show': true},
+  ];
 
- void clear(){
+  void clear() {
     projects = [];
     starredProjects = [];
     projectState = AuthStateEnum.empty;
@@ -49,15 +51,15 @@ class ProjectsProvider extends ChangeNotifier {
     updateProjecState = AuthStateEnum.empty;
     stateCrudState = AuthStateEnum.empty;
     unsplashImages = [];
-    currentProject={};
+    currentProject = {};
     coverUrl =
         "https://app.plane.so/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1575116464504-9e7652fddcb3%3Fcrop%3Dentropy%26cs%3Dtinysrgb%26fit%3Dmax%26fm%3Djpg%26ixid%3DMnwyODUyNTV8MHwxfHNlYXJjaHwxOHx8cGxhbmV8ZW58MHx8fHwxNjgxNDY4NTY5%26ixlib%3Drb-4.0.3%26q%3D80%26w%3D1080&w=1920&q=75";
-    projectDetailModel=null;
- }
+    projectDetailModel = null;
+  }
 
- void setState() {
-  notifyListeners();
- }
+  void setState() {
+    notifyListeners();
+  }
 
   void changeCoverUrl({required String url}) {
     coverUrl = url;
@@ -147,6 +149,36 @@ class ProjectsProvider extends ChangeNotifier {
     }
   }
 
+  Future inviteToProject({
+    required String slug,
+    required String projId,
+    required data,
+  }) async {
+    projectInvitationState = AuthStateEnum.loading;
+    notifyListeners();
+    try {
+      var response = await DioConfig().dioServe(
+        hasAuth: true,
+        url: APIs.inviteToProject.replaceAll('\$SLUG', slug).replaceAll(
+              '\$PROJECTID',
+              projId,
+            ),
+        hasBody: true,
+        data: data,
+        httpMethod: HttpMethod.post,
+      );
+      log(response.data.toString());
+      projectInvitationState = AuthStateEnum.success;
+      notifyListeners();
+      // log(response.data.toString());
+    } on DioError catch (e) {
+      log('Project Invite Error =  ${e.message}');
+      log(e.error.toString());
+      projectInvitationState = AuthStateEnum.error;
+      notifyListeners();
+    }
+  }
+
   Future createProjects({required String slug, required data}) async {
     createProjectState = AuthStateEnum.loading;
     notifyListeners();
@@ -166,14 +198,16 @@ class ProjectsProvider extends ChangeNotifier {
       // log(response.data.toString());
     } on DioError catch (e) {
       print('---- ERROR ------');
-      ScaffoldMessenger.of(Const.globalKey.currentContext!).showSnackBar(const SnackBar(content: Text('Identifier already exists')));
+      ScaffoldMessenger.of(Const.globalKey.currentContext!).showSnackBar(
+          const SnackBar(content: Text('Identifier already exists')));
       log(e.error.toString());
       createProjectState = AuthStateEnum.error;
       notifyListeners();
     }
   }
 
-  Future getProjectDetails({required String slug, required String projId}) async {
+  Future getProjectDetails(
+      {required String slug, required String projId}) async {
     // projectDetailState = AuthStateEnum.loading;
     // notifyListeners();
     log("${APIs.listProjects.replaceAll('\$SLUG', slug)}$projId");
@@ -194,7 +228,7 @@ class ProjectsProvider extends ChangeNotifier {
       projectDetailState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
-            print('====== FAILED =====');
+      print('====== FAILED =====');
 
       log(e.error.toString());
       projectDetailState = AuthStateEnum.error;
@@ -202,16 +236,16 @@ class ProjectsProvider extends ChangeNotifier {
     }
   }
 
-  Future updateProject({required String slug, required String projId,required Map data}) async {
+  Future updateProject(
+      {required String slug, required String projId, required Map data}) async {
     print(data);
     try {
       var response = await DioConfig().dioServe(
-        hasAuth: true,
-        url: "${APIs.listProjects.replaceAll('\$SLUG', slug)}$projId/",
-        hasBody: true,
-        httpMethod: HttpMethod.patch,
-        data: data
-      );
+          hasAuth: true,
+          url: "${APIs.listProjects.replaceAll('\$SLUG', slug)}$projId/",
+          hasBody: true,
+          httpMethod: HttpMethod.patch,
+          data: data);
       print('====== SUCCESS =====');
       updateProjecState = AuthStateEnum.success;
       notifyListeners();
@@ -223,26 +257,29 @@ class ProjectsProvider extends ChangeNotifier {
     }
   }
 
-    Future getProjectMembers({required String slug, required String projId}) async {
+  Future getProjectMembers(
+      {required String slug, required String projId}) async {
     // projectDetailState = AuthStateEnum.loading;
     // notifyListeners();
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
-        url: APIs.projectMembers.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projId),
+        url: APIs.projectMembers
+            .replaceFirst('\$SLUG', slug)
+            .replaceFirst('\$PROJECTID', projId),
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
 
       projectMembers = response.data;
-      for(int i = 0; i < projectMembers.length; i++) {
+      for (int i = 0; i < projectMembers.length; i++) {
         print(projectMembers[i]['member']['id']);
       }
       print('====== SUCCESS =====');
       projectMembersState = AuthStateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
-            print('====== FAILED =====');
+      print('====== FAILED =====');
 
       log(e.error.toString());
       projectMembersState = AuthStateEnum.error;
@@ -263,17 +300,20 @@ class ProjectsProvider extends ChangeNotifier {
       print('====== SUCCESS =====');
       deleteProjectState = AuthStateEnum.success;
       notifyListeners();
-    }
-    on DioError catch (e) {
+    } on DioError catch (e) {
       log(e.error.toString());
       deleteProjectState = AuthStateEnum.error;
       notifyListeners();
     }
   }
 
-  Future deleteProjectMember({required String slug, required String projId,required String userId}) async {
+  Future deleteProjectMember(
+      {required String slug,
+      required String projId,
+      required String userId}) async {
     try {
-      var url = '${APIs.projectMembers.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projId)}$userId/';
+      var url =
+          '${APIs.projectMembers.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projId)}$userId/';
       print(url);
       deleteProjectMemberState = AuthStateEnum.loading;
       notifyListeners();
@@ -286,44 +326,49 @@ class ProjectsProvider extends ChangeNotifier {
       print('====== SUCCESS =====');
       deleteProjectMemberState = AuthStateEnum.success;
       notifyListeners();
-    }
-    on DioError catch (e) {
+    } on DioError catch (e) {
       log(e.message.toString());
       deleteProjectMemberState = AuthStateEnum.error;
       notifyListeners();
     }
   }
 
-  Future stateCrud ({required String slug, required String projId,required String stateId,required CRUD method,required Map data}) async {
+  Future stateCrud(
+      {required String slug,
+      required String projId,
+      required String stateId,
+      required CRUD method,
+      required Map data}) async {
     try {
-      var url = 
-      method == CRUD.update ?
-      APIs.states.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projId) + stateId + '/' :
-      APIs.states.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projId);
+      var url = method == CRUD.update
+          ? APIs.states
+                  .replaceFirst('\$SLUG', slug)
+                  .replaceFirst('\$PROJECTID', projId) +
+              stateId +
+              '/'
+          : APIs.states
+              .replaceFirst('\$SLUG', slug)
+              .replaceFirst('\$PROJECTID', projId);
       print(url);
       stateCrudState = AuthStateEnum.loading;
       notifyListeners();
       var response = await DioConfig().dioServe(
-        hasAuth: true,
-        url: url,
-        hasBody: true,
-        httpMethod: 
-        method == CRUD.create ?
-        HttpMethod.post
-        : method == CRUD.update ?
-        HttpMethod.put
-        : HttpMethod.patch,
-        data: data
-      );
+          hasAuth: true,
+          url: url,
+          hasBody: true,
+          httpMethod: method == CRUD.create
+              ? HttpMethod.post
+              : method == CRUD.update
+                  ? HttpMethod.put
+                  : HttpMethod.patch,
+          data: data);
       print('====== SUCCESS =====');
       stateCrudState = AuthStateEnum.success;
       notifyListeners();
-    }
-    on DioError catch (e) {
+    } on DioError catch (e) {
       log(e.message.toString());
       stateCrudState = AuthStateEnum.error;
       notifyListeners();
     }
   }
-
 }
