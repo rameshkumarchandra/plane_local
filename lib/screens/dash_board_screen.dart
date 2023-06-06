@@ -164,7 +164,7 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                 crossAxisCount: 2,
                 mainAxisSpacing: 20,
                 crossAxisSpacing: 20,
-                childAspectRatio: 7 / 3,
+                childAspectRatio: 7 / 3.5,
               ),
               itemBuilder: (context, index) {
                 return Container(

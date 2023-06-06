@@ -371,7 +371,7 @@ class IssuesProvider extends ChangeNotifier {
           shrink: shrinkStates[count++],
           leading: SvgPicture.asset(
             states.keys.elementAt(i) == 'backlog'
-                ? 'assets/svg_images/circle.svg'
+                ? 'assets/svg_images/ellipse_1.svg'
                 : states.keys.elementAt(i) == 'cancelled'
                     ? 'assets/svg_images/cancelled.svg'
                     : states.keys.elementAt(i) == 'completed'
@@ -608,7 +608,7 @@ class IssuesProvider extends ChangeNotifier {
             if (createIssuedata['due_date'] != null)
               "target_date":
                   DateFormat('yyyy-MM-dd').format(createIssuedata['due_date']),
-            if(createIssueParentId.isNotEmpty) "parent" : createIssueParentId
+            if (createIssueParentId.isNotEmpty) "parent": createIssueParentId
           });
       // log(response.data.toString());
 

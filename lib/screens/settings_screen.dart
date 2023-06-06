@@ -59,7 +59,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const InviteMembers(),
+                      builder: (context) => InviteMembers(
+                        isProject: true,
+                      ),
                     ),
                   );
                 }
@@ -72,6 +74,8 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                         topRight: Radius.circular(20),
                       ),
                     ),
+                    constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height * 0.85),
                     context: context,
                     builder: (context) {
                       return CreateLabel(

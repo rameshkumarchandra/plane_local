@@ -175,8 +175,8 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                !widget.parent ?
-                                    checkBoxWidget(widget.blocking, index)
+                                !widget.parent
+                                    ? checkBoxWidget(widget.blocking, index)
                                     : Container(),
                                 !widget.parent
                                     ? const SizedBox(
@@ -204,7 +204,7 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                                     type: FontStyle.description,
                                     maxLines: 4,
                                     textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
+                                    overflow: TextOverflow.visible,
                                   ),
                                 ),
                               ],
@@ -233,14 +233,15 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                                       .currentProject['id'],
                                   issueID:
                                       widget.createIssue ? '' : widget.issueId,
-                                  data:
-                                  widget.blocking ? 
-                                  {
-                                    "blockers_list": issuesProvider.blockingIssues
-                                  }
-                                  : {
-                                    "blocks_list" : issuesProvider.blockedByIssues
-                                  },
+                                  data: widget.blocking
+                                      ? {
+                                          "blockers_list":
+                                              issuesProvider.blockingIssues
+                                        }
+                                      : {
+                                          "blocks_list":
+                                              issuesProvider.blockedByIssues
+                                        },
                                   index: widget.index,
                                   ref: ref,
                                 );
@@ -260,34 +261,36 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
     );
   }
 
-  Widget checkBoxWidget(bool blocking, int index){
+  Widget checkBoxWidget(bool blocking, int index) {
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
     var searchIssueProvider = ref.watch(ProviderList.searchIssueProvider);
     var themeProvider = ref.watch(ProviderList.themeProvider);
-    if(blocking){
-      return 
-      issuesProvider.blockingIssues.contains(searchIssueProvider.issues[index]['id']) ?
-      const Icon(
-        Icons.check_box,
-        color: primaryColor,
-      )
-      : 
-      Icon(
-        Icons.check_box_outline_blank,
-        color: themeProvider.isDarkThemeEnabled ? lightBackgroundColor : darkBackgroundColor,
-      );
-    }
-    else {
-      return issuesProvider.blockedByIssues.contains(searchIssueProvider.issues[index]['id']) ?
-      const Icon(
-        Icons.check_box,
-        color: primaryColor,
-      )
-      : Icon(
-        Icons.check_box_outline_blank,
-        color: themeProvider.isDarkThemeEnabled ? lightBackgroundColor : darkBackgroundColor,
-      );
+    if (blocking) {
+      return issuesProvider.blockingIssues
+              .contains(searchIssueProvider.issues[index]['id'])
+          ? const Icon(
+              Icons.check_box,
+              color: primaryColor,
+            )
+          : Icon(
+              Icons.check_box_outline_blank,
+              color: themeProvider.isDarkThemeEnabled
+                  ? lightBackgroundColor
+                  : darkBackgroundColor,
+            );
+    } else {
+      return issuesProvider.blockedByIssues
+              .contains(searchIssueProvider.issues[index]['id'])
+          ? const Icon(
+              Icons.check_box,
+              color: primaryColor,
+            )
+          : Icon(
+              Icons.check_box_outline_blank,
+              color: themeProvider.isDarkThemeEnabled
+                  ? lightBackgroundColor
+                  : darkBackgroundColor,
+            );
     }
   }
-
 }
