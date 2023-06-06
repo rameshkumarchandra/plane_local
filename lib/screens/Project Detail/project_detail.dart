@@ -603,7 +603,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                                             bottom: 10),
                                                     child: Row(
                                                       children: [
-                                                        state.leading!,
+                                                        state.leading??Container(),
                                                         Container(
                                                           padding:
                                                               const EdgeInsets

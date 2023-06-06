@@ -42,8 +42,8 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
     prov.createIssuedata['members'] = null;
     prov.createIssuedata['labels'] = null;
     prov.createIssuedata['state'] = {
-      'name': prov.states.values.toList()[0][0]['name'],
-      "id": prov.states.values.toList()[0][0]['id'],
+      'name': prov.states.values.toList()[0]['name'],
+      "id": prov.states.values.toList()[0]['id'],
     };
     super.initState();
   }
@@ -75,9 +75,9 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
       },
       child: Scaffold(
         //#f5f5f5f5 color
-        backgroundColor: themeProvider.isDarkThemeEnabled
-            ? darkSecondaryBackgroundColor
-            : const Color.fromRGBO(248, 249, 250, 1),
+        // backgroundColor: themeProvider.isDarkThemeEnabled
+        //     ? darkSecondaryBackgroundColor
+        //     : const Color.fromRGBO(248, 249, 250, 1),
         appBar: CustomAppBar(
           onPressed: () {
             Navigator.pop(context);
@@ -97,6 +97,12 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Container(
+                      height: 1,
+                      color: themeProvider.isDarkThemeEnabled
+                          ? darkThemeBorder
+                          : strokeColor,
+                    ),
                     Padding(
                       padding:
                           const EdgeInsets.only(top: 23, left: 15, right: 15),
@@ -677,11 +683,16 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       color: themeProvider.isDarkThemeEnabled
-                                          ? darkBackgroundColor
+                                          ? darkSecondaryBackgroundColor
                                           : lightBackgroundColor,
                                       borderRadius: BorderRadius.circular(5),
                                       border: Border.all(
-                                        color: Colors.grey.shade200,
+                                        color: themeProvider.isDarkThemeEnabled
+                                            ? darkThemeBorder
+                                            : Colors.grey.shade200,
+                                        width: themeProvider.isDarkThemeEnabled
+                                            ? 2
+                                            : 0,
                                       ),
                                     ),
                                     child: Padding(

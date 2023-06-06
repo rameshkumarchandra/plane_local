@@ -197,7 +197,7 @@ class _CycleWidgetState extends ConsumerState<CycleWidget> {
 
   Widget cycleActive() {
     return ListView.builder(
-      itemCount: 1,
+      itemCount: ref.read(ProviderList.cyclesProvider).cyclesActiveData.length,
       itemBuilder: (context, index) {
         return CycleActiveCard(index: index,);
       },

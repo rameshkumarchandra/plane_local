@@ -252,7 +252,7 @@ class IssuesProvider extends ChangeNotifier {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            element.leading!,
+            element.leading??Container(),
             const SizedBox(
               width: 10,
             ),
@@ -411,6 +411,9 @@ class IssuesProvider extends ChangeNotifier {
                             : 'assets/svg_images/circle.svg',
             height: 22,
             width: 22,
+            color: Color(int.parse(
+                "FF${response.data[state][j]['color'].toString().replaceAll('#', '')}",
+                radix: 16)),
           );
         }
       }
@@ -775,7 +778,7 @@ class IssuesProvider extends ChangeNotifier {
         httpMethod: HttpMethod.get,
       );
       issueView = response.data["view_props"];
-      log(issueView.toString());
+      //log("project view=>${response.data["view_props"]}");
       issues.projectView = issueView["issueView"] == 'list'
           ? ProjectView.list
           : ProjectView.kanban;

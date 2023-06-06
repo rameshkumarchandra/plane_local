@@ -184,9 +184,10 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
                                       null
                               ? CircleAvatar(
                                   radius: 10,
-                                  backgroundImage:
-                                      cyclesProvider.cyclesActiveData[index]
-                                          ['owned_by']['avatar'],
+                                  backgroundImage: Image.network(
+                                          cyclesProvider.cyclesActiveData[index]
+                                              ['owned_by']['avatar'])
+                                      .image,
                                 )
                               : CircleAvatar(
                                   radius: 10,
@@ -252,9 +253,14 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
                         ),
                       ],
                     ),
-                    ProfileCircleAvatarsWidget(
-                        details: cyclesProvider.cyclesActiveData[index]
-                            ['assignees']),
+                    cyclesProvider.cyclesActiveData[index]['assignees'] !=
+                                null &&
+                            cyclesProvider
+                                .cyclesActiveData[index]['assignees'].isNotEmpty
+                        ? ProfileCircleAvatarsWidget(
+                            details: cyclesProvider.cyclesActiveData[index]
+                                ['assignees'])
+                        : const Icon(Icons.groups_3_outlined),
                     Row(children: const [Icon(Icons.tiktok), Text('74 Issues')])
                   ],
                 ),

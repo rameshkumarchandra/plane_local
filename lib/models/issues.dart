@@ -122,7 +122,7 @@ class Issues {
     }
   }
 
-  static toGroupBY(String groupBY) {
+  static toGroupBY(String? groupBY) {
     switch (groupBY) {
       case "state":
         return GroupBY.state;
