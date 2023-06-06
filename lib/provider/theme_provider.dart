@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';

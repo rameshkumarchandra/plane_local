@@ -13,10 +13,12 @@ class BoardListsData {
   Widget? leading;
   bool? shrink;
   int index;
+  String? id;
   BoardListsData({
     this.shrink = false,
     this.title,
     this.leading,
+    this.id,
     this.header,
     this.footer,
     required this.items,

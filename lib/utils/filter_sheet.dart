@@ -48,8 +48,10 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
-            border:
-                Border.all(color: selected ? Colors.transparent : strokeColor),
+            border: Border.all(
+                color: selected || themeProvider.isDarkThemeEnabled
+                    ? Colors.transparent
+                    : Colors.grey.shade400),
             color: color ?? Colors.white),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -60,7 +62,11 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
               text.isNotEmpty
                   ? text.replaceFirst(text[0], text[0].toUpperCase())
                   : text,
-              color: selected ? Colors.white : greyColor,
+              color: selected
+                  ? Colors.white
+                  : themeProvider.isDarkThemeEnabled
+                      ? Colors.grey.shade500
+                      : greyColor,
             )
           ],
         ),
@@ -71,7 +77,9 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
       return Container(
         height: 1,
         width: double.infinity,
-        color: Colors.grey[300],
+        color: themeProvider.isDarkThemeEnabled
+            ? darkThemeBorder
+            : Colors.grey[300],
       );
     }
 
@@ -80,331 +88,316 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
       // color: themeProvider.isDarkThemeEnabled
       //     ? darkSecondaryBackgroundColor
       //     : lightSecondaryBackgroundColor,
-      child: LayoutBuilder(builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: SingleChildScrollView(
+        child: Wrap(
+          children: [
+            Row(
               children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        CustomText(
-                          'Filter',
-                          type: FontStyle.heading,
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(
-                            Icons.close,
-                            size: 27,
-                            color: Color.fromRGBO(143, 143, 147, 1),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 10),
-
-                    CustomExpansionTile(
-                      title: 'Priority',
-                      child: Wrap(
-                          children: priorities
-                              .map((e) => InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      if (issuesProvider.filterPriorities
-                                          .contains(e['text'])) {
-                                        issuesProvider.filterPriorities
-                                            .remove(e['text']);
-                                      } else {
-                                        issuesProvider.filterPriorities
-                                            .add(e['text']);
-                                      }
-                                    });
-                                  },
-                                  child: expandedWidget(
-                                      icon: Icon(
-                                        e['icon'],
-                                        size: 15,
-                                        color: issuesProvider.filterPriorities
-                                                .contains(e['text'])
-                                            ? Colors.white
-                                            : greyColor,
-                                      ),
-                                      text: e['text'],
-                                      color: issuesProvider.filterPriorities
-                                              .contains(e['text'])
-                                          ? primaryColor
-                                          : Colors.white,
-                                      selected: issuesProvider.filterPriorities
-                                          .contains(e['text']))))
-                              .toList()),
-                    ),
-
-                    horizontalLine(),
-
-                    CustomExpansionTile(
-                      title: 'State',
-                      child: Wrap(
-                          children: issuesProvider.states.values
-                              .map((e) => InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        if (issuesProvider.filterStates
-                                            .contains(e[0]['id'])) {
-                                          issuesProvider.filterStates
-                                              .remove(e[0]['id']);
-                                        } else {
-                                          issuesProvider.filterStates
-                                              .add(e[0]['id']);
-                                        }
-                                      });
-                                    },
-                                    child: expandedWidget(
-                                      icon: SvgPicture.asset(
-                                        e[0]['name'] == 'Backlog'
-                                            ? 'assets/svg_images/circle.svg'
-                                            : e[0]['name'] == 'Cancelled'
-                                                ? 'assets/svg_images/cancelled.svg'
-                                                : e[0]['name'] == 'Todo'
-                                                    ? 'assets/svg_images/in_progress.svg'
-                                                    : e[0]['name'] == 'Done'
-                                                        ? 'assets/svg_images/done.svg'
-                                                        : 'assets/svg_images/circle.svg',
-                                        height: 20,
-                                        width: 20,
-                                      ),
-                                      text: e[0]['name'],
-                                      color: issuesProvider.filterStates
-                                              .contains(e[0]['id'])
-                                          ? primaryColor
-                                          : Colors.white,
-                                      selected: issuesProvider.filterStates
-                                          .contains(e[0]['id']),
-                                    ),
-                                  ))
-                              .toList()
-                          // children: [
-                          //   expandedWidget(
-                          //       icon: Icons.dangerous_outlined, text: 'Backlog', selected: false),
-                          //   expandedWidget(
-                          //       icon: Icons.wifi_calling_3_outlined, text: 'To Do', selected: false),
-                          //   expandedWidget(
-                          //       icon: Icons.wifi_2_bar_outlined, text: 'In Progress', selected: false),
-                          //   expandedWidget(
-                          //       icon: Icons.wifi_1_bar_outlined, text: 'Done', selected: false),
-                          //   expandedWidget(
-                          //       icon: Icons.dangerous_outlined, text: 'Cancelled', selected: false),
-                          // ],
-                          ),
-                    ),
-
-                    horizontalLine(),
-
-                    CustomExpansionTile(
-                      title: 'Assignees',
-                      child: Wrap(
-                        children: projectProvider.projectMembers
-                            .map(
-                              (e) => InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    if (issuesProvider.filterAssignes
-                                        .contains(e['member']['id'])) {
-                                      issuesProvider.filterAssignes
-                                          .remove(e['member']['id']);
-                                    } else {
-                                      issuesProvider.filterAssignes
-                                          .add(e['member']['id']);
-                                    }
-                                  });
-                                },
-                                child: expandedWidget(
-                                    icon: e['member']['avatar'] != '' &&
-                                            e['member']['avatar'] != null
-                                        ? CircleAvatar(
-                                            radius: 10,
-                                            backgroundImage: NetworkImage(
-                                                e['member']['avatar']),
-                                          )
-                                        : CircleAvatar(
-                                            radius: 10,
-                                            backgroundColor:
-                                                darkBackgroundColor,
-                                            child: Center(
-                                                child: CustomText(
-                                              e['member']['email'][0]
-                                                  .toString()
-                                                  .toUpperCase(),
-                                              color: Colors.white,
-                                            )),
-                                          ),
-                                    text: e['member']['first_name'] != null &&
-                                            e['member']['first_name'] != ''
-                                        ? e['member']['first_name']
-                                        : '',
-                                    selected: issuesProvider.filterAssignes
-                                        .contains(e['member']['id']),
-                                    color: issuesProvider.filterAssignes
-                                            .contains(e['member']['id'])
-                                        ? primaryColor
-                                        : Colors.white),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-
-                    horizontalLine(),
-
-                    CustomExpansionTile(
-                      title: 'Created by',
-                      child: Wrap(
-                        children: projectProvider.projectMembers
-                            .map(
-                              (e) => InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    if (issuesProvider.filterCreatedBy
-                                        .contains(e['member']['id'])) {
-                                      issuesProvider.filterCreatedBy
-                                          .remove(e['member']['id']);
-                                    } else {
-                                      issuesProvider.filterCreatedBy
-                                          .add(e['member']['id']);
-                                    }
-                                  });
-                                },
-                                child: expandedWidget(
-                                    icon: e['member']['avatar'] != '' &&
-                                            e['member']['avatar'] != null
-                                        ? CircleAvatar(
-                                            radius: 10,
-                                            backgroundImage: NetworkImage(
-                                                e['member']['avatar']),
-                                          )
-                                        : CircleAvatar(
-                                            radius: 10,
-                                            backgroundColor:
-                                                darkBackgroundColor,
-                                            child: Center(
-                                                child: CustomText(
-                                              e['member']['email'][0]
-                                                  .toString()
-                                                  .toUpperCase(),
-                                              color: Colors.white,
-                                            )),
-                                          ),
-                                    text: e['member']['first_name'] != null &&
-                                            e['member']['first_name'] != ''
-                                        ? e['member']['first_name']
-                                        : '',
-                                    selected: issuesProvider.filterCreatedBy
-                                        .contains(e['member']['id']),
-                                    color: issuesProvider.filterCreatedBy
-                                            .contains(e['member']['id'])
-                                        ? primaryColor
-                                        : Colors.white),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-
-                    horizontalLine(),
-
-                    CustomExpansionTile(
-                      title: 'Labels',
-                      child: Wrap(
-                          children: issuesProvider.labels
-                              .map((e) => InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        if (issuesProvider.filterLabels
-                                            .contains(e['id'])) {
-                                          issuesProvider.filterLabels
-                                              .remove(e['id']);
-                                        } else {
-                                          issuesProvider.filterLabels
-                                              .add(e['id']);
-                                        }
-                                      });
-                                    },
-                                    child: expandedWidget(
-                                        icon: CircleAvatar(
-                                          radius: 5,
-                                          backgroundColor: Color(int.parse(
-                                              "0xFF${e['color'].toString().toUpperCase().replaceAll("#", "")}")),
-                                        ),
-                                        text: e['name'],
-                                        selected: issuesProvider.filterLabels
-                                            .contains(e['id']),
-                                        color: issuesProvider.filterLabels
-                                                .contains(e['id'])
-                                            ? primaryColor
-                                            : Colors.white),
-                                  ))
-                              .toList()),
-                    ),
-
-                    // horizontalLine(),
-
-                    // Expanded(child: Container()),
-
-                    // const SizedBox(height: 260),
-
-                    //long blue button to apply filter
-                    // Container(
-                    //   margin: const EdgeInsets.only(bottom: 18),
-                    //   child: Button(
-                    //     text: 'Apply Filter',
-                    //     ontap: () {
-                    //       issuesProvider.orderByIssues(
-                    //         slug: ref
-                    //             .read(ProviderList.workspaceProvider)
-                    //             .selectedWorkspace!
-                    //             .workspaceSlug,
-                    //         projID: ref
-                    //             .read(ProviderList.projectProvider)
-                    //             .currentProject["id"],
-                    //       );
-                    //       Navigator.of(context).pop();
-                    //     },
-                    //     textColor: Colors.white,
-                    //   ),
-                    // ),
-                  ],
+                CustomText(
+                  'Filter',
+                  type: FontStyle.heading,
                 ),
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 20),
-                  child: Button(
-                    text: 'Apply Filter',
-                    ontap: () {
-                      issuesProvider.orderByIssues(
-                        slug: ref
-                            .read(ProviderList.workspaceProvider)
-                            .selectedWorkspace!
-                            .workspaceSlug,
-                        projID: ref
-                            .read(ProviderList.projectProvider)
-                            .currentProject["id"],
-                      );
-                      Navigator.of(context).pop();
-                    },
-                    textColor: Colors.white,
+                const Spacer(),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                    size: 27,
+                    color: Color.fromRGBO(143, 143, 147, 1),
                   ),
                 ),
               ],
             ),
-          ),
-        );
-      }),
+
+            const SizedBox(height: 10),
+
+            CustomExpansionTile(
+              title: 'Priority',
+              child: Wrap(
+                  children: priorities
+                      .map((e) => GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (issuesProvider.issues.filters.priorities
+                                  .contains(e['text'])) {
+                                issuesProvider.issues.filters.priorities
+                                    .remove(e['text']);
+                              } else {
+                                issuesProvider.issues.filters.priorities
+                                    .add(e['text']);
+                              }
+                            });
+                          },
+                          child: expandedWidget(
+                              icon: Icon(
+                                e['icon'],
+                                size: 15,
+                                color: issuesProvider.issues.filters.priorities
+                                        .contains(e['text'])
+                                    ? Colors.white
+                                    : greyColor,
+                              ),
+                              text: e['text'],
+                              color: issuesProvider.issues.filters.priorities
+                                      .contains(e['text'])
+                                  ? primaryColor
+                                  : themeProvider.isDarkThemeEnabled
+                                      ? darkBackgroundColor
+                                      : Colors.white,
+                              selected: issuesProvider.issues.filters.priorities
+                                  .contains(e['text']))))
+                      .toList()),
+            ),
+
+            horizontalLine(),
+
+            CustomExpansionTile(
+              title: 'State',
+              child: Wrap(
+                  children: issuesProvider.states.values
+                      .map((e) => GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (issuesProvider.issues.filters.states
+                                    .contains(e['id'])) {
+                                  issuesProvider.issues.filters.states
+                                      .remove(e['id']);
+                                } else {
+                                  issuesProvider.issues.filters.states
+                                      .add(e['id']);
+                                }
+                              });
+                            },
+                            child: expandedWidget(
+                              icon: SvgPicture.asset(
+                                e['name'] == 'Backlog'
+                                    ? 'assets/svg_images/circle.svg'
+                                    : e['name'] == 'Cancelled'
+                                        ? 'assets/svg_images/cancelled.svg'
+                                        : e['name'] == 'Todo'
+                                            ? 'assets/svg_images/in_progress.svg'
+                                            : e['name'] == 'Done'
+                                                ? 'assets/svg_images/done.svg'
+                                                : 'assets/svg_images/circle.svg',
+                                height: 20,
+                                width: 20,
+                              ),
+                              text: e['name'],
+                              color: issuesProvider.issues.filters.states
+                                      .contains(e['id'])
+                                  ? primaryColor
+                                  : themeProvider.isDarkThemeEnabled
+                                      ? darkBackgroundColor
+                                      : Colors.white,
+                              selected: issuesProvider.issues.filters.states
+                                  .contains(e['id']),
+                            ),
+                          ))
+                      .toList()
+                  // children: [
+                  //   expandedWidget(
+                  //       icon: Icons.dangerous_outlined, text: 'Backlog', selected: false),
+                  //   expandedWidget(
+                  //       icon: Icons.wifi_calling_3_outlined, text: 'To Do', selected: false),
+                  //   expandedWidget(
+                  //       icon: Icons.wifi_2_bar_outlined, text: 'In Progress', selected: false),
+                  //   expandedWidget(
+                  //       icon: Icons.wifi_1_bar_outlined, text: 'Done', selected: false),
+                  //   expandedWidget(
+                  //       icon: Icons.dangerous_outlined, text: 'Cancelled', selected: false),
+                  // ],
+                  ),
+            ),
+
+            horizontalLine(),
+
+            CustomExpansionTile(
+              title: 'Assignees',
+              child: Wrap(
+                children: projectProvider.projectMembers
+                    .map(
+                      (e) => GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (issuesProvider.issues.filters.assignees
+                                .contains(e['member']['id'])) {
+                              issuesProvider.issues.filters.assignees
+                                  .remove(e['member']['id']);
+                            } else {
+                              issuesProvider.issues.filters.assignees
+                                  .add(e['member']['id']);
+                            }
+                          });
+                        },
+                        child: expandedWidget(
+                          icon: e['member']['avatar'] != '' &&
+                                  e['member']['avatar'] != null
+                              ? CircleAvatar(
+                                  radius: 10,
+                                  backgroundImage:
+                                      NetworkImage(e['member']['avatar']),
+                                )
+                              : CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor:
+                                      const Color.fromRGBO(55, 65, 81, 1),
+                                  child: Center(
+                                      child: CustomText(
+                                    e['member']['email'][0]
+                                        .toString()
+                                        .toUpperCase(),
+                                    color: Colors.white,
+                                  )),
+                                ),
+                          text: e['member']['first_name'] != null &&
+                                  e['member']['first_name'] != ''
+                              ? e['member']['first_name']
+                              : '',
+                          selected: issuesProvider.issues.filters.assignees
+                              .contains(e['member']['id']),
+                          color: issuesProvider.issues.filters.assignees
+                                  .contains(e['member']['id'])
+                              ? primaryColor
+                              : themeProvider.isDarkThemeEnabled
+                                  ? darkBackgroundColor
+                                  : Colors.white,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+
+            horizontalLine(),
+
+            CustomExpansionTile(
+              title: 'Created by',
+              child: Wrap(
+                children: projectProvider.projectMembers
+                    .map(
+                      (e) => GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (issuesProvider.issues.filters.createdBy
+                                .contains(e['member']['id'])) {
+                              issuesProvider.issues.filters.createdBy
+                                  .remove(e['member']['id']);
+                            } else {
+                              issuesProvider.issues.filters.createdBy
+                                  .add(e['member']['id']);
+                            }
+                          });
+                        },
+                        child: expandedWidget(
+                          icon: e['member']['avatar'] != '' &&
+                                  e['member']['avatar'] != null
+                              ? CircleAvatar(
+                                  radius: 10,
+                                  backgroundImage:
+                                      NetworkImage(e['member']['avatar']),
+                                )
+                              : CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor:
+                                      const Color.fromRGBO(55, 65, 81, 1),
+                                  child: Center(
+                                      child: CustomText(
+                                    e['member']['email'][0]
+                                        .toString()
+                                        .toUpperCase(),
+                                    color: Colors.white,
+                                  )),
+                                ),
+                          text: e['member']['first_name'] != null &&
+                                  e['member']['first_name'] != ''
+                              ? e['member']['first_name']
+                              : '',
+                          selected: issuesProvider.issues.filters.createdBy
+                              .contains(e['member']['id']),
+                          color: issuesProvider.issues.filters.createdBy
+                                  .contains(e['member']['id'])
+                              ? primaryColor
+                              : themeProvider.isDarkThemeEnabled
+                                  ? darkBackgroundColor
+                                  : Colors.white,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
+
+            horizontalLine(),
+
+            CustomExpansionTile(
+              title: 'Labels',
+              child: Wrap(
+                  children: issuesProvider.labels
+                      .map((e) => GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                if (issuesProvider.issues.filters.labels
+                                    .contains(e['id'])) {
+                                  issuesProvider.issues.filters.labels
+                                      .remove(e['id']);
+                                } else {
+                                  issuesProvider.issues.filters.labels
+                                      .add(e['id']);
+                                }
+                              });
+                            },
+                            child: expandedWidget(
+                              icon: CircleAvatar(
+                                radius: 5,
+                                backgroundColor: Color(int.parse(
+                                    "0xFF${e['color'].toString().toUpperCase().replaceAll("#", "")}")),
+                              ),
+                              text: e['name'],
+                              selected: issuesProvider.issues.filters.labels
+                                  .contains(e['id']),
+                              color: issuesProvider.issues.filters.labels
+                                      .contains(e['id'])
+                                  ? primaryColor
+                                  : themeProvider.isDarkThemeEnabled
+                                      ? darkBackgroundColor
+                                      : Colors.white,
+                            ),
+                          ))
+                      .toList()),
+            ),
+
+            // horizontalLine(),
+
+            // Expanded(child: Container()),
+
+            Container(height: 50),
+
+            //long blue button to apply filter
+            Container(
+              margin: const EdgeInsets.only(bottom: 18),
+              child: Button(
+                text: 'Apply Filter',
+                ontap: () {
+                  issuesProvider.updateProjectView();
+                  issuesProvider.filterIssues(
+                    slug: ref
+                        .read(ProviderList.workspaceProvider)
+                        .selectedWorkspace!
+                        .workspaceSlug,
+                    projID: ref
+                        .read(ProviderList.projectProvider)
+                        .currentProject["id"],
+                  );
+                  Navigator.of(context).pop();
+                },
+                textColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

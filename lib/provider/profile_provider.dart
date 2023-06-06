@@ -60,7 +60,7 @@ class ProfileProvider extends ChangeNotifier {
       //  await Future.delayed(Duration(seconds: 1));
       getProfileState = AuthStateEnum.success;
       slug = response.data["slug"];
-      log('----- SUCCESS ------ $slug');
+      //log('----- SUCCESS ------ $slug');
       // log("DONE" + response.data.toString());
       notifyListeners();
 

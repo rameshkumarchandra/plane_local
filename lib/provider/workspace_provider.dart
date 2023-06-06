@@ -219,7 +219,6 @@ class WorkspaceProvider extends ChangeNotifier {
 
       getWorkspaceMembers();
 
-      log(response.data.toString());
       log('SELECTED WORKSPACE ${selectedWorkspace!.workspaceName}');
       notifyListeners();
     } catch (e) {

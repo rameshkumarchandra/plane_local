@@ -123,29 +123,23 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                     height: 15,
                   ),
                   for (int i = 0; i < issuesProvider.states.length; i++)
-                    for (int j = 0;
-                        j <
-                            issuesProvider
-                                .states[issuesProvider.states.keys.elementAt(i)]
-                                .length;
-                        j++)
                       GestureDetector(
                         onTap: () {
                           if (widget.createIssue) {
                             setState(() {
                               selectedState = issuesProvider.states[
                                       issuesProvider.states.keys.elementAt(i)]
-                                  [j]['id'];
+                                  ['id'];
                               selectedStateName = issuesProvider.states[
                                       issuesProvider.states.keys.elementAt(i)]
-                                  [j]['name'];
+                                  ['name'];
                             });
                             issuesProvider.setsState();
                           } else {
                             setState(() {
                               issueDetailSelectedState = issuesProvider.states[
                                       issuesProvider.states.keys.elementAt(i)]
-                                  [j]['name'];
+                                 ['name'];
                             });
                             issueProvider.upDateIssue(
                                 slug: ref
@@ -160,7 +154,7 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                                 index: widget.index!,
                                 data: {
                                   'state':
-                                      '${issuesProvider.states[issuesProvider.states.keys.elementAt(i)][j]['id']}'
+                                      '${issuesProvider.states[issuesProvider.states.keys.elementAt(i)]['id']}'
                                 });
                           }
                         },
@@ -182,36 +176,21 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                                 //   color: Colors.grey,
                                 //   borderRadius: BorderRadius.circular(5),
                                 // ),
-                                child: SvgPicture.asset(issuesProvider
-                                            .states.keys
-                                            .elementAt(i) ==
-                                        'backlog'
-                                    ? 'assets/svg_images/circle.svg'
-                                    : issuesProvider.states.keys.elementAt(i) ==
-                                            'cancelled'
-                                        ? 'assets/svg_images/cancelled.svg'
-                                        : issuesProvider.states.keys
-                                                    .elementAt(i) ==
-                                                'completed'
-                                            ? 'assets/svg_images/done.svg'
-                                            : issuesProvider.states.keys
-                                                        .elementAt(i) ==
-                                                    'started'
-                                                ? 'assets/svg_images/in_progress.svg'
-                                                : 'assets/svg_images/circle.svg'),
+                                child: issuesProvider.stateIcons[
+                                    issuesProvider.states.keys.elementAt(i)]
                               ),
                               Container(
                                 width: 10,
                               ),
                               CustomText(
                                 issuesProvider.states[issuesProvider.states.keys
-                                    .elementAt(i)][j]["name"],
+                                    .elementAt(i)]["name"],
                                 type: FontStyle.subheading,
                               ),
                               const Spacer(),
                               widget.createIssue
-                                  ? createIssueStateSelectionWidget(i, j)
-                                  : issueDetailStateSelectionWidget(i, j),
+                                  ? createIssueStateSelectionWidget(i)
+                                  : issueDetailStateSelectionWidget(i),
                               const SizedBox(
                                 width: 10,
                               )
@@ -280,10 +259,10 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
     );
   }
 
-  Widget createIssueStateSelectionWidget(int i, int j) {
+  Widget createIssueStateSelectionWidget(int i) {
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
     return selectedState ==
-            issuesProvider.states[issuesProvider.states.keys.elementAt(i)][j]
+            issuesProvider.states[issuesProvider.states.keys.elementAt(i)]
                 ['id']
         ? const Icon(
             Icons.done,
@@ -292,11 +271,11 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
         : const SizedBox();
   }
 
-  Widget issueDetailStateSelectionWidget(int i, int j) {
+  Widget issueDetailStateSelectionWidget(int i) {
     var issueProvider = ref.watch(ProviderList.issueProvider);
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
     return issueProvider.issueDetails['state_detail']['id'] ==
-            issuesProvider.states[issuesProvider.states.keys.elementAt(i)][j]
+            issuesProvider.states[issuesProvider.states.keys.elementAt(i)]
                 ['id']
         ? const Icon(
             Icons.done,
@@ -305,7 +284,7 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
         : issueProvider.updateIssueState == AuthStateEnum.loading &&
                 issueDetailSelectedState ==
                     issuesProvider
-                            .states[issuesProvider.states.keys.elementAt(i)][j]
+                            .states[issuesProvider.states.keys.elementAt(i)]
                         ['name']
             ? const SizedBox(
                 height: 20,
