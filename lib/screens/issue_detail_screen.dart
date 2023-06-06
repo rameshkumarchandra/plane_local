@@ -1249,6 +1249,8 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                           parent: true,
                           issueId: widget.isseId,
                           createIssue: false,
+                          blocking: false,
+                          index: widget.index,
                         ));
               },
               child: issueProvider.issueDetails['parent_detail'] == null
@@ -1328,6 +1330,8 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                               parent: false,
                               issueId: issueProvider.issueDetails['id'],
                               createIssue: false,
+                              blocking: true,
+                              index: widget.index,
                             ));
                   },
                   child: Row(
@@ -1438,6 +1442,8 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                       parent: false,
                       issueId: issueProvider.issueDetails['id'],
                       createIssue: false,
+                      blocking: false,
+                      index: widget.index,
                     ),
                   );
                 },

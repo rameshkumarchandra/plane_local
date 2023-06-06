@@ -105,7 +105,7 @@ class IssueProvider with ChangeNotifier {
       print('===== SCCESS ====');
 
     } on DioError catch (e) {
-      print('===== SCCESS ====');
+      print('===== ERROR ====');
       print(e.message);
       ScaffoldMessenger.of(Const.globalKey.currentContext!).showSnackBar(
         const SnackBar(

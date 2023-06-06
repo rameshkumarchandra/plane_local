@@ -34,6 +34,22 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                   type: FontStyle.heading,
                 ),
                 const Spacer(),
+                IconButton(
+                  onPressed: () async {
+                    await themeProvider.changeTheme();
+                  },
+                  icon: Icon(
+                    !themeProvider.isDarkThemeEnabled
+                        ? Icons.brightness_2_outlined
+                        : Icons.wb_sunny_outlined,
+                    color: !themeProvider.isDarkThemeEnabled
+                        ? Colors.black
+                        : Colors.white,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
                 GestureDetector(
                   onTap: () {
                     showModalBottomSheet(
@@ -65,22 +81,6 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                IconButton(
-                  onPressed: () async {
-                    await themeProvider.changeTheme();
-                  },
-                  icon: Icon(
-                    !themeProvider.isDarkThemeEnabled
-                        ? Icons.brightness_2_outlined
-                        : Icons.wb_sunny_outlined,
-                    color: !themeProvider.isDarkThemeEnabled
-                        ? Colors.black
-                        : Colors.white,
-                  ),
-                ),
               ],
             ),
             const SizedBox(
@@ -91,7 +91,7 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                   border: Border.all(color: Colors.grey.shade400),
                   borderRadius: BorderRadius.circular(5),
                   color: Colors.black),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -112,6 +112,7 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                           textAlign: TextAlign.start,
                           color: Colors.white,
                           overflow: TextOverflow.visible,
+                          maxLines: 5,
                         ),
                       ),
                       const Icon(
@@ -121,7 +122,7 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                     ],
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
                   Row(
                     children: [
@@ -163,13 +164,13 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                 crossAxisCount: 2,
                 mainAxisSpacing: 20,
                 crossAxisSpacing: 20,
-                childAspectRatio: 2 / 1,
+                childAspectRatio: 7 / 3,
               ),
               itemBuilder: (context, index) {
                 return Container(
                   padding: EdgeInsets.all(5),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade400),
+                    border: Border.all(color: strokeColor),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Container(

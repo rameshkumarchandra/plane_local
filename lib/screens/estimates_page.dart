@@ -24,7 +24,7 @@ class _EstimatsPageState extends ConsumerState<EstimatsPage> {
       width: MediaQuery.of(context).size.width,
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
-          : lightSecondaryBackgroundColor,
+          : Colors.white,
       child: estimates.isEmpty
           ? const EmptyEstimatesWidget()
           : ListView.builder(
@@ -211,6 +211,8 @@ class _EmptyEstimatesWidgetState extends ConsumerState<EmptyEstimatesWidget> {
           child: CustomText(
             'Estimates helps you to communicate the complexity of an issue You can create your own estimate and communicate with your team.',
             type: FontStyle.title,
+            maxLines: 5,
+            textAlign: TextAlign.center,
           ),
         ),
         const SizedBox(height: 20),

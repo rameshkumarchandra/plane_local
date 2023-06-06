@@ -43,6 +43,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     var projectprovider = ref.watch(ProviderList.projectProvider);
+    var themeProvider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
       // backgroundColor: themeProvider.secondaryBackgroundColor,
       appBar: CustomAppBar(
@@ -73,7 +74,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     ),
                     context: context,
                     builder: (context) {
-                      return CreateLabel(method: CRUD.create,);
+                      return CreateLabel(
+                        method: CRUD.create,
+                      );
                     },
                   );
                 }
@@ -104,8 +107,9 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
               SizedBox(
                 //padding: const EdgeInsets.symmetric(horizontal: 20),
                 // color: themeProvider.backgroundColor,
-                height: 34,
+                height: 31,
                 child: ListView.builder(
+                  padding: const EdgeInsets.only(left: 16),
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemCount: tabs.length,
@@ -122,7 +126,10 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                           children: [
                             CustomText(
                               tabs[index],
-                              type: FontStyle.subheading,
+                              type: FontStyle.secondaryText,
+                              color: index == selectedIndex
+                                  ? primaryColor
+                                  : lightGreyTextColor,
                             ),
                             const SizedBox(height: 5),
                             Container(
@@ -141,6 +148,13 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     );
                   },
                 ),
+              ),
+              Container(
+                height: 2,
+                width: MediaQuery.of(context).size.width,
+                color: themeProvider.isDarkThemeEnabled
+                    ? darkThemeBorder
+                    : const Color(0xFFE5E5E5),
               ),
               //grey line
               const SizedBox(
@@ -176,20 +190,23 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
   }
 }
 
-
 class CreateLabel extends ConsumerStatefulWidget {
   String? label;
   String? labelColor;
   CRUD method;
   String? labelId;
-  CreateLabel({this.label, this.labelColor, required this.method,this.labelId,  super.key});
+  CreateLabel(
+      {this.label,
+      this.labelColor,
+      required this.method,
+      this.labelId,
+      super.key});
 
   @override
   ConsumerState<CreateLabel> createState() => _CreateLabelState();
 }
 
 class _CreateLabelState extends ConsumerState<CreateLabel> {
-
   TextEditingController lableController = TextEditingController();
   String lable = '';
   List colors = [
@@ -261,20 +278,19 @@ class _CreateLabelState extends ConsumerState<CreateLabel> {
                       height: 10,
                     ),
                     InkWell(
-                      onTap: () {
-                        setState(() {
-                          showColoredBox = !showColoredBox;
-                        });
-                      },
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Color(int.parse('0xFF${lable.toString().replaceAll('#', '')}'))
-                        ),
-                      )
-                    ),
+                        onTap: () {
+                          setState(() {
+                            showColoredBox = !showColoredBox;
+                          });
+                        },
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Color(int.parse(
+                                  '0xFF${lable.toString().replaceAll('#', '')}'))),
+                        )),
                     const SizedBox(
                       height: 20,
                     ),
@@ -300,21 +316,24 @@ class _CreateLabelState extends ConsumerState<CreateLabel> {
                   ],
                 ),
                 Button(
-                  text: widget.method == CRUD.update ? 'Update Label' : 'Add Lable',
+                  text: widget.method == CRUD.update
+                      ? 'Update Label'
+                      : 'Add Lable',
                   ontap: () {
                     issuesProvider.issueLabels(
-                      slug: ref
-                          .watch(ProviderList.workspaceProvider)
-                          .selectedWorkspace!
-                          .workspaceSlug,
-                      projID: ref.watch(ProviderList.projectProvider).currentProject['id'],
-                      method: widget.method,
-                      data: {
-                        "name": lableController.text,
-                        "color": lable,
-                      },
-                      labelId: widget.labelId
-                    );
+                        slug: ref
+                            .watch(ProviderList.workspaceProvider)
+                            .selectedWorkspace!
+                            .workspaceSlug,
+                        projID: ref
+                            .watch(ProviderList.projectProvider)
+                            .currentProject['id'],
+                        method: widget.method,
+                        data: {
+                          "name": lableController.text,
+                          "color": lable,
+                        },
+                        labelId: widget.labelId);
                     Navigator.of(context).pop();
                   },
                 ),
@@ -353,7 +372,8 @@ class _CreateLabelState extends ConsumerState<CreateLabel> {
                                   width: 40,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
-                                    color: Color(int.parse('0xFF${e.toString().replaceAll('#', '')}')),
+                                    color: Color(int.parse(
+                                        '0xFF${e.toString().replaceAll('#', '')}')),
                                   ),
                                 ),
                               ))
@@ -365,6 +385,5 @@ class _CreateLabelState extends ConsumerState<CreateLabel> {
         ],
       ),
     );
-  
   }
 }

@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/screens/Project%20Detail/project_detail.dart';
-import 'package:plane_startup/screens/create_view_screen.dart';
 import 'package:plane_startup/utils/constants.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 import 'package:plane_startup/widgets/loading_widget.dart';
@@ -117,7 +113,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                     ? Container()
                                     : Container(
                                         margin: const EdgeInsets.only(
-                                            top: 5, bottom: 5),
+                                            top: 10, bottom: 10),
                                         child: Divider(
                                           height: 1,
                                           thickness: 1,
@@ -164,7 +160,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                           height: 54,
                                           width: 54,
                                           decoration: BoxDecoration(
-                                            color: Colors.grey.shade200,
+                                            color: const Color(0xFFF5F5F5),
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
@@ -288,7 +284,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                             )
                           : const SizedBox.shrink(),
                       projectProvider.projects.isNotEmpty
-                          ? const SizedBox(height: 20)
+                          ? const SizedBox(height: 28)
                           : const SizedBox.shrink(),
                       // Text(
                       //   'ALL PROJECTS',
@@ -316,7 +312,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                               ? Container()
                               : Container(
                                   margin:
-                                      const EdgeInsets.only(top: 5, bottom: 5),
+                                      const EdgeInsets.only(top: 10, bottom: 10),
                                   child: Divider(
                                     height: 1,
                                     thickness: 1,
@@ -360,8 +356,8 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                     height: 54,
                                     width: 54,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: const Color(0xFFF5F5F5)),
                                     child: Center(
                                       child: Text(
                                         int.tryParse(projectProvider

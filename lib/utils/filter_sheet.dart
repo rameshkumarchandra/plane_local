@@ -51,7 +51,7 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5),
             border: Border.all(
-                color: selected ? Colors.transparent : Colors.grey.shade400),
+                color: selected ? Colors.transparent : strokeColor),
             color: color ?? Colors.white),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -62,28 +62,6 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
               text.isNotEmpty ? text.replaceFirst(text[0], text[0].toUpperCase()) : text,
               color: selected ? Colors.white : greyColor,
             )
-          ],
-        ),
-      );
-    }
-
-    Widget personForExapantionItem(
-        {required ImageProvider imageProvider, required String text}) {
-      return Container(
-        margin: const EdgeInsets.all(5),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.grey.shade400)),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CircleAvatar(
-              backgroundImage: imageProvider,
-              radius: 10,
-            ),
-            const SizedBox(width: 8),
-            CustomText(text)
           ],
         ),
       );

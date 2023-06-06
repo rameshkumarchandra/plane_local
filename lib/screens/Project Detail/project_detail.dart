@@ -111,7 +111,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
         onPressed: () {
           Navigator.pop(context);
         },
-        text: '',
+        text: ref.read(ProviderList.projectProvider).currentProject['name'], // 'Project Name'
         actions: [
           IconButton(
             onPressed: () {
@@ -122,15 +122,14 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                 ),
               );
             },
-            icon: 
-            issueProvider.statesState == AuthStateEnum.restricted  ?
-            Container() :
-            Icon(
-              Icons.settings,
-              color: themeProvider.isDarkThemeEnabled
-                  ? Colors.white
-                  : Colors.black,
-            ),
+            icon: issueProvider.statesState == AuthStateEnum.restricted
+                ? Container()
+                : Icon(
+                    Icons.settings,
+                    color: themeProvider.isDarkThemeEnabled
+                        ? Colors.white
+                        : Colors.black,
+                  ),
           )
         ],
       ),
@@ -141,46 +140,48 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 20),
-                    height: 40,
-                    alignment: Alignment.center,
-                    width: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      int.tryParse(projectProvider.projects[widget.index]
-                                  ['emoji']) !=
-                              null
-                          ? String.fromCharCode(int.parse(
-                              projectProvider.projects[widget.index]['emoji']))
-                          : '🚀',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                    ),
-                    child: CustomText(
-                      ref
-                          .read(ProviderList.projectProvider)
-                          .currentProject['name'], // 'Project Name'
-                      type: FontStyle.heading2,
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   children: [
+              //     Container(
+              //       margin: const EdgeInsets.only(left: 20),
+              //       height: 40,
+              //       alignment: Alignment.center,
+              //       width: 40,
+              //       decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(4),
+              //         color: const Color(0xFFF5F5F5)
+              //       ),
+              //       child: Text(
+              //         int.tryParse(projectProvider.projects[widget.index]
+              //                     ['emoji']) !=
+              //                 null
+              //             ? String.fromCharCode(int.parse(
+              //                 projectProvider.projects[widget.index]['emoji']))
+              //             : '🚀',
+              //         style: const TextStyle(
+              //           color: Colors.white,
+              //           fontSize: 22,
+              //         ),
+              //       ),
+              //     ),
+              //     Container(
+              //       padding: const EdgeInsets.only(
+              //         left: 10,
+              //       ),
+              //       child: CustomText(
+              //         ref
+              //             .read(ProviderList.projectProvider)
+              //             .currentProject['name'], // 'Project Name'
+              //         type: FontStyle.heading2,
+              //       ),
+              //     ),
+              //   ],
+              // ),
+
               Container(
                   margin: const EdgeInsets.only(top: 10),
                   width: MediaQuery.of(context).size.width,
-                  height: 48,
+                  height: 46,
                   child: ListView.builder(
                     itemCount: projectProvider.features.length,
                     shrinkWrap: true,
@@ -188,10 +189,10 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                           onTap: () {
-                            //  setState(() {
                             controller.jumpToPage(index);
-                            //  selected = index;
-                            //});
+                            setState(() {
+                              selected = index;
+                            });
                           },
                           child: projectProvider.features[index]['show']
                               ? Column(
@@ -204,12 +205,9 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                                       child: CustomText(
                                         projectProvider.features[index]['title']
                                             .toString(),
-                                        // color: index == selected
-                                        //     ? primaryColor
-                                        // : themeProvider.secondaryTextColor,
                                         color: index == selected
                                             ? primaryColor
-                                            : null,
+                                            : lightGreyTextColor,
                                         type: FontStyle.secondaryText,
                                       ),
                                     ),
@@ -237,7 +235,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
                 width: MediaQuery.of(context).size.width,
                 color: themeProvider.isDarkThemeEnabled
                     ? darkThemeBorder
-                    : Colors.grey.shade300,
+                    : const Color(0xFFE5E5E5),
               ),
               Expanded(
                   child: PageView.builder(

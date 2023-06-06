@@ -120,10 +120,12 @@ class _MyAppState extends ConsumerState<MyApp> {
             900: Color(0xFFFFFFFF),
           },
         ),
+
         textTheme: TextTheme(
-            subtitle1: TextStyle(
-          color: themeProvider.isDarkThemeEnabled ? Colors.white : Colors.black,
-        )),
+          subtitle1: TextStyle(
+            color: themeProvider.isDarkThemeEnabled ? Colors.white : Colors.black,
+          ),
+        ),
 
         // cursor color
 

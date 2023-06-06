@@ -46,7 +46,7 @@ class _FeaturesPageState extends ConsumerState<FeaturesPage> {
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
-          : lightSecondaryBackgroundColor,
+          : Colors.white,
       child: ListView.builder(
           padding: const EdgeInsets.only(top: 20),
           itemCount: cardData.length,
@@ -89,18 +89,35 @@ class _FeaturesPageState extends ConsumerState<FeaturesPage> {
                             !projectsProvider.features[index + 1]['show'];
                         projectsProvider.setState();
                         projectsProvider.updateProject(
-                          slug: ref
-                              .read(ProviderList.workspaceProvider)
-                              .selectedWorkspace!
-                              .workspaceSlug,
-                          projId: ref.read(ProviderList.projectProvider).currentProject['id'],
-                          data: {
-                            if(projectsProvider.features[index + 1]['title'] == 'Cycles') "cycle_view": projectsProvider.features[index + 1]['show'],
-                            if(projectsProvider.features[index + 1]['title'] == 'Modules') "module_view": projectsProvider.features[index + 1]['show'],
-                            if(projectsProvider.features[index + 1]['title'] == 'Views') "issue_views_view": projectsProvider.features[index + 1]['show'],
-                            if(projectsProvider.features[index + 1]['title'] == 'Pages') "page_view": projectsProvider.features[index + 1]['show'],
-                          }
-                        );
+                            slug: ref
+                                .read(ProviderList.workspaceProvider)
+                                .selectedWorkspace!
+                                .workspaceSlug,
+                            projId: ref
+                                .read(ProviderList.projectProvider)
+                                .currentProject['id'],
+                            data: {
+                              if (projectsProvider.features[index + 1]
+                                      ['title'] ==
+                                  'Cycles')
+                                "cycle_view": projectsProvider
+                                    .features[index + 1]['show'],
+                              if (projectsProvider.features[index + 1]
+                                      ['title'] ==
+                                  'Modules')
+                                "module_view": projectsProvider
+                                    .features[index + 1]['show'],
+                              if (projectsProvider.features[index + 1]
+                                      ['title'] ==
+                                  'Views')
+                                "issue_views_view": projectsProvider
+                                    .features[index + 1]['show'],
+                              if (projectsProvider.features[index + 1]
+                                      ['title'] ==
+                                  'Pages')
+                                "page_view": projectsProvider
+                                    .features[index + 1]['show'],
+                            });
                       },
                       child: Container(
                         width: 30,

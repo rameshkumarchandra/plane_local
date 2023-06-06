@@ -131,60 +131,71 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                   height: 10,
                 ),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selected = 0;
-                        });
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        height: 35,
-                        width: 100,
-                        decoration: BoxDecoration(
-                            color: selected == 0 ? primaryColor : null,
-                            borderRadius: BorderRadius.circular(5)),
-                        child: CustomText(
-                          'Unsplash',
-                          type: FontStyle.title,
-                          color: selected == 0
-                              ? Colors.white
-                              : themeProvider.isDarkThemeEnabled
-                                  ? darkPrimaryTextColor
-                                  : lightPrimaryTextColor,
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selected = 0;
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            height: 35,
+                            width: 100,
+                            decoration: BoxDecoration(
+                                color: selected == 0 ? primaryColor : null,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: CustomText(
+                              'Unsplash',
+                              type: FontStyle.title,
+                              color: selected == 0
+                                  ? Colors.white
+                                  : themeProvider.isDarkThemeEnabled
+                                      ? darkPrimaryTextColor
+                                      : lightPrimaryTextColor,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selected = 1;
-                        });
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        height: 35,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            color: selected == 1 ? primaryColor : null,
-                            borderRadius: BorderRadius.circular(5)),
-                        child: CustomText(
-                          'Upload',
-                          type: FontStyle.title,
-                          color: selected == 1
-                              ? Colors.white
-                              : themeProvider.isDarkThemeEnabled
-                                  ? darkPrimaryTextColor
-                                  : lightPrimaryTextColor,
+                        const SizedBox(
+                          width: 20,
                         ),
-                      ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selected = 1;
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.only(left: 10, right: 10),
+                            height: 35,
+                            width: 80,
+                            decoration: BoxDecoration(
+                                color: selected == 1 ? primaryColor : null,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: CustomText(
+                              'Upload',
+                              type: FontStyle.title,
+                              color: selected == 1
+                                  ? Colors.white
+                                  : themeProvider.isDarkThemeEnabled
+                                      ? darkPrimaryTextColor
+                                      : lightPrimaryTextColor,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                   InkWell(
+                    onTap: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: Icon(Icons.close, color: themeProvider.isDarkThemeEnabled ? lightBackgroundColor  :darkBackgroundColor,))
                   ],
                 ),
                 const SizedBox(
@@ -194,7 +205,7 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                     ? Container()
                     : Row(
                         children: [
-                          Container(
+                          SizedBox(
                             //   height: 50,
                             width: MediaQuery.of(context).size.width - 130,
                             child: TextFormField(
@@ -251,6 +262,7 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                             itemCount: images.length + 1,
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
+                                  childAspectRatio: 5/3,
                                     crossAxisCount: 3,
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10),
@@ -273,9 +285,11 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                                   decoration: BoxDecoration(
                                       color: Colors.grey[300],
                                       image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: Image.network(images[index])
-                                              .image)),
+                                        fit: BoxFit.cover,
+                                        image: Image.network(
+                                          images[index],
+                                        ).image,
+                                      )),
                                 ),
                               );
                             },
@@ -327,7 +341,7 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.file_upload_outlined),
+                                  const Icon(Icons.file_upload_outlined),
                                   const SizedBox(
                                     width: 10,
                                   ),

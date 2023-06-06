@@ -82,7 +82,6 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                   child: Column(
                     children: [
                       //cover image
-
                       Stack(
                         children: [
                           Container(
@@ -107,63 +106,109 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                             top: 15,
                             right: 15,
                             child: GestureDetector(
-                              onTap: () async {
-                                showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    enableDrag: true,
-                                    constraints: BoxConstraints(
-                                        maxHeight:
-                                            MediaQuery.of(context).size.height *
-                                                0.70),
-                                    shape: const RoundedRectangleBorder(
+                                onTap: () async {
+                                  showModalBottomSheet(
+                                      isScrollControlled: true,
+                                      enableDrag: true,
+                                      constraints: BoxConstraints(
+                                          maxHeight: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.70),
+                                      shape: const RoundedRectangleBorder(
                                         borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(30),
-                                      topRight: Radius.circular(30),
-                                    )),
-                                    context: context,
-                                    builder: (ctx) {
-                                      return const SelectCoverImage();
-                                    });
-                                // var file = await ImagePicker.platform
-                                //     .pickImage(source: ImageSource.gallery);
-                                // if (file != null) {
-                                //   setState(() {
-                                //     coverImage = File(file.path);
-                                //   });
-                                // }
-                              },
-                              child: Container(
-                                height: 30,
-                                width: 30,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                child: const Icon(
-                                  Icons.edit,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
+                                          topLeft: Radius.circular(30),
+                                          topRight: Radius.circular(30),
+                                        ),
+                                      ),
+                                      context: context,
+                                      builder: (ctx) {
+                                        return const SelectCoverImage();
+                                      });
+                                  // var file = await ImagePicker.platform
+                                  //     .pickImage(source: ImageSource.gallery);
+                                  // if (file != null) {
+                                  //   setState(() {
+                                  //     coverImage = File(file.path);
+                                  //   });
+                                  // }
+                                },
+                                child: const CircleAvatar(
+                                  backgroundColor: Color(0xFFF5F5F5),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                )),
                           ),
                         ],
+                      ),
+                      const SizedBox(
+                        height: 17,
                       ),
                       //row containing circle avatar with an emoji and text
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 15),
+                          horizontal: 15,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             GestureDetector(
                               onTap: () {
-                                setState(() {
-                                  showEMOJI = true;
-                                });
+                                showModalBottomSheet(
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(30),
+                                        topRight: Radius.circular(30),
+                                      ),
+                                    ),
+                                    context: context,
+                                    builder: (ctx) {
+                                      return Container(
+                                        padding: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          border: Border.all(
+                                            color: Colors.grey.shade300,
+                                          ),
+                                        ),
+                                        child: ListView(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                          children: [
+                                            Wrap(
+                                              spacing: 10,
+                                              runSpacing: 1,
+                                              children: emojisWidgets
+                                                  .map(
+                                                    (e) => InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          selectedEmoji = e;
+                                                          showEMOJI = false;
+                                                        });
+                                                      },
+                                                      child: CustomText(
+                                                        e,
+                                                        type: FontStyle.heading,
+                                                      ),
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    });
                               },
                               child: CircleAvatar(
                                 radius: 25,
-                                backgroundColor: Colors.grey[300],
+                                backgroundColor: const Color(0xFFF5F5F5),
                                 child: CustomText(
                                   selectedEmoji,
                                   type: FontStyle.heading,
@@ -217,7 +262,9 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                           ],
                         ),
                       ),
-
+                      const SizedBox(
+                        height: 17,
+                      ),
                       //text field for title with grey border
                       Padding(
                         padding: const EdgeInsets.symmetric(
@@ -241,7 +288,7 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                           },
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 17),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
@@ -267,12 +314,11 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                           },
                         ),
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 17),
                       //large text field for description with grey border.
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
-                          vertical: 7,
                         ),
                         child: TextFormField(
                           controller: description,
@@ -332,47 +378,6 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                     ],
                   ),
                 ),
-                showEMOJI
-                    ? Positioned(
-                        left: 50,
-                        child: Container(
-                          constraints: const BoxConstraints(
-                              maxWidth: 340, maxHeight: 400),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.grey.shade300,
-                            ),
-                          ),
-                          child: ListView(
-                            children: [
-                              Wrap(
-                                spacing: 5,
-                                runSpacing: 5,
-                                children: emojisWidgets
-                                    .map(
-                                      (e) => InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedEmoji = e;
-                                            showEMOJI = false;
-                                          });
-                                        },
-                                        child: CustomText(
-                                          e,
-                                          type: FontStyle.heading,
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    : Container(),
               ],
             ),
           ),

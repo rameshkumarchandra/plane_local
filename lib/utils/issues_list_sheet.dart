@@ -10,7 +10,15 @@ class IssuesListSheet extends ConsumerStatefulWidget {
   bool parent;
   String issueId;
   bool createIssue;
-  IssuesListSheet({required this.parent, required this.issueId, required this.createIssue, super.key});
+  bool blocking;
+  int index;
+  IssuesListSheet(
+      {required this.parent,
+      required this.issueId,
+      required this.createIssue,
+      required this.blocking,
+      required this.index,
+      super.key});
 
   @override
   ConsumerState<IssuesListSheet> createState() => _IssuesListSheetState();
@@ -22,15 +30,13 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
     super.initState();
     ref.read(ProviderList.searchIssueProvider).setStateToLoading();
     ref.read(ProviderList.searchIssueProvider).getIssues(
-          slug: ref
-              .read(ProviderList.workspaceProvider)
-              .selectedWorkspace!
-              .workspaceSlug,
-          projectId:
-              ref.read(ProviderList.projectProvider).currentProject['id'],
-          parent: widget.parent,
-          issueId: widget.createIssue ? '' : widget.issueId
-        );
+        slug: ref
+            .read(ProviderList.workspaceProvider)
+            .selectedWorkspace!
+            .workspaceSlug,
+        projectId: ref.read(ProviderList.projectProvider).currentProject['id'],
+        parent: widget.parent,
+        issueId: widget.createIssue ? '' : widget.issueId);
   }
 
   @override
@@ -43,7 +49,9 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: BoxDecoration(
-        color: themeProvider.isDarkThemeEnabled ? darkBackgroundColor : lightBackgroundColor,
+        color: themeProvider.isDarkThemeEnabled
+            ? darkBackgroundColor
+            : lightBackgroundColor,
         borderRadius: const BorderRadius.only(
           topRight: Radius.circular(10),
           topLeft: Radius.circular(10),
@@ -84,8 +92,7 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                           .currentProject['id'],
                       input: value,
                       parent: widget.parent,
-                      issueId: widget.issueId
-                    ),
+                      issueId: widget.issueId),
                 ),
                 const SizedBox(
                   height: 20,
@@ -98,19 +105,29 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                         return InkWell(
                           onTap: () {
                             if (widget.parent) {
-                              if(widget.createIssue){
-                                  if(issuesProvider.createIssueParent == searchIssueProvider.issues[index]['project__identifier'] + '-' + searchIssueProvider.issues[index]['sequence_id'].toString()) {
-                                      issuesProvider.createIssueParent = '';
-                                      issuesProvider.createIssueParentId = '';
-                                      
-                                  }
-                                  else {
-                                      issuesProvider.createIssueParent = searchIssueProvider.issues[index]['project__identifier'] + '-' + searchIssueProvider.issues[index]['sequence_id'].toString();
-                                      issuesProvider.createIssueParentId = searchIssueProvider.issues[index]['id'];
-                                  }
+                              if (widget.createIssue) {
+                                if (issuesProvider.createIssueParent ==
+                                    searchIssueProvider.issues[index]
+                                            ['project__identifier'] +
+                                        '-' +
+                                        searchIssueProvider.issues[index]
+                                                ['sequence_id']
+                                            .toString()) {
+                                  issuesProvider.createIssueParent = '';
+                                  issuesProvider.createIssueParentId = '';
+                                } else {
+                                  issuesProvider.createIssueParent =
+                                      searchIssueProvider.issues[index]
+                                              ['project__identifier'] +
+                                          '-' +
+                                          searchIssueProvider.issues[index]
+                                                  ['sequence_id']
+                                              .toString();
+                                  issuesProvider.createIssueParentId =
+                                      searchIssueProvider.issues[index]['id'];
+                                }
                                 issuesProvider.setsState();
-                              }
-                              else {
+                              } else {
                                 issueProvider.upDateIssue(
                                   slug: ref
                                       .read(ProviderList.workspaceProvider)
@@ -119,9 +136,9 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                                   projID: ref
                                       .read(ProviderList.projectProvider)
                                       .currentProject['id'],
-                                  issueID: widget.createIssue ? '' : widget.issueId,
-                                  data: 
-                                  {
+                                  issueID:
+                                      widget.createIssue ? '' : widget.issueId,
+                                  data: {
                                     "parent": searchIssueProvider.issues[index]
                                         ['id']
                                   },
@@ -130,6 +147,27 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                                 );
                               }
                               Navigator.of(context).pop();
+                            } else {
+                              if (widget.blocking) {
+                                if (issuesProvider.blockingIssues.contains(
+                                    searchIssueProvider.issues[index]['id'])) {
+                                  issuesProvider.blockingIssues.remove(
+                                      searchIssueProvider.issues[index]['id']);
+                                } else {
+                                  issuesProvider.blockingIssues.add(
+                                      searchIssueProvider.issues[index]['id']);
+                                }
+                              } else {
+                                if (issuesProvider.blockedByIssues.contains(
+                                    searchIssueProvider.issues[index]['id'])) {
+                                  issuesProvider.blockedByIssues.remove(
+                                      searchIssueProvider.issues[index]['id']);
+                                } else {
+                                  issuesProvider.blockedByIssues.add(
+                                      searchIssueProvider.issues[index]['id']);
+                                }
+                              }
+                              issuesProvider.setsState();
                             }
                           },
                           child: Padding(
@@ -137,15 +175,14 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                !widget.parent ?
+                                    checkBoxWidget(widget.blocking, index)
+                                    : Container(),
                                 !widget.parent
-                                    ? Icon(
-                                        Icons.check_box_outline_blank,
-                                        color: themeProvider.isDarkThemeEnabled ? lightBackgroundColor : darkBackgroundColor,
+                                    ? const SizedBox(
+                                        width: 5,
                                       )
                                     : Container(),
-                                !widget.parent ?
-                                const SizedBox(width: 5,) :
-                                Container(),
                                 CustomText(
                                   searchIssueProvider.issues[index]
                                           ['project__identifier'] +
@@ -185,7 +222,30 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: primaryColor),
-                              onPressed: () {},
+                              onPressed: () async {
+                                issueProvider.upDateIssue(
+                                  slug: ref
+                                      .read(ProviderList.workspaceProvider)
+                                      .selectedWorkspace!
+                                      .workspaceSlug,
+                                  projID: ref
+                                      .read(ProviderList.projectProvider)
+                                      .currentProject['id'],
+                                  issueID:
+                                      widget.createIssue ? '' : widget.issueId,
+                                  data:
+                                  widget.blocking ? 
+                                  {
+                                    "blockers_list": issuesProvider.blockingIssues
+                                  }
+                                  : {
+                                    "blocks_list" : issuesProvider.blockedByIssues
+                                  },
+                                  index: widget.index,
+                                  ref: ref,
+                                );
+                                Navigator.of(context).pop();
+                              },
                               child: CustomText(
                                 'Add issues',
                                 type: FontStyle.buttonText,
@@ -199,4 +259,35 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
             ),
     );
   }
+
+  Widget checkBoxWidget(bool blocking, int index){
+    var issuesProvider = ref.watch(ProviderList.issuesProvider);
+    var searchIssueProvider = ref.watch(ProviderList.searchIssueProvider);
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    if(blocking){
+      return 
+      issuesProvider.blockingIssues.contains(searchIssueProvider.issues[index]['id']) ?
+      const Icon(
+        Icons.check_box,
+        color: primaryColor,
+      )
+      : 
+      Icon(
+        Icons.check_box_outline_blank,
+        color: themeProvider.isDarkThemeEnabled ? lightBackgroundColor : darkBackgroundColor,
+      );
+    }
+    else {
+      return issuesProvider.blockedByIssues.contains(searchIssueProvider.issues[index]['id']) ?
+      const Icon(
+        Icons.check_box,
+        color: primaryColor,
+      )
+      : Icon(
+        Icons.check_box_outline_blank,
+        color: themeProvider.isDarkThemeEnabled ? lightBackgroundColor : darkBackgroundColor,
+      );
+    }
+  }
+
 }

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/config/enums.dart';
@@ -56,7 +54,7 @@ class _MembersState extends ConsumerState<Members> {
                     builder: (context) => const InviteMembers()));
               },
               child: Container(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: 15,
                 ),
                 child: Row(
@@ -103,7 +101,7 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
-          : lightSecondaryBackgroundColor,
+          : Colors.white,
       child: ListView.builder(
           // shrinkWrap: true,
           itemCount: widget.fromWorkspace
@@ -145,6 +143,7 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                               ""
                       ? CircleAvatar(
                           radius: 20,
+                          backgroundColor: strokeColor,
                           child: Center(
                             child: CustomText(
                               workspaceProvider.workspaceMembers[index]
@@ -161,13 +160,19 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                           backgroundImage: NetworkImage(workspaceProvider
                               .workspaceMembers[index]['member']['avatar']),
                         )
-                  : projectsProvider.projectMembers[index]['member']['avatar'] == null ||
-                          projectsProvider.projectMembers[index]['member']['avatar'] == ""
+                  : projectsProvider.projectMembers[index]['member']
+                                  ['avatar'] ==
+                              null ||
+                          projectsProvider.projectMembers[index]['member']
+                                  ['avatar'] ==
+                              ""
                       ? CircleAvatar(
                           radius: 20,
+                          backgroundColor: lightGreeyColor,
                           child: Center(
                             child: CustomText(
-                              projectsProvider.projectMembers[index]['member']['email'][0]
+                              projectsProvider.projectMembers[index]['member']
+                                      ['email'][0]
                                   .toString()
                                   .toUpperCase(),
                               color: Colors.black,
@@ -177,17 +182,19 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                         )
                       : CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(
-                              projectsProvider.projectMembers[index]['member']['avatar']),
+                          backgroundImage: NetworkImage(projectsProvider
+                              .projectMembers[index]['member']['avatar']),
                         ),
               title: Wrap(
                 children: [
                   CustomText(
                     widget.fromWorkspace
                         ? '${workspaceProvider.workspaceMembers[index]['member']['first_name']} ${workspaceProvider.workspaceMembers[index]['member']['last_name'] ?? ''}'
-                        : projectsProvider.projectMembers[index]['member']['first_name'] +
+                        : projectsProvider.projectMembers[index]['member']
+                                ['first_name'] +
                             ' ' +
-                            projectsProvider.projectMembers[index]['member']['last_name'],
+                            projectsProvider.projectMembers[index]['member']
+                                ['last_name'],
                     type: FontStyle.title,
                     fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
@@ -200,7 +207,8 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                   widget.fromWorkspace
                       ? workspaceProvider.workspaceMembers[index]['member']
                           ['email']
-                      : projectsProvider.projectMembers[index]['member']['email'],
+                      : projectsProvider.projectMembers[index]['member']
+                          ['email'],
                   color: const Color.fromRGBO(133, 142, 150, 1),
                   textAlign: TextAlign.left,
                   type: FontStyle.subtitle,
@@ -266,11 +274,16 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
                                               10
                                           ? 'Viewer'
                                           : 'Guest'
-                              : projectsProvider.projectMembers[index]['role'] == 20
+                              : projectsProvider.projectMembers[index]
+                                          ['role'] ==
+                                      20
                                   ? 'Admin'
-                                  : projectsProvider.projectMembers[index]['role'] == 15
+                                  : projectsProvider.projectMembers[index]
+                                              ['role'] ==
+                                          15
                                       ? 'Member'
-                                      : projectsProvider.projectMembers[index]['role'] ==
+                                      : projectsProvider.projectMembers[index]
+                                                  ['role'] ==
                                               10
                                           ? 'Viewer'
                                           : 'Guest',

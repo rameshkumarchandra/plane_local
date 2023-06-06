@@ -157,7 +157,7 @@ class _CycleActiveCardState extends State<CycleActiveCard> {
                       ],
                     ),
                     const ThreeDotsWidget(),
-                    const Row(children: [Icon(Icons.tiktok), Text('74 Issues')])
+                    Row(children: [Icon(Icons.tiktok), Text('74 Issues')])
                   ],
                 ),
               ],

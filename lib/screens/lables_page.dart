@@ -21,7 +21,7 @@ class _LablesPageState extends ConsumerState<LablesPage> {
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
-          : lightSecondaryBackgroundColor,
+          : Colors.white,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         itemCount: issuesProvider.labels.length,
@@ -62,23 +62,23 @@ class _LablesPageState extends ConsumerState<LablesPage> {
                   padding: EdgeInsets.zero,
                   onPressed: () {
                     showModalBottomSheet(
-                    enableDrag: true,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
+                      enableDrag: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
                       ),
-                    ),
-                    context: context,
-                    builder: (context) {
-                      return CreateLabel(
-                        label: issuesProvider.labels[index]['name'],
-                        labelColor: issuesProvider.labels[index]['color'],
-                        labelId: issuesProvider.labels[index]['id'],
-                        method: CRUD.update,
-                      );
-                    },
-                  );
+                      context: context,
+                      builder: (context) {
+                        return CreateLabel(
+                          label: issuesProvider.labels[index]['name'],
+                          labelColor: issuesProvider.labels[index]['color'],
+                          labelId: issuesProvider.labels[index]['id'],
+                          method: CRUD.update,
+                        );
+                      },
+                    );
                   },
                   icon: const Icon(Icons.edit_outlined),
                   color: greyColor,

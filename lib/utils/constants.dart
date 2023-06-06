@@ -9,20 +9,24 @@ const primaryLightColor = Color.fromRGBO(63, 118, 255, 0.1);
 const greyColor = Color.fromRGBO(136, 136, 136, 1);
 const lightGreeyColor = Color.fromRGBO(238, 238, 238, 1);
 const lightYellowColor = Color.fromRGBO(252, 190, 29, 0.16);
+const strokeColor = Color(0xFFE5E5E5);
+const lightGreyTextColor = Color(0xFFA3A3A3);
 
 const lightPrimaryTextColor = Colors.black;
 const lightSecondaryTextColor = Color.fromARGB(255, 97, 97, 97);
 const lightStrokeColor = Color.fromARGB(255, 158, 158, 158);
 const lightBackgroundColor = Colors.white;
-const lightSecondaryBackgroundColor = Color.fromARGB(255, 248, 247, 247);
+const lightSecondaryBackgroundColor = Color(0xFFFAFAFA);
+const bottomNavTextColor = Color(0xFF8F8F93);
+//Color(0xFFE5E5E5),
 
 const darkPrimaryTextColor = Colors.white;
 const darkSecondaryTextColor = Color.fromARGB(255, 224, 224, 224);
 const darkStrokeColor = Color.fromARGB(255, 189, 189, 189);
-const darkBackgroundColor = Color.fromRGBO(19,20,22,1);
+const darkBackgroundColor = Color.fromRGBO(19, 20, 22, 1);
 const darkSecondaryBackgroundColor = Color.fromARGB(255, 33, 33, 33);
 const darkCircleAvatarColor = Color.fromRGBO(34, 34, 34, 1);
-const darkThemeBorder =  Color.fromRGBO(39, 42, 45, 1);
+const darkThemeBorder = Color.fromRGBO(39, 42, 45, 1);
 
 InputDecoration kTextFieldDecoration = InputDecoration(
   errorStyle: const TextStyle(
@@ -32,8 +36,10 @@ InputDecoration kTextFieldDecoration = InputDecoration(
       fontWeight: FontWeight.w400),
   //contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
   labelText: '',
+  labelStyle: const TextStyle(
+    color: Color(0xFFA3A3A3),
+  ),
   alignLabelWithHint: true,
-  floatingLabelBehavior: FloatingLabelBehavior.never,
   errorBorder: const OutlineInputBorder(
     borderSide: BorderSide(color: Color.fromARGB(255, 253, 17, 0)),
     borderRadius: BorderRadius.all(Radius.circular(6.0)),
@@ -46,14 +52,14 @@ InputDecoration kTextFieldDecoration = InputDecoration(
     ),
   ),
   border: const OutlineInputBorder(
-    borderSide: BorderSide(color: greyColor),
+    borderSide: BorderSide(color: Color(0xFFE5E5E5)),
     borderRadius: BorderRadius.all(
       Radius.circular(10.0),
     ),
   ),
-  enabledBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.grey.shade500, width: 1.0),
-    borderRadius: const BorderRadius.all(Radius.circular(8)),
+  enabledBorder: const OutlineInputBorder(
+    borderSide: BorderSide(color: Color(0xFFE5E5E5), width: 1.0),
+    borderRadius: BorderRadius.all(Radius.circular(8)),
   ),
   disabledBorder: OutlineInputBorder(
     borderSide: BorderSide(color: Colors.grey.shade500, width: 1.0),

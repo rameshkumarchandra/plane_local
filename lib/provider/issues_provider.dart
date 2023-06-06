@@ -68,6 +68,8 @@ class IssuesProvider extends ChangeNotifier {
   String groupBy = '';
   String issueType = '';
   List filterPriorities = [];
+  List blockingIssues = [];
+  List blockedByIssues = [];
   List filterStates = [];
   List filterAssignes = [];
   List filterCreatedBy = [];
@@ -109,6 +111,8 @@ class IssuesProvider extends ChangeNotifier {
     groupBy = '';
     issueType = '';
     filterPriorities = [];
+    blockingIssues = [];
+    blockedByIssues = [];
     filterStates = [];
     filterAssignes = [];
     filterCreatedBy = [];
@@ -447,7 +451,7 @@ class IssuesProvider extends ChangeNotifier {
             const SizedBox(
               width: 10,
             ),
-            const Icon(Icons.add, color: Color.fromRGBO(133, 142, 150, 1)),
+            const Icon(Icons.add, color: primaryColor),
           ],
         ),
       );

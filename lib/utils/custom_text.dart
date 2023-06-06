@@ -98,9 +98,9 @@ class CustomText extends ConsumerWidget {
           fontWeight: fontWeight ?? FontWeight.w400,
           fontFamily: 'SF Pro Display',
           // color: color ?? themeProvider.primaryTextColor,
-          color: themeProvider.isDarkThemeEnabled
+          color: color ?? (themeProvider.isDarkThemeEnabled
               ? darkPrimaryTextColor
-              : Colors.black,
+              : Colors.black),
         );
 
       case FontStyle.text:
@@ -121,9 +121,9 @@ class CustomText extends ConsumerWidget {
           fontWeight: fontWeight ?? FontWeight.w400,
           fontFamily: 'SF Pro Display',
           // color: color ?? themeProvider.secondaryTextColor,
-          color: themeProvider.isDarkThemeEnabled
+          color: color ?? (themeProvider.isDarkThemeEnabled
               ? darkSecondaryTextColor
-              : Colors.black,
+              : Colors.black),
         );
 
       case FontStyle.heading:

@@ -22,7 +22,7 @@ class _ControlPageState extends ConsumerState<ControlPage> {
     return Container(
       color: themeProvider.isDarkThemeEnabled
           ? darkSecondaryBackgroundColor
-          : lightSecondaryBackgroundColor,
+          : Colors.white,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(

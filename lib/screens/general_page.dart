@@ -20,6 +20,7 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
   TextEditingController name = TextEditingController();
   TextEditingController description = TextEditingController();
   TextEditingController identifier = TextEditingController();
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -45,6 +46,15 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
     }
   }
 
+  void scrollDown() async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var themeProvider = ref.watch(ProviderList.themeProvider);
@@ -62,6 +72,7 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
       child: Stack(
         children: [
           ListView(
+            controller: scrollController,
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
             children: [
@@ -252,16 +263,14 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                     value: 'Secret',
                     child: CustomText(
                       'Secret',
-                      type: FontStyle.subtitle,
-                      fontWeight: FontWeight.bold,
+                      type: FontStyle.description,
                     ),
                   ),
                   DropdownMenuItem(
                     value: 'Public',
                     child: CustomText(
                       'Public',
-                      type: FontStyle.subtitle,
-                      fontWeight: FontWeight.bold,
+                      type: FontStyle.description,
                     ),
                   ),
                 ],
@@ -276,6 +285,10 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                     border: Border.all(
                         color: const Color.fromRGBO(255, 12, 12, 1))),
                 child: ExpansionTile(
+                  onExpansionChanged: (value) async {
+                    print(value);
+                    scrollDown();
+                  },
                   childrenPadding:
                       const EdgeInsets.only(left: 15, right: 15, bottom: 10),
                   iconColor: themeProvider.isDarkThemeEnabled
@@ -304,30 +317,34 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                     GestureDetector(
                       onTap: () async {
                         await projectProviderRead.deleteProject(
+                            slug: ref
+                                .read(ProviderList.workspaceProvider)
+                                .selectedWorkspace!
+                                .workspaceSlug,
+                            projId: projectProviderRead.currentProject['id']);
+                        Navigator.of(context)
+                          ..pop()
+                          ..pop();
+                        projectProviderRead.getProjects(
                           slug: ref
                               .read(ProviderList.workspaceProvider)
                               .selectedWorkspace!
                               .workspaceSlug,
-                          projId: projectProviderRead.currentProject['id']
                         );
-                        Navigator.of(context)..pop()..pop();
-                        projectProviderRead.getProjects(slug: 
-                        ref.read(ProviderList.workspaceProvider)
-                              .selectedWorkspace!
-                              .workspaceSlug,
-                        );
-                        projectProviderRead.getProjects(slug: 
-                        ref.read(ProviderList.workspaceProvider)
+                        projectProviderRead.getProjects(
+                          slug: ref
+                              .read(ProviderList.workspaceProvider)
                               .selectedWorkspace!
                               .workspaceSlug,
                         );
                         projectProviderRead.favouriteProjects(
-                        slug: ref.read(ProviderList.workspaceProvider)
-                              .selectedWorkspace!
-                              .workspaceSlug,
-                        method: HttpMethod.get,
-                        projectID: "",
-                        index: 0);
+                            slug: ref
+                                .read(ProviderList.workspaceProvider)
+                                .selectedWorkspace!
+                                .workspaceSlug,
+                            method: HttpMethod.get,
+                            projectID: "",
+                            index: 0);
                       },
                       child: Container(
                           height: 45,

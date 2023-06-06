@@ -86,7 +86,7 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
                 child: CustomRichText(
                     //ype: RichFontStyle.title,
                     fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w400,
                     widgets: [
                       TextSpan(
                           text: issueProvider.issuesResponse[widget.cardIndex]
@@ -104,6 +104,7 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
           type: FontStyle.title,
           maxLines: 10,
           textAlign: TextAlign.start,
+          color: Colors.black,
         ),
         !issueProvider.isTagsEnabled()
             ? const SizedBox(
@@ -420,8 +421,11 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
                                 ),
                                 CustomText(
                                   issueProvider.issuesResponse[widget.cardIndex]
+                                          ['sub_issues_count'] != '' && issueProvider.issuesResponse[widget.cardIndex]
+                                          ['sub_issues_count'] != null ?
+                                  issueProvider.issuesResponse[widget.cardIndex]
                                           ['sub_issues_count']
-                                      .toString(),
+                                      .toString() : '0',
                                   fontSize: 13,
                                 ),
                               ],
@@ -464,8 +468,11 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
                                 ),
                                 CustomText(
                                   issueProvider.issuesResponse[widget.cardIndex]
+                                          ['link_count'] != '' && issueProvider.issuesResponse[widget.cardIndex]
+                                          ['link_count'] != null ?
+                                  issueProvider.issuesResponse[widget.cardIndex]
                                           ['link_count']
-                                      .toString(),
+                                      .toString() : '0',
                                   fontSize: 13,
                                 ),
                               ],
@@ -504,8 +511,11 @@ class _IssueCardWidgetState extends ConsumerState<IssueCardWidget> {
                                 ),
                                 CustomText(
                                   issueProvider.issuesResponse[widget.cardIndex]
+                                          ['attachment_count'] != '' && issueProvider.issuesResponse[widget.cardIndex]
+                                          ['attachment_count'] != null ?
+                                  issueProvider.issuesResponse[widget.cardIndex]
                                           ['attachment_count']
-                                      .toString(),
+                                      .toString() : '0',
                                   fontSize: 13,
                                 ),
                               ],

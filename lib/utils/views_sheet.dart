@@ -328,8 +328,8 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
 
           customHorizontalLine(),
 
-          CustomExpansionTile(
-            title: 'Show empty state',
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: Wrap(
               children: [
                 Row(
@@ -347,27 +347,44 @@ class _ViewsSheetState extends ConsumerState<ViewsSheet> {
                           showEmptyStates = !showEmptyStates;
                         });
                       },
-                      child: Container(
-                          padding: const EdgeInsets.all(2),
-                          height: 20,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24),
-                              border: Border.all(
-                                  color: showEmptyStates
-                                      ? primaryColor
-                                      : greyColor,
-                                  width: 2)),
-                          width: 20,
-                          child: showEmptyStates
-                              ? Container(
-                                  height: 10,
-                                  width: 10,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(24),
-                                      color: primaryColor),
-                                )
-                              : null),
+                      child: 
+                      Container(
+                        width: 30,
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: showEmptyStates
+                                ? primaryColor
+                                : Colors.grey[300]),
+                        child: Align(
+                          alignment: showEmptyStates
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: const CircleAvatar(radius: 6),
+                        ),
+                      ),
+                      // Container(
+                      //     padding: const EdgeInsets.all(2),
+                      //     height: 20,
+                      //     alignment: Alignment.center,
+                      //     decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(24),
+                      //         border: Border.all(
+                      //             color: showEmptyStates
+                      //                 ? primaryColor
+                      //                 : greyColor,
+                      //             width: 2)),
+                      //     width: 20,
+                      //     child: showEmptyStates
+                      //         ? Container(
+                      //             height: 10,
+                      //             width: 10,
+                      //             decoration: BoxDecoration(
+                      //                 borderRadius: BorderRadius.circular(24),
+                      //                 color: primaryColor),
+                      //           )
+                      //         : null),
+                    
                     )
                   ],
                 ),

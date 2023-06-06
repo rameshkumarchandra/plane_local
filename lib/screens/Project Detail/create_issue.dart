@@ -762,6 +762,8 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                             parent: true,
                                             issueId: '',
                                             createIssue: true,
+                                            blocking: false,
+                                            index: 0,
                                           ),
                                         );
                                   },
