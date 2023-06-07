@@ -91,8 +91,8 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
         },
         text: widget.appBarTitle,
       ),
-      body: issueProvider.issueDetailState == AuthStateEnum.loading ||
-              issueProvider.issueActivityState == AuthStateEnum.loading
+      body: issueProvider.issueDetailState == StateEnum.loading ||
+              issueProvider.issueActivityState == StateEnum.loading
           ? Center(
               child: SizedBox(
                 width: 30,
@@ -107,8 +107,8 @@ class _IssueDetailState extends ConsumerState<IssueDetail> {
                 ),
               ),
             )
-          : issueProvider.issueDetailState == AuthStateEnum.success &&
-                  issueProvider.issueActivityState == AuthStateEnum.success
+          : issueProvider.issueDetailState == StateEnum.success &&
+                  issueProvider.issueActivityState == StateEnum.success
               ? SingleChildScrollView(
                   child: Padding(
                     padding:

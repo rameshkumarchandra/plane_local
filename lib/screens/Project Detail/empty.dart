@@ -1107,7 +1107,7 @@ class EmptyPlaceholder {
                 color: const Color.fromRGBO(63, 118, 255, 1),
               ),
               child: ref.watch(ProviderList.issuesProvider).joinprojectState ==
-                      AuthStateEnum.loading
+                      StateEnum.loading
                   ? const Center(
                       child: SizedBox(
                         height: 20,

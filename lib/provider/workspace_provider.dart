@@ -24,10 +24,10 @@ class WorkspaceProvider extends ChangeNotifier {
   var workspaceMembers = [];
   String tempLogo = '';
   WorkspaceModel? workspace;
-  AuthStateEnum workspaceInvitationState = AuthStateEnum.empty;
-  AuthStateEnum selectWorkspaceState = AuthStateEnum.empty;
-  AuthStateEnum uploadImageState = AuthStateEnum.empty;
-  AuthStateEnum getMembersState = AuthStateEnum.empty;
+  StateEnum workspaceInvitationState = StateEnum.empty;
+  StateEnum selectWorkspaceState = StateEnum.empty;
+  StateEnum uploadImageState = StateEnum.empty;
+  StateEnum getMembersState = StateEnum.empty;
 
   void clear() {
     workspaceInvitations = [];
@@ -49,7 +49,7 @@ class WorkspaceProvider extends ChangeNotifier {
   }
 
   Future getWorkspaceInvitations() async {
-    workspaceInvitationState = AuthStateEnum.loading;
+    workspaceInvitationState = StateEnum.loading;
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
@@ -57,19 +57,19 @@ class WorkspaceProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-      workspaceInvitationState = AuthStateEnum.success;
+      workspaceInvitationState = StateEnum.success;
       workspaceInvitations = response.data;
       //log(response.data.toString());
       notifyListeners();
       // return response.data;
     } catch (e) {
-      workspaceInvitationState = AuthStateEnum.error;
+      workspaceInvitationState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future joinWorkspaces({required data}) async {
-    workspaceInvitationState = AuthStateEnum.loading;
+    workspaceInvitationState = StateEnum.loading;
     notifyListeners();
 
     try {
@@ -80,13 +80,13 @@ class WorkspaceProvider extends ChangeNotifier {
         data: {"invitations": data},
         httpMethod: HttpMethod.post,
       );
-      workspaceInvitationState = AuthStateEnum.success;
+      workspaceInvitationState = StateEnum.success;
       log(response.data.toString());
       notifyListeners();
       // return response.data;
     } catch (e) {
       log("ERROR" + e.toString());
-      workspaceInvitationState = AuthStateEnum.error;
+      workspaceInvitationState = StateEnum.error;
       notifyListeners();
     }
   }
@@ -95,7 +95,7 @@ class WorkspaceProvider extends ChangeNotifier {
       {required String name,
       required String slug,
       required String size}) async {
-    workspaceInvitationState = AuthStateEnum.loading;
+    workspaceInvitationState = StateEnum.loading;
     notifyListeners();
     // return;
     try {
@@ -106,7 +106,7 @@ class WorkspaceProvider extends ChangeNotifier {
           httpMethod: HttpMethod.post,
           data: {"name": name, "slug": slug, "company_size": int.parse(size)});
       await getWorkspaces();
-      workspaceInvitationState = AuthStateEnum.success;
+      workspaceInvitationState = StateEnum.success;
       log(response.data.toString());
       notifyListeners();
       return response.statusCode!;
@@ -114,14 +114,14 @@ class WorkspaceProvider extends ChangeNotifier {
     } on DioError catch (e) {
       log(e.response!.data.toString());
       log(e.message.toString());
-      workspaceInvitationState = AuthStateEnum.error;
+      workspaceInvitationState = StateEnum.error;
       notifyListeners();
       return e.response!.statusCode!;
     }
   }
 
   Future checkWorspaceSlug({required String slug}) async {
-    workspaceInvitationState = AuthStateEnum.loading;
+    workspaceInvitationState = StateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -143,13 +143,13 @@ class WorkspaceProvider extends ChangeNotifier {
       log('ERRORRRR');
       log(e.response!.data.toString());
       log(e.message.toString());
-      workspaceInvitationState = AuthStateEnum.error;
+      workspaceInvitationState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future inviteToWorkspace({required String slug, required email, role}) async {
-    workspaceInvitationState = AuthStateEnum.loading;
+    workspaceInvitationState = StateEnum.loading;
     notifyListeners();
     try {
       log(APIs.inviteToWorkspace.replaceAll('\$SLUG', slug));
@@ -167,24 +167,24 @@ class WorkspaceProvider extends ChangeNotifier {
               },
         httpMethod: HttpMethod.post,
       );
-      workspaceInvitationState = AuthStateEnum.success;
+      workspaceInvitationState = StateEnum.success;
       log(response.data.toString());
       notifyListeners();
       return !urlNotAvailable;
     } on DioError catch (e) {
       log(e.response!.data.toString());
       log(e.message.toString());
-      workspaceInvitationState = AuthStateEnum.error;
+      workspaceInvitationState = StateEnum.error;
       notifyListeners();
     } catch (e) {
       log(e.toString());
-      workspaceInvitationState = AuthStateEnum.error;
+      workspaceInvitationState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future getWorkspaces() async {
-    workspaceInvitationState = AuthStateEnum.loading;
+    workspaceInvitationState = StateEnum.loading;
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
@@ -192,7 +192,7 @@ class WorkspaceProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-      workspaceInvitationState = AuthStateEnum.success;
+      workspaceInvitationState = StateEnum.success;
       workspaces = response.data;
 
       var isWorkspacePresent = workspaces.where((element) {
@@ -223,13 +223,13 @@ class WorkspaceProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       log(e.toString());
-      workspaceInvitationState = AuthStateEnum.error;
+      workspaceInvitationState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future selectWorkspace({required String id}) async {
-    selectWorkspaceState = AuthStateEnum.loading;
+    selectWorkspaceState = StateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -239,7 +239,7 @@ class WorkspaceProvider extends ChangeNotifier {
         data: {"last_workspace_id": id},
         httpMethod: HttpMethod.patch,
       );
-      selectWorkspaceState = AuthStateEnum.success;
+      selectWorkspaceState = StateEnum.success;
       ref!.read(ProviderList.profileProvider).userProfile =
           UserProfile.fromMap(response.data);
 
@@ -278,13 +278,13 @@ class WorkspaceProvider extends ChangeNotifier {
       // return response.data;
     } on DioError catch (e) {
       log(e.toString());
-      selectWorkspaceState = AuthStateEnum.error;
+      selectWorkspaceState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future retrieveWorkspace({required String slug}) async {
-    selectWorkspaceState = AuthStateEnum.loading;
+    selectWorkspaceState = StateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -293,7 +293,7 @@ class WorkspaceProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-      selectWorkspaceState = AuthStateEnum.success;
+      selectWorkspaceState = StateEnum.success;
       log(response.data.toString());
       // response = jsonDecode(response.data);
       selectedWorkspace = WorkspaceModel.fromJson(response.data);
@@ -305,13 +305,13 @@ class WorkspaceProvider extends ChangeNotifier {
       // log(response.data.toString());
     } catch (e) {
       log(e.toString());
-      selectWorkspaceState = AuthStateEnum.error;
+      selectWorkspaceState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future updateWorkspace({required data}) async {
-    selectWorkspaceState = AuthStateEnum.loading;
+    selectWorkspaceState = StateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -324,7 +324,7 @@ class WorkspaceProvider extends ChangeNotifier {
         data: data,
         httpMethod: HttpMethod.patch,
       );
-      selectWorkspaceState = AuthStateEnum.success;
+      selectWorkspaceState = StateEnum.success;
       log(response.data.toString());
       // response = jsonDecode(response.data);
       selectedWorkspace = WorkspaceModel.fromJson(response.data);
@@ -337,13 +337,13 @@ class WorkspaceProvider extends ChangeNotifier {
       // log(response.data.toString());
     } catch (e) {
       log(e.toString());
-      selectWorkspaceState = AuthStateEnum.error;
+      selectWorkspaceState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future<bool> deleteWorkspace() async {
-    selectWorkspaceState = AuthStateEnum.loading;
+    selectWorkspaceState = StateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -355,7 +355,7 @@ class WorkspaceProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.delete,
       );
-      selectWorkspaceState = AuthStateEnum.success;
+      selectWorkspaceState = StateEnum.success;
       log(response.data.toString());
       await getWorkspaces();
 
@@ -366,14 +366,14 @@ class WorkspaceProvider extends ChangeNotifier {
       // log(response.data.toString());
     } catch (e) {
       log(e.toString());
-      selectWorkspaceState = AuthStateEnum.error;
+      selectWorkspaceState = StateEnum.error;
       notifyListeners();
       return false;
     }
   }
 
   Future getWorkspaceMembers() async {
-    getMembersState = AuthStateEnum.loading;
+    getMembersState = StateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -385,7 +385,7 @@ class WorkspaceProvider extends ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-      getMembersState = AuthStateEnum.success;
+      getMembersState = StateEnum.success;
       log(response.data.toString());
       workspaceMembers = response.data;
       // response = jsonDecode(response.data);
@@ -394,7 +394,7 @@ class WorkspaceProvider extends ChangeNotifier {
       // log(response.data.toString());
     } catch (e) {
       log(e.toString());
-      getMembersState = AuthStateEnum.error;
+      getMembersState = StateEnum.error;
       notifyListeners();
     }
   }

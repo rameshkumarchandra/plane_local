@@ -68,7 +68,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
         ),
       ),
       body: LoadingWidget(
-        loading: projectProvider.projectState == AuthStateEnum.loading,
+        loading: projectProvider.projectState == StateEnum.loading,
         widgetClass: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: projectProvider.projects.isEmpty &&
@@ -311,8 +311,8 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                   true
                               ? Container()
                               : Container(
-                                  margin:
-                                      const EdgeInsets.only(top: 10, bottom: 10),
+                                  margin: const EdgeInsets.only(
+                                      top: 10, bottom: 10),
                                   child: Divider(
                                     height: 1,
                                     thickness: 1,

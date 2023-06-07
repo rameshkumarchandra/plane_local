@@ -652,11 +652,14 @@ class _CycleDetailState extends ConsumerState<CycleDetail> {
                                               darkSecondaryBackgroundColor,
                                           child: Center(
                                             child: CustomText(
+                                               cyclesProvider.cyclesDetailsData[
+                                                          'assignees'][idx]
+                                                          ['first_name']!=null?
                                               cyclesProvider.cyclesDetailsData[
                                                           'assignees'][idx]
                                                           ['first_name'][0]
                                                       .toString()
-                                                      .toUpperCase() ??
+                                                      .toUpperCase():
                                                   '',
                                               color: Colors.white,
                                             ),

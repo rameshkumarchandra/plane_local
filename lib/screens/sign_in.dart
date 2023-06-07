@@ -48,10 +48,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           child: Form(
             key: gkey,
             child: LoadingWidget(
-              loading: authProvider.sendCodeState == AuthStateEnum.loading ||
-                  authProvider.validateCodeState == AuthStateEnum.loading ||
+              loading: authProvider.sendCodeState == StateEnum.loading ||
+                  authProvider.validateCodeState == StateEnum.loading ||
                   workspaceProvider.workspaceInvitationState ==
-                      AuthStateEnum.loading,
+                      StateEnum.loading,
               widgetClass: SizedBox(
                 height: height,
                 child: SafeArea(
@@ -223,7 +223,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                         .then(
                                       (value) async {
                                         if (authProvider.validateCodeState ==
-                                            AuthStateEnum.success) {
+                                            StateEnum.success) {
                                           if (profileProvider
                                               .userProfile.is_onboarded!) {
                                             await workspaceProvider

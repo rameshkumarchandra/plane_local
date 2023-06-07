@@ -73,8 +73,7 @@ class _WorkspaceGeneralState extends ConsumerState<WorkspaceGeneral> {
           text: 'Workspace General',
         ),
         body: LoadingWidget(
-          loading:
-              workspaceProvider.selectWorkspaceState == AuthStateEnum.loading,
+          loading: workspaceProvider.selectWorkspaceState == StateEnum.loading,
           widgetClass: SingleChildScrollView(
             child: Column(
               children: [

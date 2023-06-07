@@ -267,7 +267,7 @@ class _SelectProjectMembersState extends ConsumerState<SelectProjectMembers> {
                 ],
               ),
             ),
-            issuesProvider.membersState == AuthStateEnum.loading
+            issuesProvider.membersState == StateEnum.loading
                 ? Container(
                     alignment: Alignment.center,
                     color: Colors.white.withOpacity(0.7),

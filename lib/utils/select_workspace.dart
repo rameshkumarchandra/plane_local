@@ -188,7 +188,7 @@ class _SelectWorkspaceState extends ConsumerState<SelectWorkspace> {
               ),
             ],
           ),
-          prov.selectWorkspaceState == AuthStateEnum.loading
+          prov.selectWorkspaceState == StateEnum.loading
               ? Container(
                   alignment: Alignment.center,
                   color: themeProvider.isDarkThemeEnabled

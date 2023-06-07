@@ -75,7 +75,7 @@ class _MembersState extends ConsumerState<Members> {
           ],
         ),
         body: LoadingWidget(
-          loading: workspaceProvider.getMembersState == AuthStateEnum.loading,
+          loading: workspaceProvider.getMembersState == StateEnum.loading,
           widgetClass: MembersListWidget(
             fromWorkspace: widget.fromWorkspace,
           ),
@@ -101,8 +101,7 @@ class _MembersListWidgetState extends ConsumerState<MembersListWidget> {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var projectsProvider = ref.watch(ProviderList.projectProvider);
     return LoadingWidget(
-      loading:
-          projectsProvider.deleteProjectMemberState == AuthStateEnum.loading,
+      loading: projectsProvider.deleteProjectMemberState == StateEnum.loading,
       widgetClass: Container(
         color: themeProvider.isDarkThemeEnabled
             ? darkSecondaryBackgroundColor

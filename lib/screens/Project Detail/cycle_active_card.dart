@@ -462,13 +462,17 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
                                   backgroundColor: darkSecondaryBackgroundColor,
                                   child: Center(
                                     child: CustomText(
-                                      cyclesProvider
+                                      cyclesProvider.cyclesActiveData[
+                                                      widget.index]['assignees']
+                                                  [idx]['first_name'] ==
+                                              null
+                                          ? ''
+                                          : cyclesProvider
                                               .cyclesActiveData[widget.index]
                                                   ['assignees'][idx]
                                                   ['first_name'][0]
                                               .toString()
-                                              .toUpperCase() ??
-                                          '',
+                                              .toUpperCase(),
                                       color: Colors.white,
                                     ),
                                   ),

@@ -30,8 +30,8 @@ class ProfileProvider extends ChangeNotifier {
 
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
-  AuthStateEnum getProfileState = AuthStateEnum.empty;
-  AuthStateEnum updateProfileState = AuthStateEnum.empty;
+  StateEnum getProfileState = StateEnum.empty;
+  StateEnum updateProfileState = StateEnum.empty;
   UserProfile userProfile = UserProfile.initialize();
 
   void clear() {
@@ -43,7 +43,7 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future getProfile() async {
-    getProfileState = AuthStateEnum.loading;
+    getProfileState = StateEnum.loading;
 
     try {
       var response = await DioConfig().dioServe(
@@ -58,7 +58,7 @@ class ProfileProvider extends ChangeNotifier {
       lastName.text = userProfile.last_name!;
       // dropDownValue = userProfile.role!;
       //  await Future.delayed(Duration(seconds: 1));
-      getProfileState = AuthStateEnum.success;
+      getProfileState = StateEnum.success;
       slug = response.data["slug"];
       //log('----- SUCCESS ------ $slug');
       // log("DONE" + response.data.toString());
@@ -68,13 +68,13 @@ class ProfileProvider extends ChangeNotifier {
     } on DioError catch (e) {
       print('----- ERROR ------');
       log(e.error.toString());
-      getProfileState = AuthStateEnum.error;
+      getProfileState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future updateProfile({required Map data}) async {
-    updateProfileState = AuthStateEnum.loading;
+    updateProfileState = StateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -85,11 +85,11 @@ class ProfileProvider extends ChangeNotifier {
           data: data);
       log(response.data.toString());
       userProfile = UserProfile.fromMap(response.data);
-      updateProfileState = AuthStateEnum.success;
+      updateProfileState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.error.toString());
-      updateProfileState = AuthStateEnum.error;
+      updateProfileState = StateEnum.error;
       notifyListeners();
     }
   }

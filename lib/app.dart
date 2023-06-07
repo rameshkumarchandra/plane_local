@@ -26,27 +26,26 @@ class _AppState extends ConsumerState<App> {
         ref.watch(ProviderList.workspaceProvider);
     var theme_provider = ref.watch(ProviderList.themeProvider);
     return Scaffold(
-        body: (profileProv.getProfileState == AuthStateEnum.loading ||
-                workspaceProv.workspaceInvitationState == AuthStateEnum.loading)
+        body: (profileProv.getProfileState == StateEnum.loading ||
+                workspaceProv.workspaceInvitationState == StateEnum.loading)
             ? Center(
                 child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: LoadingIndicator(
-                          indicatorType: Indicator.lineSpinFadeLoader,
-                          colors: 
-                          theme_provider.isDarkThemeEnabled ?
-                          [Colors.white] :
-                          [Colors.black],
-                          strokeWidth: 1.0,
-                          backgroundColor: Colors.transparent,
-                        ),
-                      ),
+                  width: 30,
+                  height: 30,
+                  child: LoadingIndicator(
+                    indicatorType: Indicator.lineSpinFadeLoader,
+                    colors: theme_provider.isDarkThemeEnabled
+                        ? [Colors.white]
+                        : [Colors.black],
+                    strokeWidth: 1.0,
+                    backgroundColor: Colors.transparent,
+                  ),
+                ),
               )
             : !profileProv.userProfile.is_onboarded!
                 ? const SetupProfileScreen()
                 // : workspaceProv.workspaces.isEmpty
                 //     ? const SetupWorkspace()
-                    : const HomeScreen());
+                : const HomeScreen());
   }
 }

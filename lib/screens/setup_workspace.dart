@@ -52,7 +52,7 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: LoadingWidget(
-          loading: prov.workspaceInvitationState == AuthStateEnum.loading,
+          loading: prov.workspaceInvitationState == StateEnum.loading,
           widgetClass: Form(
             key: formKey,
             child: SingleChildScrollView(
@@ -371,7 +371,7 @@ class _SetupWorkspaceState extends ConsumerState<SetupWorkspace> {
                                         size: dropDownValue!,
                                       );
                                       if (prov.workspaceInvitationState ==
-                                          AuthStateEnum.success) {
+                                          StateEnum.success) {
                                         // ignore: use_build_context_synchronously
                                         Navigator.push(
                                             context,

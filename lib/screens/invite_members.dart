@@ -55,9 +55,8 @@ class _InviteMembersState extends ConsumerState<InviteMembers> {
       ),
       body: LoadingWidget(
         loading: !widget.isProject
-            ? workspaceProvider.workspaceInvitationState ==
-                AuthStateEnum.loading
-            : projectProvider.projectInvitationState == AuthStateEnum.loading,
+            ? workspaceProvider.workspaceInvitationState == StateEnum.loading
+            : projectProvider.projectInvitationState == StateEnum.loading,
         widgetClass: LayoutBuilder(builder: (context, constraints) {
           return SingleChildScrollView(
             child: ConstrainedBox(
@@ -312,7 +311,7 @@ class _InviteMembersState extends ConsumerState<InviteMembers> {
 
                         if (!widget.isProject &&
                             workspaceProvider.workspaceInvitationState ==
-                                AuthStateEnum.success) {
+                                StateEnum.success) {
                           //show success snackbar
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: CustomText(
@@ -325,7 +324,7 @@ class _InviteMembersState extends ConsumerState<InviteMembers> {
                         }
                         if (widget.isProject &&
                             projectProvider.projectInvitationState ==
-                                AuthStateEnum.success) {
+                                StateEnum.success) {
                           //show success snackbar
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: CustomText(

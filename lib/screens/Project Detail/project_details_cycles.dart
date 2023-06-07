@@ -104,7 +104,7 @@ class _CycleWidgetState extends ConsumerState<CycleWidget> {
     var cyclesProvider = ref.watch(ProviderList.cyclesProvider);
     var themeProvider = ref.watch(ProviderList.themeProvider);
     return LoadingWidget(
-      loading: cyclesProvider.cyclesState == AuthStateEnum.loading,
+      loading: cyclesProvider.cyclesState == StateEnum.loading,
       widgetClass: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

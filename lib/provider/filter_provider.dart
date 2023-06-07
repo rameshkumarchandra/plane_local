@@ -8,11 +8,11 @@ import '../config/apis.dart';
 import '../services/dio_service.dart';
 
 class FilterProvider with ChangeNotifier {
-  AuthStateEnum filterState = AuthStateEnum.loading;
+  StateEnum filterState = StateEnum.loading;
 
   Future applyFilter({required String slug, required String projectId}) async {
     try {
-      filterState = AuthStateEnum.loading;
+      filterState = StateEnum.loading;
       notifyListeners();
       var response = await DioConfig().dioServe(
         hasAuth: true,
@@ -22,11 +22,11 @@ class FilterProvider with ChangeNotifier {
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
-      filterState = AuthStateEnum.success;
+      filterState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.message.toString());
-      filterState = AuthStateEnum.error;
+      filterState = StateEnum.error;
       notifyListeners();
     }
   }

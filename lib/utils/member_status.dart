@@ -262,7 +262,7 @@ class _MemberStatusState extends ConsumerState<MemberStatus> {
             ],
           ),
         ),
-        projectProvider.deleteProjectMemberState == AuthStateEnum.loading
+        projectProvider.deleteProjectMemberState == StateEnum.loading
             ? Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(

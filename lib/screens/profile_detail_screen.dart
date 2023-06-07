@@ -63,7 +63,7 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
         text: 'General',
       ),
       body: LoadingWidget(
-        loading: profileProvier.updateProfileState == AuthStateEnum.loading,
+        loading: profileProvier.updateProfileState == StateEnum.loading,
         widgetClass:
             LayoutBuilder(builder: (context, BoxConstraints constraints) {
           return SingleChildScrollView(
@@ -100,7 +100,7 @@ class _ProfileDetailScreenState extends ConsumerState<ProfileDetailScreen> {
                                               FileImage(pickedImage!),
                                         ),
                                         fileUploadProvider.fileUploadState ==
-                                                AuthStateEnum.loading
+                                                StateEnum.loading
                                             ? CircleAvatar(
                                                 radius: 50,
                                                 backgroundColor: Colors.white
