@@ -19,8 +19,8 @@ class _CycleCardState extends ConsumerState<CycleCard> {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     return GestureDetector(
       onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (ctx) => const CycleDetail()));
+        //Navigator.of(context)
+        //    .push(MaterialPageRoute(builder: (ctx) => const CycleDetail()));
       },
       child: Container(
         margin: const EdgeInsets.only(top: 15),
