@@ -178,7 +178,12 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                               : selectedIndex == 3
                                   ? const FeaturesPage()
                                   : selectedIndex == 4
-                                      ? const StatesPage()
+                                      ? Container(
+                                        child: Center(
+                                          child: CustomText('IN DEVELOPMENT'),
+                                        ),
+                                      )
+                                      // const StatesPage()
                                       : selectedIndex == 5
                                           ? const LablesPage()
                                           : selectedIndex == 6

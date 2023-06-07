@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:plane_startup/config/enums.dart';
@@ -25,7 +23,6 @@ import '../../kanban/models/inputs.dart';
 import '../../utils/custom_text.dart';
 import '../../utils/filter_sheet.dart';
 import '../settings_screen.dart';
-import 'cycle_card.dart';
 import 'module_card.dart';
 
 class ProjectDetail extends ConsumerStatefulWidget {
@@ -201,7 +198,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
               Container(
                   margin: const EdgeInsets.only(top: 10),
                   width: MediaQuery.of(context).size.width,
-                  height: 48,
+                  height: 46,
                   child: ListView.builder(
                     itemCount: projectProvider.features.length,
                     shrinkWrap: true,
@@ -758,7 +755,7 @@ class _ProjectDetailState extends ConsumerState<ProjectDetail> {
 
   Widget cycles() {
     var themeProvider = ref.read(ProviderList.themeProvider);
-    return CycleWidget();
+    return const CycleWidget();
   }
 
   Widget modules() {

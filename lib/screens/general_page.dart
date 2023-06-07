@@ -106,10 +106,10 @@ class _GeneralPageState extends ConsumerState<GeneralPage> {
                       decoration: BoxDecoration(
                         color: themeProvider.isDarkThemeEnabled
                             ? darkBackgroundColor
-                            : lightBackgroundColor,
+                            : lightGreeyColor,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: greyColor,
+                          color: strokeColor,
                         ),
                       ),
                       child: Center(

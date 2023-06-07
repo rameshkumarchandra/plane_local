@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/screens/Project%20Detail/cycle_detail.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 import 'package:plane_startup/widgets/profile_circle_avatar_widget.dart';
-
 import '../../utils/constants.dart';
 
 class CycleActiveCard extends ConsumerStatefulWidget {
@@ -68,8 +68,12 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.brightness_6_outlined),
-              const SizedBox(width: 8),
+              SvgPicture.asset(
+                'assets/svg_images/cycles_icon.svg',
+                height: 25,
+                width: 25,
+              ),
+              const SizedBox(width: 5),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -85,41 +89,42 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
                     decoration: BoxDecoration(
                         color: checkDate(
                                     startDate: cyclesProvider
-                                        .cyclesAllData[index]['start_date'],
-                                    endDate: cyclesProvider.cyclesAllData[index]
-                                        ['end_date']) ==
+                                        .cyclesActiveData[index]['start_date'],
+                                    endDate: cyclesProvider
+                                        .cyclesActiveData[index]['end_date']) ==
                                 'Draft'
                             ? lightGreeyColor
                             : checkDate(
                                         startDate: cyclesProvider
-                                            .cyclesAllData[index]['start_date'],
-                                        endDate:
-                                            cyclesProvider.cyclesAllData[index]
-                                                ['end_date']) ==
+                                                .cyclesActiveData[index]
+                                            ['start_date'],
+                                        endDate: cyclesProvider
+                                                .cyclesActiveData[index]
+                                            ['end_date']) ==
                                     'Completed'
                                 ? primaryLightColor
                                 : greenWithOpacity,
                         borderRadius: BorderRadius.circular(5)),
                     child: CustomText(
                       checkDate(
-                        startDate: cyclesProvider.cyclesAllData[index]
+                        startDate: cyclesProvider.cyclesActiveData[index]
                             ['start_date'],
-                        endDate: cyclesProvider.cyclesAllData[index]
+                        endDate: cyclesProvider.cyclesActiveData[index]
                             ['end_date'],
                       ),
                       color: checkDate(
-                                startDate: cyclesProvider.cyclesAllData[index]
-                                    ['start_date'],
-                                endDate: cyclesProvider.cyclesAllData[index]
+                                startDate: cyclesProvider
+                                    .cyclesActiveData[index]['start_date'],
+                                endDate: cyclesProvider.cyclesActiveData[index]
                                     ['end_date'],
                               ) ==
                               'Draft'
                           ? greyColor
                           : checkDate(
                                     startDate: cyclesProvider
-                                        .cyclesAllData[index]['start_date'],
-                                    endDate: cyclesProvider.cyclesAllData[index]
-                                        ['end_date'],
+                                        .cyclesActiveData[index]['start_date'],
+                                    endDate: cyclesProvider
+                                        .cyclesActiveData[index]['end_date'],
                                   ) ==
                                   'Completed'
                               ? primaryColor
@@ -217,9 +222,10 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
                     Row(
                       children: [
                         SvgPicture.asset(
-                          'assets/svg_images/issues.svg',
+                          'assets/svg_images/issues_icon.svg',
                           height: 15,
                           width: 15,
+                          color: greyColor,
                         ),
                         const SizedBox(
                           width: 10,
@@ -262,7 +268,20 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
                             details: cyclesProvider.cyclesActiveData[index]
                                 ['assignees'])
                         : const Icon(Icons.groups_3_outlined),
-                    Row(children: const [Icon(Icons.tiktok), Text('74 Issues')])
+                    Row(
+                      children: [
+                        SvgPicture.asset(
+                          'assets/svg_images/done.svg',
+                          height: 20,
+                          width: 20,
+                          color: const Color(0xFF438AF3),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Text('74 Issues'),
+                      ],
+                    )
                   ],
                 ),
               ],
@@ -318,6 +337,8 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => CycleDetail(
+                          cycleName: cyclesProvider
+                                .cyclesActiveData[widget.index]['name'],
                             cycleId: cyclesProvider
                                 .cyclesActiveData[widget.index]['id'])));
               },
@@ -402,17 +423,34 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
                 ),
                 CustomText(states[index]),
                 const Spacer(),
-                const Icon(Icons.circle_outlined),
+                CircularPercentIndicator(
+                  radius: 10,
+                  lineWidth: 2,
+                  progressColor: primaryColor,
+                  percent: convertToRatio(
+                    index == 0 ?
+                    (cyclesProvider.cyclesActiveData[0]['backlog_issues'] * 100 / cyclesProvider.cyclesActiveData[0]['total_issues'])
+                    : index == 1 ?
+                    (cyclesProvider.cyclesActiveData[0]['unstarted_issues'] * 100 / cyclesProvider.cyclesActiveData[0]['total_issues'])
+                    : index == 2 ?
+                    (cyclesProvider.cyclesActiveData[0]['started_issues'] * 100 / cyclesProvider.cyclesActiveData[0]['total_issues'])
+                    : index == 3 ?
+                    (cyclesProvider.cyclesActiveData[0]['cancelled_issues'] * 100 / cyclesProvider.cyclesActiveData[0]['total_issues'])
+                    : (cyclesProvider.cyclesActiveData[0]['completed_issues'] * 100 / cyclesProvider.cyclesActiveData[0]['total_issues'])
+                  ),
+                ),
                 const SizedBox(width: 5),
                 CustomText(index == 0
-                    ? '${(cyclesProvider.cyclesActiveData[0]['backlog_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']}% of ${cyclesProvider.cyclesActiveData[0]['backlog_issues']}'
+                    ? '${((cyclesProvider.cyclesActiveData[0]['backlog_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']).toString().split('.').first}% off ${cyclesProvider.cyclesActiveData[0]['total_issues']}'
+                    // .split('.')
+                    // .first
                     : index == 1
-                        ? '${(cyclesProvider.cyclesActiveData[0]['unstarted_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']}% of ${cyclesProvider.cyclesActiveData[0]['unstarted_issues']}'
+                        ? '${((cyclesProvider.cyclesActiveData[0]['unstarted_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']).toString().split('.').first}% of ${cyclesProvider.cyclesActiveData[0]['total_issues']}'
                         : index == 2
-                            ? '${(cyclesProvider.cyclesActiveData[0]['started_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']}% of ${cyclesProvider.cyclesActiveData[0]['started_issues']}'
+                            ? '${((cyclesProvider.cyclesActiveData[0]['started_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']).toString().split('.').first}% of ${cyclesProvider.cyclesActiveData[0]['total_issues']}'
                             : index == 3
-                                ? '${(cyclesProvider.cyclesActiveData[0]['cancelled_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']}% of ${cyclesProvider.cyclesActiveData[0]['cancelled_issues']}'
-                                : '${(cyclesProvider.cyclesActiveData[0]['completed_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']}% of ${cyclesProvider.cyclesActiveData[0]['completed_issues']}')
+                                ? '${((cyclesProvider.cyclesActiveData[0]['cancelled_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']).toString().split('.').first}% of ${cyclesProvider.cyclesActiveData[0]['total_issues']}'
+                                : '${((cyclesProvider.cyclesActiveData[0]['completed_issues'] * 100) / cyclesProvider.cyclesActiveData[0]['total_issues']).toString().split('.').first}% of ${cyclesProvider.cyclesActiveData[0]['total_issues']}')
               ],
             ),
           ),
@@ -499,6 +537,7 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
   }
 
   Widget fifthPart() {
+    var cyclesProvider = ref.watch(ProviderList.cyclesProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -511,30 +550,34 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
             ),
           ),
           const SizedBox(height: 15),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ...List.generate(
-                1,
-                (index) => Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: Colors.grey.shade300, width: 1),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Icon(
-                        Icons.circle,
-                        color: Colors.purple[200],
+          ...List.generate(
+            cyclesProvider.cyclesActiveData[widget.index]['labels'].length,
+            (idx) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.circle,
+                    color: Color(
+                      int.parse(
+                        "FF${cyclesProvider.cyclesActiveData[0]['labels'][idx]['color'].toString().toUpperCase().replaceAll("#", "")}",
+                        radix: 16,
                       ),
-                      CustomText('Label 1'),
-                    ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  SizedBox(
+                    width: width * 0.7,
+                    child: CustomText(
+                      cyclesProvider.cyclesActiveData[0]['labels'][idx]['name'],
+                      maxLines: 2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           )
         ],
       ),
@@ -566,12 +609,11 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
       return 'Draft';
     } else {
       if (DateTime.parse(startDate).isAfter(now)) {
-        Duration difference =
-            DateTime.parse(startDate.split('+').first).difference(now);
+        Duration difference = DateTime.parse(startDate).difference(now);
         if (difference.inDays == 0) {
           return 'Today';
         } else {
-          return '${difference.inDays.abs()} Days Left';
+          return '${difference.inDays.abs()} dDays Left';
         }
       }
       if (DateTime.parse(startDate).isBefore(now) &&
@@ -586,5 +628,11 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
         return 'Completed';
       }
     }
+  }
+
+  double convertToRatio(double decimalValue) {
+    double value = decimalValue / 10;
+    print(value);
+    return value == 10 ? 1.0 : value;
   }
 }

@@ -308,7 +308,7 @@ class IssuesProvider extends ChangeNotifier {
                       MaterialPageRoute(builder: (ctx) => const CreateIssue()));
                 },
                 child: const Icon(Icons.add,
-                    color: Color.fromRGBO(133, 142, 150, 1))),
+                    color: primaryColor)),
           ],
         ),
       );
@@ -713,7 +713,7 @@ class IssuesProvider extends ChangeNotifier {
   }
 
   Future updateProjectView() async {
-    var filterPriority = null;
+    var filterPriority;
     if (issues.filters.priorities.isNotEmpty) {
       filterPriority = issues.filters.priorities
           .map((element) => element == 'none' ? null : element)
@@ -907,7 +907,7 @@ class IssuesProvider extends ChangeNotifier {
       issuesResponse = [];
       isISsuesEmpty = true;
       for (var key in response.data.keys) {
-        log("KEY=" + key.toString());
+        log("KEY=$key");
         if (response.data[key].isNotEmpty) {
           isISsuesEmpty = false;
           break;

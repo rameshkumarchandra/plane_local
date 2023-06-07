@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 // import 'package:google_fonts/google_fonts.dart';
 
 import '../config/const.dart';
@@ -13,6 +12,7 @@ const strokeColor = Color(0xFFE5E5E5);
 const lightGreyTextColor = Color(0xFFA3A3A3);
 const greenWithOpacity = Color.fromRGBO(9, 169, 83, 0.08);
 const greenHighLight = Color(0xFF09A953);
+const lightGreyBoxColor = Color(0xFFF5F5F5);
 
 const lightPrimaryTextColor = Colors.black;
 const lightSecondaryTextColor = Color.fromARGB(255, 97, 97, 97);
