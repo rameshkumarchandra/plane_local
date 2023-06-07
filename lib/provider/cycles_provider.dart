@@ -13,8 +13,42 @@ class CyclesProvider with ChangeNotifier {
   AuthStateEnum cyclesState = AuthStateEnum.loading;
   AuthStateEnum cyclesDetilesState = AuthStateEnum.loading;
   List<dynamic> cyclesAllData = [];
+  List<dynamic> cycleFavoriteData = [];
   List<dynamic> cyclesActiveData = [];
   Map<String, dynamic> cyclesDetailsData = {};
+
+  Future<bool> dateCheck({
+    required String slug,
+    required String projectId,
+    required Map<String, dynamic> data,
+  }) async {
+    var url = APIs.dateCheck
+        .replaceFirst('\$SLUG', slug)
+        .replaceFirst('\$PROJECTID', projectId);
+    print(url);
+
+    try {
+      cyclesState = AuthStateEnum.loading;
+      notifyListeners();
+      var response = await DioConfig().dioServe(
+        hasAuth: true,
+        url: url,
+        hasBody: true,
+        data: data,
+        httpMethod: HttpMethod.post,
+      );
+      log(response.data.toString());
+      cyclesState = AuthStateEnum.success;
+
+      notifyListeners();
+      return response.data['status'];
+    } on DioError catch (e) {
+      log(e.message.toString());
+      cyclesState = AuthStateEnum.error;
+      notifyListeners();
+      return false;
+    }
+  }
 
   Future cyclesCrud({
     required String slug,
@@ -44,11 +78,23 @@ class CyclesProvider with ChangeNotifier {
         data: data,
       );
 
+      // log('CYCLES =========> ${response.data.toString()}');
+
       // * RESPONSE FROM API CONVERTED TO MODEL IS THROWING ERRORS FOR VIEW PROPS ATTRIBUTE * //
       // cyclesData = CyclesModel.fromJson(response.data);
       if (query == 'all') {
-        cyclesAllData = response.data;
+        cyclesAllData = [];
+        cycleFavoriteData = [];
+        response.data.forEach((element) {
+          if (element['is_favorite'] == true) {
+            cycleFavoriteData.add(element);
+          } else {
+            cyclesAllData.add(element);
+          }
+        });
       }
+      // log(cyclesAllData.toString());
+      // log(cycleFavoriteData.toString());
       if (query == 'current') {
         cyclesActiveData = response.data;
       }
@@ -91,6 +137,49 @@ class CyclesProvider with ChangeNotifier {
           '====================================== CYCLE DETAILS ERROR =====================================');
       print(e.message);
       cyclesDetilesState = AuthStateEnum.error;
+      notifyListeners();
+    }
+  }
+
+  Future updateCycle({
+    required String slug,
+    required String projectId,
+    Map<String, dynamic>? data,
+    required String cycleId,
+    required bool isFavorite,
+  }) async {
+    var url = !isFavorite
+        ? APIs.toggleFavoriteCycle
+            .replaceFirst('\$SLUG', slug)
+            .replaceFirst('\$PROJECTID', projectId)
+        : '${APIs.toggleFavoriteCycle.replaceAll('\$SLUG', slug).replaceAll('\$PROJECTID', projectId)}$cycleId/';
+    // print(url);
+    try {
+      cyclesState = AuthStateEnum.loading;
+      notifyListeners();
+      var response = await DioConfig().dioServe(
+        hasAuth: true,
+        url: url,
+        hasBody: !isFavorite ? true : false,
+        httpMethod: !isFavorite ? HttpMethod.post : HttpMethod.delete,
+        data: data,
+      );
+
+      // log('UPDATE CYCLES ======> ${response.data.toString()}');
+      cycleFavoriteData = [];
+      cyclesAllData = [];
+      await cyclesCrud(
+        slug: slug,
+        projectId: projectId,
+        method: CRUD.read,
+        query: 'all',
+      );
+      cyclesState = AuthStateEnum.success;
+      notifyListeners();
+    } on DioError catch (e) {
+      print('===== CYCLES  ERROR =====');
+      log(e.message.toString());
+      cyclesState = AuthStateEnum.error;
       notifyListeners();
     }
   }

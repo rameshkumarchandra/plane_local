@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/provider/provider_list.dart';
 import 'package:plane_startup/screens/Project%20Detail/cycle_active_card.dart';
 import 'package:plane_startup/screens/Project%20Detail/cycle_card.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 import 'package:plane_startup/utils/constants.dart';
+import 'package:plane_startup/widgets/loading_widget.dart';
 
 class CycleWidget extends ConsumerStatefulWidget {
   const CycleWidget({super.key});
@@ -99,107 +102,340 @@ class _CycleWidgetState extends ConsumerState<CycleWidget> {
 
   Widget cycleAll() {
     var cyclesProvider = ref.watch(ProviderList.cyclesProvider);
-    return ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: cyclesProvider.cyclesAllData.length,
-        itemBuilder: (context, index) {
-          return (Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(Icons.brightness_6_outlined),
-                      const SizedBox(
-                        width: 10,
+    var themeProvider = ref.watch(ProviderList.themeProvider);
+    return LoadingWidget(
+      loading: cyclesProvider.cyclesState == AuthStateEnum.loading,
+      widgetClass: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            cyclesProvider.cycleFavoriteData.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: GestureDetector(
+                      child: CustomText(
+                        'Favorite Cycles',
+                        type: FontStyle.heading2,
                       ),
-                      Column(
+                    ),
+                  )
+                : const SizedBox.shrink(),
+            cyclesProvider.cycleFavoriteData.isNotEmpty
+                ? const SizedBox(
+                    height: 15,
+                  )
+                : const SizedBox.shrink(),
+            cyclesProvider.cycleFavoriteData.isNotEmpty
+                ? ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: cyclesProvider.cycleFavoriteData.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CustomText(
-                            cyclesProvider.cyclesAllData[index]['name'],
-                            type: FontStyle.heading2,
-                          ),
-                          const SizedBox(
-                            height: 14,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/svg_images/cycles_icon.svg',
+                                    height: 25,
+                                    width: 25,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: width * 0.6,
+                                        child: CustomText(
+                                          cyclesProvider
+                                              .cycleFavoriteData[index]['name'],
+                                          maxLines: 2,
+                                          type: FontStyle.heading2,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 14,
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                            color: checkDate(
+                                                        startDate: cyclesProvider
+                                                                .cycleFavoriteData[index]
+                                                            ['start_date'],
+                                                        endDate: cyclesProvider
+                                                                .cycleFavoriteData[index]
+                                                            ['end_date']) ==
+                                                    'Draft'
+                                                ? lightGreeyColor
+                                                : checkDate(
+                                                            startDate: cyclesProvider
+                                                                    .cycleFavoriteData[index]
+                                                                ['start_date'],
+                                                            endDate: cyclesProvider
+                                                                    .cycleFavoriteData[index]
+                                                                ['end_date']) ==
+                                                        'Completed'
+                                                    ? primaryLightColor
+                                                    : greenWithOpacity,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: CustomText(
+                                          checkDate(
+                                            startDate: cyclesProvider
+                                                    .cycleFavoriteData[index]
+                                                ['start_date'],
+                                            endDate: cyclesProvider
+                                                    .cycleFavoriteData[index]
+                                                ['end_date'],
+                                          ),
+                                          color: checkDate(
+                                                    startDate: cyclesProvider
+                                                            .cycleFavoriteData[
+                                                        index]['start_date'],
+                                                    endDate: cyclesProvider
+                                                            .cycleFavoriteData[
+                                                        index]['end_date'],
+                                                  ) ==
+                                                  'Draft'
+                                              ? greyColor
+                                              : checkDate(
+                                                        startDate: cyclesProvider
+                                                                .cycleFavoriteData[
+                                                            index]['start_date'],
+                                                        endDate: cyclesProvider
+                                                                .cycleFavoriteData[
+                                                            index]['end_date'],
+                                                      ) ==
+                                                      'Completed'
+                                                  ? primaryColor
+                                                  : greenHighLight,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    cyclesProvider.updateCycle(
+                                      slug: ref
+                                          .read(ProviderList.workspaceProvider)
+                                          .selectedWorkspace!
+                                          .workspaceSlug,
+                                      projectId: ref
+                                          .read(ProviderList.projectProvider)
+                                          .currentProject['id'],
+                                      data: {
+                                        'cycle': cyclesProvider
+                                            .cycleFavoriteData[index]['id'],
+                                      },
+                                      cycleId: cyclesProvider
+                                          .cycleFavoriteData[index]['id'],
+                                      isFavorite: true,
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.star,
+                                    color: themeProvider.isDarkThemeEnabled
+                                        ? lightSecondaryBackgroundColor
+                                        : darkSecondaryBackgroundColor,
+                                  )),
+                            ],
                           ),
                           Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                                color: checkDate(
-                                            startDate:
-                                                cyclesProvider.cyclesAllData[index]
-                                                    ['start_date'],
-                                            endDate:
-                                                cyclesProvider.cyclesAllData[index]
-                                                    ['end_date']) ==
-                                        'Draft'
-                                    ? lightGreeyColor
-                                    : checkDate(
-                                                startDate: cyclesProvider
-                                                        .cyclesAllData[index]
-                                                    ['start_date'],
-                                                endDate: cyclesProvider
-                                                        .cyclesAllData[index]
-                                                    ['end_date']) ==
-                                            'Completed'
-                                        ? primaryLightColor
-                                        : greenWithOpacity,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: CustomText(
-                              checkDate(
-                                startDate: cyclesProvider.cyclesAllData[index]
-                                    ['start_date'],
-                                endDate: cyclesProvider.cyclesAllData[index]
-                                    ['end_date'],
-                              ),
-                              color: checkDate(
-                                        startDate: cyclesProvider
-                                            .cyclesAllData[index]['start_date'],
-                                        endDate: cyclesProvider
-                                            .cyclesAllData[index]['end_date'],
-                                      ) ==
-                                      'Draft'
-                                  ? greyColor
-                                  : checkDate(
-                                            startDate:
-                                                cyclesProvider.cyclesAllData[index]
-                                                    ['start_date'],
-                                            endDate: cyclesProvider
-                                                .cyclesAllData[index]['end_date'],
-                                          ) ==
-                                          'Completed'
-                                      ? primaryColor
-                                      : greenHighLight,
-                            ),
+                            margin: const EdgeInsets.only(top: 16, bottom: 8),
+                            height: 1,
+                            color: strokeColor,
+                            //width: ,
                           ),
                         ],
-                      ),
-                    ],
-                  ),
-                  const Icon(Icons.star_outline),
-                ],
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 16, bottom: 8),
-                height: 1,
-                color: strokeColor,
-                //width: ,
-              ),
-            ],
-          ));
-        });
+                      );
+                    },
+                  )
+                : const SizedBox.shrink(),
+            cyclesProvider.cycleFavoriteData.isNotEmpty
+                ? const SizedBox(
+                    height: 20,
+                  )
+                : const SizedBox.shrink(),
+            cyclesProvider.cyclesAllData.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: CustomText(
+                      'All Cycles',
+                      type: FontStyle.heading2,
+                    ),
+                  )
+                : const SizedBox.shrink(),
+            cyclesProvider.cyclesAllData.isNotEmpty
+                ? const SizedBox(
+                    height: 15,
+                  )
+                : const SizedBox.shrink(),
+            cyclesProvider.cyclesAllData.isNotEmpty
+                ? ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: cyclesProvider.cyclesAllData.length,
+                    itemBuilder: (context, index) {
+                      return (Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/svg_images/cycles_icon.svg',
+                                    height: 25,
+                                    width: 25,
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width: width * 0.6,
+                                        child: CustomText(
+                                          cyclesProvider.cyclesAllData[index]
+                                              ['name'],
+                                          maxLines: 2,
+                                          type: FontStyle.heading2,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 14,
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.all(6),
+                                        decoration: BoxDecoration(
+                                            color: checkDate(
+                                                        startDate: cyclesProvider
+                                                                .cyclesAllData[index]
+                                                            ['start_date'],
+                                                        endDate: cyclesProvider
+                                                                .cyclesAllData[index]
+                                                            ['end_date']) ==
+                                                    'Draft'
+                                                ? lightGreeyColor
+                                                : checkDate(
+                                                            startDate: cyclesProvider
+                                                                    .cyclesAllData[index]
+                                                                ['start_date'],
+                                                            endDate: cyclesProvider
+                                                                    .cyclesAllData[index]
+                                                                ['end_date']) ==
+                                                        'Completed'
+                                                    ? primaryLightColor
+                                                    : greenWithOpacity,
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: CustomText(
+                                          checkDate(
+                                            startDate: cyclesProvider
+                                                    .cyclesAllData[index]
+                                                ['start_date'],
+                                            endDate: cyclesProvider
+                                                    .cyclesAllData[index]
+                                                ['end_date'],
+                                          ),
+                                          color: checkDate(
+                                                    startDate: cyclesProvider
+                                                            .cyclesAllData[
+                                                        index]['start_date'],
+                                                    endDate: cyclesProvider
+                                                            .cyclesAllData[
+                                                        index]['end_date'],
+                                                  ) ==
+                                                  'Draft'
+                                              ? greyColor
+                                              : checkDate(
+                                                        startDate: cyclesProvider
+                                                                .cyclesAllData[
+                                                            index]['start_date'],
+                                                        endDate: cyclesProvider
+                                                                .cyclesAllData[
+                                                            index]['end_date'],
+                                                      ) ==
+                                                      'Completed'
+                                                  ? primaryColor
+                                                  : greenHighLight,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              IconButton(
+                                  onPressed: () {
+                                    cyclesProvider.updateCycle(
+                                        slug: ref
+                                            .read(
+                                                ProviderList.workspaceProvider)
+                                            .selectedWorkspace!
+                                            .workspaceSlug,
+                                        projectId: ref
+                                            .read(ProviderList.projectProvider)
+                                            .currentProject['id'],
+                                        cycleId: cyclesProvider
+                                            .cyclesAllData[index]['id'],
+                                        isFavorite: false,
+                                        data: {
+                                          'cycle': cyclesProvider
+                                              .cyclesAllData[index]['id'],
+                                        });
+                                  },
+                                  icon: Icon(
+                                    Icons.star_border,
+                                    color: themeProvider.isDarkThemeEnabled
+                                        ? lightSecondaryBackgroundColor
+                                        : darkSecondaryBackgroundColor,
+                                  )),
+                            ],
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(top: 16, bottom: 8),
+                            height: 1,
+                            color: strokeColor,
+                            //width: ,
+                          ),
+                        ],
+                      ));
+                    })
+                : const SizedBox.shrink(),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget cycleActive() {
     return ListView.builder(
       itemCount: ref.read(ProviderList.cyclesProvider).cyclesActiveData.length,
       itemBuilder: (context, index) {
-        return CycleActiveCard(index: index,);
+        return CycleActiveCard(
+          index: index,
+        );
       },
     );
   }

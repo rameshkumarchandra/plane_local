@@ -57,7 +57,7 @@ class _DashBoardScreenState extends ConsumerState<DashBoardScreen> {
                         enableDrag: true,
                         constraints: BoxConstraints(
                             maxHeight:
-                                MediaQuery.of(context).size.height * 0.45),
+                                MediaQuery.of(context).size.height * 0.85),
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),

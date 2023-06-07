@@ -38,158 +38,155 @@ class _SelectWorkspaceState extends ConsumerState<SelectWorkspace> {
       width: double.infinity,
       child: Stack(
         children: [
-          SingleChildScrollView(
-            child: Wrap(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ListView(
+            shrinkWrap: true,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomText(
+                    'Workspace',
+                    type: FontStyle.heading,
+                  ),
+                  IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.grey,
+                      ))
+                ],
+              ),
+              Container(
+                height: 15,
+              ),
+              ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: prov.workspaces.length,
+                  shrinkWrap: true,
+                  itemBuilder: (ctx, index) {
+                    return GestureDetector(
+                      onTap: () async {
+                        await prov
+                            .selectWorkspace(id: prov.workspaces[index]["id"])
+                            .then(
+                          (value) async {
+                            ref.read(ProviderList.projectProvider).getProjects(
+                                slug: ref
+                                    .read(ProviderList.workspaceProvider)
+                                    .workspaces
+                                    .where((element) =>
+                                        element['id'] ==
+                                        profileProvider
+                                            .userProfile.last_workspace_id)
+                                    .first['slug']);
+                            ref
+                                .read(ProviderList.projectProvider)
+                                .favouriteProjects(
+                                  index: 0,
+                                  slug: ref
+                                      .read(ProviderList.workspaceProvider)
+                                      .workspaces
+                                      .where((element) =>
+                                          element['id'] ==
+                                          profileProvider
+                                              .userProfile.last_workspace_id)
+                                      .first['slug'],
+                                  method: HttpMethod.get,
+                                  projectID: "",
+                                );
+                          },
+                        );
+                        Navigator.of(context).pop();
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 15),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 35,
+                                  width: 35,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      color: colors[Random().nextInt(3)],
+                                      borderRadius: BorderRadius.circular(5)),
+                                  child: CustomText(
+                                    prov.workspaces[index]['name']
+                                        .toString()
+                                        .toUpperCase()[0],
+                                    type: FontStyle.boldTitle,
+                                    // fontWeight: FontWeight.w400,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                CustomText(
+                                  prov.workspaces[index]['name'],
+                                  type: FontStyle.heading2,
+                                ),
+                                const Spacer(),
+                                ref
+                                            .read(ProviderList.profileProvider)
+                                            .userProfile
+                                            .last_workspace_id ==
+                                        prov.workspaces[index]['id']
+                                    ? const Icon(
+                                        Icons.done,
+                                        color: Color.fromRGBO(9, 169, 83, 1),
+                                      )
+                                    : Container(),
+                                const SizedBox(
+                                  width: 10,
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 2,
+                            margin: const EdgeInsets.only(bottom: 15),
+                            color: Colors.grey.shade200,
+                          )
+                        ],
+                      ),
+                    );
+                  }),
+              Container(
+                height: 5,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const SetupWorkspace(
+                            fromHomeScreen: true,
+                          )));
+                },
+                child: Row(
                   children: [
-                    CustomText(
-                      'Workspace',
-                      type: FontStyle.heading,
+                    const Icon(
+                      Icons.add,
+                      color: primaryColor,
                     ),
-                    IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(
-                          Icons.close,
-                          color: Colors.grey,
-                        ))
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    CustomText(
+                      'Create Workspace',
+                      type: FontStyle.appbarTitle,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 19,
+                      color: primaryColor,
+                    ),
                   ],
                 ),
-                Container(
-                  height: 15,
-                ),
-                ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: prov.workspaces.length,
-                    shrinkWrap: true,
-                    itemBuilder: (ctx, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          prov
-                              .selectWorkspace(id: prov.workspaces[index]["id"])
-                              .then(
-                            (value) {
-                              ref
-                                  .read(ProviderList.projectProvider)
-                                  .getProjects(
-                                      slug: ref
-                                          .read(ProviderList.workspaceProvider)
-                                          .workspaces
-                                          .where((element) =>
-                                              element['id'] ==
-                                              profileProvider.userProfile
-                                                  .last_workspace_id)
-                                          .first['slug']);
-                              ref
-                                  .read(ProviderList.projectProvider)
-                                  .favouriteProjects(
-                                    index: 0,
-                                    slug: ref
-                                        .read(ProviderList.workspaceProvider)
-                                        .workspaces
-                                        .where((element) =>
-                                            element['id'] ==
-                                            profileProvider
-                                                .userProfile.last_workspace_id)
-                                        .first['slug'],
-                                    method: HttpMethod.get,
-                                    projectID: "",
-                                  );
-                            },
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(bottom: 15),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: 35,
-                                    width: 35,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                        color: colors[Random().nextInt(3)],
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: CustomText(
-                                      prov.workspaces[index]['name']
-                                          .toString()
-                                          .toUpperCase()[0],
-                                      type: FontStyle.boldTitle,
-                                      // fontWeight: FontWeight.w400,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  CustomText(
-                                    prov.workspaces[index]['name'],
-                                    type: FontStyle.heading2,
-                                  ),
-                                  const Spacer(),
-                                  ref
-                                              .read(
-                                                  ProviderList.profileProvider)
-                                              .userProfile
-                                              .last_workspace_id ==
-                                          prov.workspaces[index]['id']
-                                      ? const Icon(
-                                          Icons.done,
-                                          color: Color.fromRGBO(9, 169, 83, 1),
-                                        )
-                                      : Container(),
-                                  const SizedBox(
-                                    width: 10,
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              height: 2,
-                              margin: const EdgeInsets.only(bottom: 15),
-                              color: Colors.grey.shade200,
-                            )
-                          ],
-                        ),
-                      );
-                    }),
-                Container(
-                  height: 5,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const SetupWorkspace(
-                              fromHomeScreen: true,
-                            )));
-                  },
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.add,
-                        color: primaryColor,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      CustomText(
-                        'Create Workspace',
-                        type: FontStyle.appbarTitle,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 19,
-                        color: primaryColor,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 20,
-                ),
-              ],
-            ),
+              ),
+              Container(
+                height: 20,
+              ),
+            ],
           ),
           prov.selectWorkspaceState == AuthStateEnum.loading
               ? Container(
@@ -199,23 +196,21 @@ class _SelectWorkspaceState extends ConsumerState<SelectWorkspace> {
                       : lightSecondaryBackgroundColor.withOpacity(0.7),
                   // height: 25,
                   // width: 25,
-                  child: Wrap(
-                    children: [
-                      SizedBox(
-                        height: 25,
-                        width: 25,
-                        child: LoadingIndicator(
-                          indicatorType: Indicator.lineSpinFadeLoader,
-                          colors: [
-                            themeProvider.isDarkThemeEnabled
-                                ? Colors.white
-                                : Colors.black
-                          ],
-                          strokeWidth: 1.0,
-                          backgroundColor: Colors.transparent,
-                        ),
+                  child: Center(
+                    child: SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: LoadingIndicator(
+                        indicatorType: Indicator.lineSpinFadeLoader,
+                        colors: [
+                          themeProvider.isDarkThemeEnabled
+                              ? Colors.white
+                              : Colors.black
+                        ],
+                        strokeWidth: 1.0,
+                        backgroundColor: Colors.transparent,
                       ),
-                    ],
+                    ),
                   ),
                 )
               : const SizedBox(),
