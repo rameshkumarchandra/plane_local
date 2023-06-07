@@ -53,4 +53,8 @@ class APIs {
       '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/search-issues/';
   static String cycles =
       '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/cycles/';
+  static String dateCheck =
+      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/cycles/date-check/';
+  static String toggleFavoriteCycle =
+      '$baseApi/api/workspaces/\$SLUG/projects/\$PROJECTID/user-favorite-cycles/';
 }
