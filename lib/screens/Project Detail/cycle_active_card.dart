@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/screens/Project%20Detail/cycle_detail.dart';
 import 'package:plane_startup/utils/custom_text.dart';
 import 'package:plane_startup/widgets/profile_circle_avatar_widget.dart';
 
@@ -311,12 +312,22 @@ class _CycleActiveCardState extends ConsumerState<CycleActiveCard> {
           ),
           Align(
             alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 25, bottom: 10),
-              child: CustomText(
-                'View Cycle',
-                color: Colors.blueAccent,
-                type: FontStyle.heading2,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CycleDetail(
+                            cycleId: cyclesProvider
+                                .cyclesActiveData[widget.index]['id'])));
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 25, bottom: 10),
+                child: CustomText(
+                  'View Cycle',
+                  color: Colors.blueAccent,
+                  type: FontStyle.heading2,
+                ),
               ),
             ),
           ),
