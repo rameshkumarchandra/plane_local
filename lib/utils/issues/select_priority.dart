@@ -185,7 +185,6 @@ class _SelectIssuePriorityState extends ConsumerState<SelectIssuePriority> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 alignment: Alignment.center,
-                                
                                 child: index == 4
                                     ? Transform.rotate(
                                         angle: 40,
@@ -240,7 +239,7 @@ class _SelectIssuePriorityState extends ConsumerState<SelectIssuePriority> {
             Icons.done,
             color: Color.fromRGBO(8, 171, 34, 1),
           )
-        : issueProvider.updateIssueState == AuthStateEnum.loading &&
+        : issueProvider.updateIssueState == StateEnum.loading &&
                 issueDetailSelectedPriorityItem == priorities[idx]['name']
             ? const SizedBox(
                 height: 20,

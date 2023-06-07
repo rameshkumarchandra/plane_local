@@ -10,8 +10,8 @@ import '../config/enums.dart';
 import '../services/dio_service.dart';
 
 class CyclesProvider with ChangeNotifier {
-  AuthStateEnum cyclesState = AuthStateEnum.loading;
-  AuthStateEnum cyclesDetilesState = AuthStateEnum.loading;
+  StateEnum cyclesState = StateEnum.loading;
+  StateEnum cyclesDetailState = StateEnum.loading;
   List<dynamic> cyclesAllData = [];
   List<dynamic> cycleFavoriteData = [];
   List<dynamic> cyclesActiveData = [];
@@ -28,7 +28,7 @@ class CyclesProvider with ChangeNotifier {
     print(url);
 
     try {
-      cyclesState = AuthStateEnum.loading;
+      cyclesState = StateEnum.loading;
       notifyListeners();
       var response = await DioConfig().dioServe(
         hasAuth: true,
@@ -38,13 +38,13 @@ class CyclesProvider with ChangeNotifier {
         httpMethod: HttpMethod.post,
       );
       log(response.data.toString());
-      cyclesState = AuthStateEnum.success;
+      cyclesState = StateEnum.success;
 
       notifyListeners();
       return response.data['status'];
     } on DioError catch (e) {
       log(e.message.toString());
-      cyclesState = AuthStateEnum.error;
+      cyclesState = StateEnum.error;
       notifyListeners();
       return false;
     }
@@ -64,7 +64,7 @@ class CyclesProvider with ChangeNotifier {
         : '${APIs.cycles.replaceFirst('\$SLUG', slug).replaceFirst('\$PROJECTID', projectId)}?cycle_view=$query';
     print(url);
     try {
-      // cyclesState = AuthStateEnum.loading;
+      // cyclesState = StateEnum.loading;
       // notifyListeners();
       var response = await DioConfig().dioServe(
         hasAuth: true,
@@ -98,12 +98,12 @@ class CyclesProvider with ChangeNotifier {
       if (query == 'current') {
         cyclesActiveData = response.data;
       }
-      cyclesState = AuthStateEnum.success;
+      cyclesState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       print('===== CYCLES  ERROR =====');
       log(e.message.toString());
-      cyclesState = AuthStateEnum.error;
+      cyclesState = StateEnum.error;
       notifyListeners();
     }
   }
@@ -130,13 +130,13 @@ class CyclesProvider with ChangeNotifier {
                 : HttpMethod.patch,
       );
       cyclesDetailsData = response.data;
-      cyclesDetilesState = AuthStateEnum.success;
+      cyclesDetailState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       print(
           '====================================== CYCLE DETAILS ERROR =====================================');
       print(e.message);
-      cyclesDetilesState = AuthStateEnum.error;
+      cyclesDetailState = StateEnum.error;
       notifyListeners();
     }
   }
@@ -155,7 +155,7 @@ class CyclesProvider with ChangeNotifier {
         : '${APIs.toggleFavoriteCycle.replaceAll('\$SLUG', slug).replaceAll('\$PROJECTID', projectId)}$cycleId/';
     // print(url);
     try {
-      cyclesState = AuthStateEnum.loading;
+      cyclesState = StateEnum.loading;
       notifyListeners();
       var response = await DioConfig().dioServe(
         hasAuth: true,
@@ -174,12 +174,12 @@ class CyclesProvider with ChangeNotifier {
         method: CRUD.read,
         query: 'all',
       );
-      cyclesState = AuthStateEnum.success;
+      cyclesState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       print('===== CYCLES  ERROR =====');
       log(e.message.toString());
-      cyclesState = AuthStateEnum.error;
+      cyclesState = StateEnum.error;
       notifyListeners();
     }
   }

@@ -20,7 +20,7 @@ class _LablesPageState extends ConsumerState<LablesPage> {
     var themeProvider = ref.watch(ProviderList.themeProvider);
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
     return LoadingWidget(
-      loading: issuesProvider.labelState == AuthStateEnum.loading,
+      loading: issuesProvider.labelState == StateEnum.loading,
       widgetClass: Container(
         color: themeProvider.isDarkThemeEnabled
             ? darkSecondaryBackgroundColor

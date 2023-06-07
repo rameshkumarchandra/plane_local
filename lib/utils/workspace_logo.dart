@@ -132,7 +132,7 @@ class _WorkspaceLogoState extends ConsumerState<WorkspaceLogo> {
             ],
           ),
         ),
-        fileProvider.fileUploadState == AuthStateEnum.loading
+        fileProvider.fileUploadState == StateEnum.loading
             ? Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(

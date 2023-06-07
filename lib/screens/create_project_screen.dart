@@ -71,7 +71,7 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
         text: 'Create Project',
       ),
       body: LoadingWidget(
-        loading: projectProvider.createProjectState == AuthStateEnum.loading,
+        loading: projectProvider.createProjectState == StateEnum.loading,
         widgetClass: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
           return SingleChildScrollView(
@@ -431,7 +431,7 @@ class _CreateProjectState extends ConsumerState<CreateProject> {
                                 "network": selectedVal
                               });
                           if (projectProvider.createProjectState ==
-                              AuthStateEnum.success) {
+                              StateEnum.success) {
                             Navigator.pop(context);
                           }
                         }

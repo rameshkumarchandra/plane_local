@@ -30,7 +30,7 @@ class _InviteCOWorkersState extends ConsumerState<InviteCOWorkers> {
     var prov = ref.watch(ProviderList.workspaceProvider);
     return Scaffold(
       body: LoadingWidget(
-        loading: prov.workspaceInvitationState == AuthStateEnum.loading,
+        loading: prov.workspaceInvitationState == StateEnum.loading,
         widgetClass: SafeArea(
           child: Container(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 24),

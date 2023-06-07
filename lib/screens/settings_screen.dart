@@ -93,7 +93,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
             )
           : Container(),
       body: LoadingWidget(
-        loading: projectprovider.deleteProjectState == AuthStateEnum.loading,
+        loading: projectprovider.deleteProjectState == StateEnum.loading,
         widgetClass: SizedBox(
           height: height,
           child: Column(

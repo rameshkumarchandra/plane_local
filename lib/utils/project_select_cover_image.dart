@@ -191,11 +191,16 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                         ),
                       ],
                     ),
-                   InkWell(
-                    onTap: (){
-                      Navigator.of(context).pop();
-                    },
-                    child: Icon(Icons.close, color: themeProvider.isDarkThemeEnabled ? lightBackgroundColor  :darkBackgroundColor,))
+                    InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Icon(
+                          Icons.close,
+                          color: themeProvider.isDarkThemeEnabled
+                              ? lightBackgroundColor
+                              : darkBackgroundColor,
+                        ))
                   ],
                 ),
                 const SizedBox(
@@ -262,7 +267,7 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
                             itemCount: images.length + 1,
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                                  childAspectRatio: 5/3,
+                                    childAspectRatio: 5 / 3,
                                     crossAxisCount: 3,
                                     crossAxisSpacing: 10,
                                     mainAxisSpacing: 10),
@@ -406,8 +411,8 @@ class _SelectCoverImageState extends ConsumerState<SelectCoverImage> {
               ],
             ),
           ),
-          projectProvider.unsplashImageState == AuthStateEnum.loading ||
-                  fileProvider.fileUploadState == AuthStateEnum.loading
+          projectProvider.unsplashImageState == StateEnum.loading ||
+                  fileProvider.fileUploadState == StateEnum.loading
               ? Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(

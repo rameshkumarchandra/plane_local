@@ -485,7 +485,7 @@ class _SelectIssueLabelsState extends ConsumerState<SelectIssueLabels> {
                       )
               ],
             ),
-            issuesProvider.labelState == AuthStateEnum.loading
+            issuesProvider.labelState == StateEnum.loading
                 ? Center(
                     child: Container(
                       alignment: Alignment.center,

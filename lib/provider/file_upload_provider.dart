@@ -17,10 +17,10 @@ class FileUploadProvider extends ChangeNotifier {
   FileUploadProvider(ChangeNotifierProviderRef<FileUploadProvider> this.ref);
   Ref? ref;
   static String? _downloadUrl;
-  AuthStateEnum fileUploadState = AuthStateEnum.empty;
+  StateEnum fileUploadState = StateEnum.empty;
 
   Future<String?> uploadFile(File pickedFile, String fileType) async {
-    fileUploadState = AuthStateEnum.loading;
+    fileUploadState = StateEnum.loading;
     notifyListeners();
     var type = pickedFile.path.split('.').last;
 
@@ -40,14 +40,14 @@ class FileUploadProvider extends ChangeNotifier {
               "Authorization": "Bearer $token"
             }))
         .catchError((e) {
-      fileUploadState = AuthStateEnum.error;
+      fileUploadState = StateEnum.error;
       notifyListeners();
       log(e);
       throw e;
     });
     _downloadUrl = response.data['asset'];
 
-    fileUploadState = AuthStateEnum.success;
+    fileUploadState = StateEnum.success;
     print(_downloadUrl);
 
     notifyListeners();

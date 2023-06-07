@@ -26,10 +26,12 @@ class SelectStates extends ConsumerStatefulWidget {
 }
 
 class _SelectStatesState extends ConsumerState<SelectStates> {
+  var selectedState = '';
   @override
   void initState() {
-    if (ref.read(ProviderList.issuesProvider).states.isEmpty) {
-      ref.read(ProviderList.issuesProvider).getStates(
+    var prov = ref.read(ProviderList.issuesProvider);
+    if (prov.states.isEmpty) {
+      prov.getStates(
           slug: ref
               .read(ProviderList.workspaceProvider)
               .selectedWorkspace!
@@ -37,29 +39,18 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
           projID: ref.read(ProviderList.projectProvider).currentProject['id']);
     }
 
-    selectedState = widget.createIssue
-        ? ref.read(ProviderList.issuesProvider).createIssuedata['state'] != null
-            ? ref.read(ProviderList.issuesProvider).createIssuedata['state']
-                ['id']
-            : ''
-        : ref.read(ProviderList.issuesProvider).states['state'] != null
-            ? ref.read(ProviderList.issuesProvider).states['state']['id']
-            : '';
-
-    selectedStateName = widget.createIssue
-        ? ref.read(ProviderList.issuesProvider).createIssuedata['state'] != null
-            ? ref.read(ProviderList.issuesProvider).createIssuedata['state']
-                ['name']
-            : ''
-        : ref.read(ProviderList.issuesProvider).states['state'] != null
-            ? ref.read(ProviderList.issuesProvider).states['state']['name']
-            : '';
-
+    // selectedState = widget.createIssue
+    //     ? prov.createIssuedata['state'] != null
+    //         ? prov.createIssuedata['state']['id']
+    //         : ''
+    //     : prov.states['state'] != null
+    //         ? prov.states['state']['id']
+    //         : '';
+   // log(prov.createIssuedata['state'].toString());
+    selectedState = prov.createIssuedata['state'] ?? prov.states.keys.first;
     super.initState();
   }
 
-  var selectedState = '';
-  var selectedStateName = '';
   String issueDetailSelectedState = '';
   @override
   Widget build(BuildContext context) {
@@ -69,15 +60,11 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
     return WillPopScope(
       onWillPop: () async {
         var prov = ref.read(ProviderList.issuesProvider);
-        if (selectedState.isNotEmpty) {
-          prov.createIssuedata['state'] = {
-            'name': selectedStateName,
-            "id": selectedState,
-          };
-
-          prov.setsState();
-          // log(prov.createIssuedata.toString());
-        }
+        //   if (selectedState.isNotEmpty) {
+        prov.createIssuedata['state'] = selectedState;
+        prov.setsState();
+        // log(prov.createIssuedata.toString());
+        //  }
         return true;
       },
       child: SingleChildScrollView(
@@ -107,7 +94,7 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                             var prov = ref.read(ProviderList.issuesProvider);
                             if (selectedState.isNotEmpty) {
                               prov.createIssuedata['state'] = {
-                                'name': selectedStateName,
+                                'name': prov.states[selectedState]['name'],
                                 "id": selectedState,
                               };
 
@@ -123,53 +110,51 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                     height: 15,
                   ),
                   for (int i = 0; i < issuesProvider.states.length; i++)
-                      GestureDetector(
-                        onTap: () {
-                          if (widget.createIssue) {
-                            setState(() {
-                              selectedState = issuesProvider.states[
-                                      issuesProvider.states.keys.elementAt(i)]
-                                  ['id'];
-                              selectedStateName = issuesProvider.states[
-                                      issuesProvider.states.keys.elementAt(i)]
-                                  ['name'];
-                            });
-                            issuesProvider.setsState();
-                          } else {
-                            setState(() {
-                              issueDetailSelectedState = issuesProvider.states[
-                                      issuesProvider.states.keys.elementAt(i)]
-                                 ['name'];
-                            });
-                            issueProvider.upDateIssue(
-                                slug: ref
-                                    .read(ProviderList.workspaceProvider)
-                                    .selectedWorkspace!
-                                    .workspaceSlug,
-                                projID: ref
-                                    .read(ProviderList.projectProvider)
-                                    .currentProject['id'],
-                                issueID: widget.issueId!,
-                                ref: ref,
-                                index: widget.index!,
-                                data: {
-                                  'state':
-                                      '${issuesProvider.states[issuesProvider.states.keys.elementAt(i)]['id']}'
-                                });
-                          }
-                        },
-                        child: Container(
-                          height: 40,
-                          padding: const EdgeInsets.only(
-                            left: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: themeProvider.isDarkThemeEnabled ? darkSecondaryBackgroundColor :  Color.fromRGBO(248, 249, 250, 1),
-                          ),
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: Row(
-                            children: [
-                              SizedBox(
+                    GestureDetector(
+                      onTap: () {
+                        if (widget.createIssue) {
+                          setState(() {
+                            selectedState = issuesProvider.states[
+                                issuesProvider.states.keys.elementAt(i)]['id'];
+                          });
+                          issuesProvider.setsState();
+                        } else {
+                          setState(() {
+                            issueDetailSelectedState = issuesProvider.states[
+                                    issuesProvider.states.keys.elementAt(i)]
+                                ['name'];
+                          });
+                          issueProvider.upDateIssue(
+                              slug: ref
+                                  .read(ProviderList.workspaceProvider)
+                                  .selectedWorkspace!
+                                  .workspaceSlug,
+                              projID: ref
+                                  .read(ProviderList.projectProvider)
+                                  .currentProject['id'],
+                              issueID: widget.issueId!,
+                              ref: ref,
+                              index: widget.index!,
+                              data: {
+                                'state':
+                                    '${issuesProvider.states[issuesProvider.states.keys.elementAt(i)]['id']}'
+                              });
+                        }
+                      },
+                      child: Container(
+                        height: 40,
+                        padding: const EdgeInsets.only(
+                          left: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: themeProvider.isDarkThemeEnabled
+                              ? darkSecondaryBackgroundColor
+                              : const Color.fromRGBO(248, 249, 250, 1),
+                        ),
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
                                 height: 25,
                                 width: 25,
                                 // decoration: BoxDecoration(
@@ -177,27 +162,26 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                                 //   borderRadius: BorderRadius.circular(5),
                                 // ),
                                 child: issuesProvider.stateIcons[
-                                    issuesProvider.states.keys.elementAt(i)]
-                              ),
-                              Container(
-                                width: 10,
-                              ),
-                              CustomText(
-                                issuesProvider.states[issuesProvider.states.keys
-                                    .elementAt(i)]["name"],
-                                type: FontStyle.subheading,
-                              ),
-                              const Spacer(),
-                              widget.createIssue
-                                  ? createIssueStateSelectionWidget(i)
-                                  : issueDetailStateSelectionWidget(i),
-                              const SizedBox(
-                                width: 10,
-                              )
-                            ],
-                          ),
+                                    issuesProvider.states.keys.elementAt(i)]),
+                            Container(
+                              width: 10,
+                            ),
+                            CustomText(
+                              issuesProvider.states[issuesProvider.states.keys
+                                  .elementAt(i)]["name"],
+                              type: FontStyle.subheading,
+                            ),
+                            const Spacer(),
+                            widget.createIssue
+                                ? createIssueStateSelectionWidget(i)
+                                : issueDetailStateSelectionWidget(i),
+                            const SizedBox(
+                              width: 10,
+                            )
+                          ],
                         ),
                       ),
+                    ),
                   widget.createIssue
                       ? GestureDetector(
                           onTap: () {
@@ -230,7 +214,7 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
                       : Container(),
                 ],
               ),
-              issuesProvider.statesState == AuthStateEnum.loading
+              issuesProvider.statesState == StateEnum.loading
                   ? Container(
                       alignment: Alignment.center,
                       color: Colors.white.withOpacity(0.7),
@@ -262,8 +246,7 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
   Widget createIssueStateSelectionWidget(int i) {
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
     return selectedState ==
-            issuesProvider.states[issuesProvider.states.keys.elementAt(i)]
-                ['id']
+            issuesProvider.states[issuesProvider.states.keys.elementAt(i)]['id']
         ? const Icon(
             Icons.done,
             color: Color.fromRGBO(8, 171, 34, 1),
@@ -275,17 +258,15 @@ class _SelectStatesState extends ConsumerState<SelectStates> {
     var issueProvider = ref.watch(ProviderList.issueProvider);
     var issuesProvider = ref.watch(ProviderList.issuesProvider);
     return issueProvider.issueDetails['state_detail']['id'] ==
-            issuesProvider.states[issuesProvider.states.keys.elementAt(i)]
-                ['id']
+            issuesProvider.states[issuesProvider.states.keys.elementAt(i)]['id']
         ? const Icon(
             Icons.done,
             color: Color.fromRGBO(8, 171, 34, 1),
           )
-        : issueProvider.updateIssueState == AuthStateEnum.loading &&
+        : issueProvider.updateIssueState == StateEnum.loading &&
                 issueDetailSelectedState ==
                     issuesProvider
-                            .states[issuesProvider.states.keys.elementAt(i)]
-                        ['name']
+                        .states[issuesProvider.states.keys.elementAt(i)]['name']
             ? const SizedBox(
                 height: 20,
                 width: 20,

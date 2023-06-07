@@ -58,7 +58,7 @@ class _CreateStateState extends ConsumerState<CreateState> {
         text: 'Create State',
       ),
       body: LoadingWidget(
-        loading: issuesProvider.statesState == AuthStateEnum.loading,
+        loading: issuesProvider.statesState == StateEnum.loading,
         widgetClass: SingleChildScrollView(
           child: Form(
             key: formKey,

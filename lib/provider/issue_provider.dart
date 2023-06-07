@@ -9,24 +9,24 @@ import '../config/const.dart';
 import '../services/dio_service.dart';
 
 class IssueProvider with ChangeNotifier {
-  AuthStateEnum issueDetailState = AuthStateEnum.empty;
-  AuthStateEnum issueActivityState = AuthStateEnum.empty;
-  AuthStateEnum updateIssueState = AuthStateEnum.empty;
+  StateEnum issueDetailState = StateEnum.empty;
+  StateEnum issueActivityState = StateEnum.empty;
+  StateEnum updateIssueState = StateEnum.empty;
   Map<String, dynamic> issueDetails = {};
   List<dynamic> issueActivity = [];
-  
-  void clear(){
-    issueDetailState = AuthStateEnum.empty;
-    issueActivityState = AuthStateEnum.empty;
-    updateIssueState = AuthStateEnum.empty;
+
+  void clear() {
+    issueDetailState = StateEnum.empty;
+    issueActivityState = StateEnum.empty;
+    updateIssueState = StateEnum.empty;
     issueDetails = {};
     issueActivity = [];
   }
-  Future getIssueDetails({
-    required String slug,
-    required String projID,
-    required String issueID
-  }) async {
+
+  Future getIssueDetails(
+      {required String slug,
+      required String projID,
+      required String issueID}) async {
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
@@ -38,72 +38,65 @@ class IssueProvider with ChangeNotifier {
         httpMethod: HttpMethod.get,
       );
       issueDetails = response.data;
-      issueDetailState = AuthStateEnum.success;
+      issueDetailState = StateEnum.success;
       notifyListeners();
-      
     } on DioError catch (e) {
       print(e.message);
-      issueDetailState = AuthStateEnum.error;
+      issueDetailState = StateEnum.error;
       notifyListeners();
     }
   }
 
-  Future getIssueActivity({
-    required String slug,
-    required String projID,
-    required String issueID
-  }) async {
+  Future getIssueActivity(
+      {required String slug,
+      required String projID,
+      required String issueID}) async {
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
-        url: '${APIs.issueDetails
-            .replaceAll("\$SLUG", slug)
-            .replaceAll('\$PROJECTID', projID)
-            .replaceAll('\$ISSUEID', issueID)}history/',
+        url:
+            '${APIs.issueDetails.replaceAll("\$SLUG", slug).replaceAll('\$PROJECTID', projID).replaceAll('\$ISSUEID', issueID)}history/',
         hasBody: false,
         httpMethod: HttpMethod.get,
       );
       issueActivity = response.data;
-      issueActivityState  = AuthStateEnum.success;
+      issueActivityState = StateEnum.success;
       notifyListeners();
-      
     } on DioError catch (e) {
       print(e.message);
-      issueActivityState = AuthStateEnum.error;
+      issueActivityState = StateEnum.error;
       notifyListeners();
     }
   }
 
-  Future upDateIssue({
-    required String slug,
-    required String projID,
-    required String issueID,
-    required Map data,
-    required int index,
-    required WidgetRef ref
-  }) async {
+  Future upDateIssue(
+      {required String slug,
+      required String projID,
+      required String issueID,
+      required Map data,
+      required int index,
+      required WidgetRef ref}) async {
     print(data);
     try {
-      updateIssueState = AuthStateEnum.loading;
+      updateIssueState = StateEnum.loading;
       notifyListeners();
       var response = await DioConfig().dioServe(
-        hasAuth: true,
-        url: APIs.issueDetails
-            .replaceAll("\$SLUG", slug)
-            .replaceAll('\$PROJECTID', projID)
-            .replaceAll('\$ISSUEID', issueID),
-        hasBody: true,
-        httpMethod: HttpMethod.patch,
-        data: data
-      );
-      
+          hasAuth: true,
+          url: APIs.issueDetails
+              .replaceAll("\$SLUG", slug)
+              .replaceAll('\$PROJECTID', projID)
+              .replaceAll('\$ISSUEID', issueID),
+          hasBody: true,
+          httpMethod: HttpMethod.patch,
+          data: data);
+
       await getIssueDetails(slug: slug, projID: projID, issueID: issueID);
       await getIssueActivity(slug: slug, projID: projID, issueID: issueID);
-      ref.read(ProviderList.issuesProvider).issuesResponse[index] = issueDetails;
-      updateIssueState  = AuthStateEnum.success;
+      ref.read(ProviderList.issuesProvider).issuesResponse[index] =
+          issueDetails;
+      updateIssueState = StateEnum.success;
       notifyListeners();
       print('===== SCCESS ====');
-
     } on DioError catch (e) {
       print('===== ERROR ====');
       print(e.message);
@@ -112,18 +105,17 @@ class IssueProvider with ChangeNotifier {
           content: Text('Something went wrong, please try again!'),
         ),
       );
-      updateIssueState = AuthStateEnum.error;
+      updateIssueState = StateEnum.error;
       notifyListeners();
     }
   }
 
   clearData() {
-    issueDetailState = AuthStateEnum.loading;
-    issueActivityState = AuthStateEnum.loading;
-    updateIssueState = AuthStateEnum.empty;
+    issueDetailState = StateEnum.loading;
+    issueActivityState = StateEnum.loading;
+    updateIssueState = StateEnum.empty;
     issueDetails = {};
     issueActivity = [];
     notifyListeners();
   }
-
 }

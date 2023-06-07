@@ -58,7 +58,7 @@ class _IssuesListSheetState extends ConsumerState<IssuesListSheet> {
         ),
       ),
       constraints: BoxConstraints(maxHeight: height * 0.7),
-      child: searchIssueProvider.searchIssuesState == AuthStateEnum.loading
+      child: searchIssueProvider.searchIssuesState == StateEnum.loading
           ? Center(
               child: SizedBox(
                 width: 30,

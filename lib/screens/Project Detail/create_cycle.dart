@@ -56,7 +56,7 @@ class _CreateCycleState extends ConsumerState<CreateCycle> {
           ? darkSecondaryBackgroundColor
           : Colors.white,
       body: LoadingWidget(
-        loading: cyclesProvider.cyclesState == AuthStateEnum.loading,
+        loading: cyclesProvider.cyclesState == StateEnum.loading,
         widgetClass: LayoutBuilder(builder: (context, constraints) {
           return SingleChildScrollView(
             child: ConstrainedBox(

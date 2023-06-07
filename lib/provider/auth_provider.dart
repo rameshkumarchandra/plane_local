@@ -14,11 +14,11 @@ import 'provider_list.dart';
 class AuthProvider extends ChangeNotifier {
   AuthProvider(ChangeNotifierProviderRef<AuthProvider> this.ref);
   Ref ref;
-  AuthStateEnum sendCodeState = AuthStateEnum.empty;
-  AuthStateEnum validateCodeState = AuthStateEnum.empty;
+  StateEnum sendCodeState = StateEnum.empty;
+  StateEnum validateCodeState = StateEnum.empty;
 
   Future sendMagicCode(String email) async {
-    sendCodeState = AuthStateEnum.loading;
+    sendCodeState = StateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -30,18 +30,18 @@ class AuthProvider extends ChangeNotifier {
           'email': email,
         },
       );
-      sendCodeState = AuthStateEnum.success;
+      sendCodeState = StateEnum.success;
       log(response.data.toString());
       notifyListeners();
     } on DioError catch (e) {
       log(e.message.toString());
-      sendCodeState = AuthStateEnum.failed;
+      sendCodeState = StateEnum.failed;
       notifyListeners();
     }
   }
 
   Future validateMagicCode({required String key, required token}) async {
-    validateCodeState = AuthStateEnum.loading;
+    validateCodeState = StateEnum.loading;
     notifyListeners();
     try {
       log({"key": key, "token": token}.toString());
@@ -56,7 +56,7 @@ class AuthProvider extends ChangeNotifier {
           .setString("token", response.data["access_token"]);
       // await ref.read(ProviderList.profileProvider).getProfile();
       // .userProfile = UserProfile.fromMap(response.data);
-      validateCodeState = AuthStateEnum.success;
+      validateCodeState = StateEnum.success;
 
       await ref
           .read(ProviderList.profileProvider)
@@ -110,7 +110,7 @@ class AuthProvider extends ChangeNotifier {
       log(response.data.toString());
       notifyListeners();
     } on DioError catch (e) {
-      validateCodeState = AuthStateEnum.failed;
+      validateCodeState = StateEnum.failed;
       ScaffoldMessenger.of(Const.globalKey.currentContext!).showSnackBar(
         SnackBar(
           content: Text(e.response.toString()),

@@ -41,10 +41,7 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
     };
     prov.createIssuedata['members'] = null;
     prov.createIssuedata['labels'] = null;
-    prov.createIssuedata['state'] = {
-      'name': prov.states.values.toList()[0]['name'],
-      "id": prov.states.values.toList()[0]['id'],
-    };
+    prov.createIssuedata['state'] = prov.createIssuedata['state']?? prov.states.keys.first;
     super.initState();
   }
 
@@ -85,8 +82,8 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
           text: 'Create Issue',
         ),
         body: LoadingWidget(
-          loading: issueProvider.createIssueState == AuthStateEnum.loading ||
-              issueProvider.statesState == AuthStateEnum.loading,
+          loading: issueProvider.createIssueState == StateEnum.loading ||
+              issueProvider.statesState == StateEnum.loading,
           widgetClass: LayoutBuilder(
               builder: (BuildContext context, BoxConstraints constraints) {
             return SingleChildScrollView(
@@ -270,13 +267,28 @@ class _CreateIssueState extends ConsumerState<CreateIssue> {
                                       },
                                       child: Row(
                                         children: [
+                                          issueProvider.createIssuedata[
+                                                      'state'] ==
+                                                  null
+                                              ? Container()
+                                              :Container(
+                                                height: 20,
+                                                width: 20,
+                                                margin: const EdgeInsets.only(right: 5),
+                                                child: 
+                                                issueProvider.stateIcons[
+                                                  issueProvider.createIssuedata[
+                                                      'state']]
+                                              ) ,
                                           CustomText(
                                             issueProvider.createIssuedata[
                                                         'state'] ==
                                                     null
                                                 ? 'Select'
-                                                : issueProvider.createIssuedata[
-                                                    'state']['name'],
+                                                : issueProvider.states[
+                                                    issueProvider
+                                                            .createIssuedata[
+                                                        'state']]['name'],
                                             type: FontStyle.title,
                                           ),
                                           issueProvider.createIssuedata[

@@ -8,10 +8,12 @@ import 'package:intl/intl.dart';
 import 'package:plane_startup/config/const.dart';
 import 'package:plane_startup/config/enums.dart';
 import 'package:plane_startup/provider/provider_list.dart';
+import 'package:plane_startup/screens/Project%20Detail/create_issue.dart';
 import 'package:plane_startup/widgets/issue_card_widget.dart';
 import '../config/apis.dart';
 import '../kanban/models/inputs.dart';
 import '../models/issues.dart';
+import '../routers/routes_path.dart';
 import '../services/dio_service.dart';
 import '../utils/constants.dart';
 import '../utils/custom_text.dart';
@@ -19,15 +21,15 @@ import '../utils/custom_text.dart';
 class IssuesProvider extends ChangeNotifier {
   IssuesProvider(ChangeNotifierProviderRef<IssuesProvider> this.ref);
   Ref? ref;
-  AuthStateEnum statesState = AuthStateEnum.empty;
-  AuthStateEnum membersState = AuthStateEnum.empty;
-  AuthStateEnum issueState = AuthStateEnum.empty;
-  AuthStateEnum labelState = AuthStateEnum.empty;
-  AuthStateEnum orderByState = AuthStateEnum.empty;
-  AuthStateEnum projectViewState = AuthStateEnum.empty;
-  AuthStateEnum issuePropertyState = AuthStateEnum.empty;
-  AuthStateEnum joinprojectState = AuthStateEnum.empty;
-  var createIssueState = AuthStateEnum.empty;
+  StateEnum statesState = StateEnum.empty;
+  StateEnum membersState = StateEnum.empty;
+  StateEnum issueState = StateEnum.empty;
+  StateEnum labelState = StateEnum.empty;
+  StateEnum orderByState = StateEnum.empty;
+  StateEnum projectViewState = StateEnum.empty;
+  StateEnum issuePropertyState = StateEnum.empty;
+  StateEnum joinprojectState = StateEnum.empty;
+  var createIssueState = StateEnum.empty;
   String createIssueParent = '';
   String createIssueParentId = '';
   var issueView = {};
@@ -186,6 +188,7 @@ class IssuesProvider extends ChangeNotifier {
 
     for (var element in issues.issues) {
       //  log(issues.groupBY.toString());
+
       element.leading = issues.groupBY == GroupBY.priority
           ? element.title == 'Urgent'
               ? Icon(Icons.error_outline,
@@ -252,7 +255,7 @@ class IssuesProvider extends ChangeNotifier {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            element.leading??Container(),
+            element.leading ?? Container(),
             const SizedBox(
               width: 10,
             ),
@@ -298,7 +301,14 @@ class IssuesProvider extends ChangeNotifier {
             const SizedBox(
               width: 10,
             ),
-            const Icon(Icons.add, color: Color.fromRGBO(133, 142, 150, 1)),
+            GestureDetector(
+                onTap: () {
+                  createIssuedata['state'] = element.id;
+                  Navigator.push(Const.globalKey.currentContext!,
+                      MaterialPageRoute(builder: (ctx) => const CreateIssue()));
+                },
+                child: const Icon(Icons.add,
+                    color: Color.fromRGBO(133, 142, 150, 1))),
           ],
         ),
       );
@@ -319,7 +329,7 @@ class IssuesProvider extends ChangeNotifier {
   }
 
   Future getLabels({required String slug, required String projID}) async {
-    labelState = AuthStateEnum.loading;
+    labelState = StateEnum.loading;
     // notifyListeners();
 
     try {
@@ -335,12 +345,12 @@ class IssuesProvider extends ChangeNotifier {
       );
       // log('getLabels' + response.data.toString());
       labels = response.data;
-      labelState = AuthStateEnum.success;
+      labelState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log('Error in getLabels  ${e.message}');
       log(e.error.toString());
-      labelState = AuthStateEnum.error;
+      labelState = StateEnum.error;
       notifyListeners();
     }
   }
@@ -352,7 +362,7 @@ class IssuesProvider extends ChangeNotifier {
     CRUD? method,
     String? labelId,
   }) async {
-    labelState = AuthStateEnum.loading;
+    labelState = StateEnum.loading;
     notifyListeners();
     String url = method == CRUD.update
         ? '${APIs.issueLabels.replaceAll("\$SLUG", slug).replaceAll('\$PROJECTID', projID)}$labelId/'
@@ -372,17 +382,17 @@ class IssuesProvider extends ChangeNotifier {
           data: data);
       //   log(response.data.toString());
       await getLabels(slug: slug, projID: projID);
-      labelState = AuthStateEnum.success;
+      labelState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.error.toString());
-      labelState = AuthStateEnum.error;
+      labelState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future getStates({required String slug, required String projID}) async {
-    statesState = AuthStateEnum.loading;
+    statesState = StateEnum.loading;
     // notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -418,22 +428,22 @@ class IssuesProvider extends ChangeNotifier {
         }
       }
       //  log(states.toString());
-      statesState = AuthStateEnum.success;
+      statesState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.response!.statusCode.toString());
       if (e.response!.statusCode == 403) {
-        statesState = AuthStateEnum.restricted;
+        statesState = StateEnum.restricted;
         notifyListeners();
       } else {
-        statesState = AuthStateEnum.error;
+        statesState = StateEnum.error;
         notifyListeners();
       }
     }
   }
 
   Future createIssue({required String slug, required String projID}) async {
-    createIssueState = AuthStateEnum.loading;
+    createIssueState = StateEnum.loading;
 
     notifyListeners();
     try {
@@ -478,17 +488,17 @@ class IssuesProvider extends ChangeNotifier {
 
       issuesResponse.add(response.data);
       isISsuesEmpty = issuesResponse.isEmpty;
-      createIssueState = AuthStateEnum.success;
+      createIssueState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.response.toString());
-      createIssueState = AuthStateEnum.error;
+      createIssueState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future getIssues({required String slug, required String projID}) async {
-    issueState = AuthStateEnum.loading;
+    issueState = StateEnum.loading;
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
@@ -503,15 +513,15 @@ class IssuesProvider extends ChangeNotifier {
 
       issuesResponse = response.data;
       isISsuesEmpty = issuesResponse.isEmpty;
-      issueState = AuthStateEnum.success;
+      issueState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.response.toString());
       if (e.response!.statusCode == 403) {
-        issueState = AuthStateEnum.restricted;
+        issueState = StateEnum.restricted;
         notifyListeners();
       } else {
-        issueState = AuthStateEnum.error;
+        issueState = StateEnum.error;
         notifyListeners();
       }
     }
@@ -521,7 +531,7 @@ class IssuesProvider extends ChangeNotifier {
       {required String slug,
       required String projID,
       required dynamic data}) async {
-    statesState = AuthStateEnum.loading;
+    statesState = StateEnum.loading;
     notifyListeners();
     try {
       await DioConfig().dioServe(
@@ -533,11 +543,11 @@ class IssuesProvider extends ChangeNotifier {
           httpMethod: HttpMethod.post,
           data: data);
       getStates(slug: slug, projID: projID);
-      statesState = AuthStateEnum.success;
+      statesState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.response.toString());
-      statesState = AuthStateEnum.error;
+      statesState = StateEnum.error;
       notifyListeners();
     }
   }
@@ -546,7 +556,7 @@ class IssuesProvider extends ChangeNotifier {
     required String slug,
     required String projID,
   }) async {
-    membersState = AuthStateEnum.loading;
+    membersState = StateEnum.loading;
     //notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -559,17 +569,17 @@ class IssuesProvider extends ChangeNotifier {
       );
       // log('Project Members    ${response.data.toString()}');
       members = response.data;
-      membersState = AuthStateEnum.success;
+      membersState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.response.toString());
-      membersState = AuthStateEnum.error;
+      membersState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future getIssueProperties() async {
-    issueState = AuthStateEnum.loading;
+    issueState = StateEnum.loading;
     log(APIs.issueProperties
         .replaceAll(
             "\$SLUG",
@@ -648,17 +658,17 @@ class IssuesProvider extends ChangeNotifier {
             issueProperty['properties']['priority'];
       }
 
-      issueState = AuthStateEnum.success;
+      issueState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.message.toString());
-      issueState = AuthStateEnum.error;
+      issueState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future updateIssueProperties({required DisplayProperties properties}) async {
-    issuePropertyState = AuthStateEnum.loading;
+    issuePropertyState = StateEnum.loading;
     notifyListeners();
     try {
       var response = await DioConfig().dioServe(
@@ -693,11 +703,11 @@ class IssuesProvider extends ChangeNotifier {
 
       // log(response.data.toString());
       issueProperty = response.data;
-      issuePropertyState = AuthStateEnum.success;
+      issuePropertyState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.response.toString());
-      issuePropertyState = AuthStateEnum.error;
+      issuePropertyState = StateEnum.error;
       notifyListeners();
     }
   }
@@ -750,18 +760,18 @@ class IssuesProvider extends ChangeNotifier {
         httpMethod: HttpMethod.post,
       );
       //  log(response.data.toString());
-      projectViewState = AuthStateEnum.success;
+      projectViewState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log("ERROR");
       log(e.response.toString());
-      projectViewState = AuthStateEnum.error;
+      projectViewState = StateEnum.error;
       notifyListeners();
     }
   }
 
   Future getProjectView() async {
-    projectViewState = AuthStateEnum.loading;
+    projectViewState = StateEnum.loading;
     try {
       var response = await DioConfig().dioServe(
         hasAuth: true,
@@ -793,12 +803,12 @@ class IssuesProvider extends ChangeNotifier {
       issues.filters.labels = issueView["filters"]["labels"] ?? [];
       showEmptyStates = issueView["showEmptyGroups"];
 
-      projectViewState = AuthStateEnum.success;
+      projectViewState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log(e.response.toString());
       issues.projectView = ProjectView.kanban;
-      projectViewState = AuthStateEnum.error;
+      projectViewState = StateEnum.error;
       notifyListeners();
     }
   }
@@ -807,7 +817,7 @@ class IssuesProvider extends ChangeNotifier {
     required String slug,
     required String projID,
   }) async {
-    orderByState = AuthStateEnum.loading;
+    orderByState = StateEnum.loading;
     notifyListeners();
 
     if (issues.groupBY == GroupBY.labels) {
@@ -916,12 +926,12 @@ class IssuesProvider extends ChangeNotifier {
       } else {
         groupBy_response = response.data;
       }
-      orderByState = AuthStateEnum.success;
+      orderByState = StateEnum.success;
       notifyListeners();
     } on DioError catch (e) {
       log('error');
       log(e.response.toString());
-      orderByState = AuthStateEnum.error;
+      orderByState = StateEnum.error;
       notifyListeners();
     }
   }
@@ -929,7 +939,7 @@ class IssuesProvider extends ChangeNotifier {
   Future joinProject({String? projectId, String? slug}) async {
     print(projectId);
     try {
-      joinprojectState = AuthStateEnum.loading;
+      joinprojectState = StateEnum.loading;
       notifyListeners();
       var response = await DioConfig().dioServe(
           hasAuth: true,
@@ -939,7 +949,7 @@ class IssuesProvider extends ChangeNotifier {
           data: {
             "project_ids": [projectId]
           });
-      joinprojectState = AuthStateEnum.success;
+      joinprojectState = StateEnum.success;
       notifyListeners();
       getProjectMembers(slug: slug, projID: projectId!);
       getIssueProperties();
@@ -955,7 +965,7 @@ class IssuesProvider extends ChangeNotifier {
     } on DioError catch (e) {
       print('==== HERE =====');
       log(e.message.toString());
-      joinprojectState = AuthStateEnum.error;
+      joinprojectState = StateEnum.error;
       notifyListeners();
     }
   }
